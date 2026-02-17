@@ -517,15 +517,17 @@ function MobileBottomSheet() {
                 <div className="h-1 w-10 rounded-full bg-stone/40" />
               </div>
 
-              {/* Close button */}
-              <button
-                onClick={dismiss}
-                className="absolute top-3 right-4 flex h-8 w-8 items-center justify-center rounded-full text-stone transition-colors hover:bg-cream/10 hover:text-cream"
-              >
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                </svg>
-              </button>
+              {/* Close button — pinned below drag handle, high z-index to avoid nav conflict */}
+              <div className="flex shrink-0 justify-end px-4">
+                <button
+                  onClick={dismiss}
+                  className="z-[60] flex h-8 w-8 items-center justify-center rounded-full bg-garage-mid/80 text-stone transition-colors hover:bg-cream/10 hover:text-cream"
+                >
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                  </svg>
+                </button>
+              </div>
 
               {/* Scrollable content */}
               <div className={`flex-1 px-6 pb-24 ${sheetItem.id === 'boombox' ? 'flex flex-col overflow-hidden' : 'overflow-y-auto'}`}>

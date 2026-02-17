@@ -3,12 +3,13 @@ import { AnimatePresence, motion } from 'motion/react'
 import { useStore } from '../../stores/useStore'
 import { useIsMobile } from '../../hooks/useIsMobile'
 
-const navLinks = [
+const socialLinks = [
   { label: 'GitHub', href: 'https://github.com/bryanrg22' },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/bryanrg22/' },
   { label: 'Scholar', href: 'https://scholar.google.com/citations?user=x5W6xScAAAAJ&hl=en' },
   { label: 'DevPost', href: 'https://devpost.com/bryanrg22' },
   { label: 'Handshake', href: 'https://usc.joinhandshake.com/profiles/bryanrg22' },
+  { label: 'Contact', href: 'mailto:bryanrg@usc.edu' },
 ]
 
 export default function TopBar() {
@@ -54,14 +55,27 @@ export default function TopBar() {
         </h1>
 
         {isMobile ? (
-          /* Mobile: Contact + Resume pills + hamburger */
-          <div className="flex items-center gap-2">
-            <a
-              href="mailto:bryanrg@usc.edu"
-              className="rounded-full border border-blue-accent/30 px-3 py-1 text-xs text-blue-accent transition-colors hover:border-blue-accent hover:bg-blue-accent/10"
+          /* Mobile: Social dropdown + Resume pill */
+          <div className="relative flex items-center gap-2">
+            <button
+              onClick={() => setMobileNavOpen(!isMobileNavOpen)}
+              className={`rounded-full border px-3 py-1 text-xs transition-colors ${
+                isMobileNavOpen
+                  ? 'border-blue-accent bg-blue-accent/10 text-blue-accent'
+                  : 'border-blue-accent/30 text-blue-accent'
+              }`}
             >
-              Contact
-            </a>
+              Social
+              <svg
+                width="10"
+                height="10"
+                viewBox="0 0 10 10"
+                fill="none"
+                className={`ml-1 inline-block transition-transform ${isMobileNavOpen ? 'rotate-180' : ''}`}
+              >
+                <path d="M2 4l3 3 3-3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
             <a
               href="/resume.pdf"
               target="_blank"
@@ -70,31 +84,37 @@ export default function TopBar() {
             >
               Resume
             </a>
-            <button
-              onClick={() => setMobileNavOpen(!isMobileNavOpen)}
-              className="ml-1 flex h-9 w-9 items-center justify-center rounded-lg text-golden transition-colors hover:bg-golden/10"
-              aria-label="Toggle menu"
-            >
-              <motion.div
-                animate={isMobileNavOpen ? { rotate: 90 } : { rotate: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                {isMobileNavOpen ? (
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M4 4l12 12M16 4L4 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                  </svg>
-                ) : (
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                  </svg>
-                )}
-              </motion.div>
-            </button>
+
+            {/* Social dropdown */}
+            <AnimatePresence>
+              {isMobileNavOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -4, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -4, scale: 0.95 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute top-full right-0 mt-2 min-w-[180px] overflow-hidden rounded-xl border border-golden/10 bg-garage-dark/95 shadow-xl backdrop-blur-xl"
+                >
+                  {socialLinks.map((link) => (
+                    <a
+                      key={link.label}
+                      href={link.href}
+                      target={link.href.startsWith('mailto:') ? undefined : '_blank'}
+                      rel="noopener noreferrer"
+                      onClick={() => setMobileNavOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-cream transition-colors hover:bg-golden/10 hover:text-golden"
+                    >
+                      {link.label}
+                    </a>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         ) : (
-          /* Desktop: full nav row */
+          /* Desktop: full nav row — unchanged */
           <nav className="flex items-center gap-4">
-            {navLinks.map((link) => (
+            {socialLinks.filter(l => !l.href.startsWith('mailto:')).map((link) => (
               <a
                 key={link.label}
                 href={link.href}
@@ -122,34 +142,6 @@ export default function TopBar() {
           </nav>
         )}
       </div>
-
-      {/* Mobile dropdown */}
-      <AnimatePresence>
-        {isMobile && isMobileNavOpen && (
-          <motion.nav
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25, ease: 'easeInOut' }}
-            className="overflow-hidden border-b border-golden/10 bg-garage-dark/95 backdrop-blur-xl"
-          >
-            <div className="flex flex-col px-4 py-2">
-              {navLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => setMobileNavOpen(false)}
-                  className="flex items-center gap-3 border-l-2 border-golden/30 py-3 pl-4 text-sm text-cream transition-colors hover:border-golden hover:text-golden"
-                >
-                  {link.label}
-                </a>
-              ))}
-            </div>
-          </motion.nav>
-        )}
-      </AnimatePresence>
     </header>
   )
 }

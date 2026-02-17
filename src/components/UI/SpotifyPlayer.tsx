@@ -40,6 +40,7 @@ export default function SpotifyPlayer() {
                   height: '60vh',
                   zIndex: 50,
                   pointerEvents: 'none',
+                  overflow: 'hidden',
                 }
               : {
                   position: 'fixed',
@@ -72,12 +73,10 @@ export default function SpotifyPlayer() {
                 ? {
                     position: 'absolute',
                     top: '80px',
-                    left: '16px',
-                    right: '16px',
-                    bottom: '16px',
-                    width: 'calc(100% - 32px)',
-                    height: 'calc(100% - 96px)',
-                    borderRadius: '12px',
+                    left: '0',
+                    right: '0',
+                    bottom: '0',
+                    borderRadius: '12px 12px 0 0',
                     pointerEvents: 'auto',
                   }
                 : {
