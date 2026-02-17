@@ -61,6 +61,9 @@ export default function CameraController() {
 
       const onTouchStart = (e: TouchEvent) => {
         if (e.touches.length !== 1) return
+        // Ignore touches that start on UI overlays (tab bar, panels, buttons)
+        const target = e.target as HTMLElement
+        if (target.closest('nav, button, [class*="InfoPanel"], [class*="TopBar"]')) return
         tracking = true
         isTouching.current = true
         const touch = e.touches[0]
