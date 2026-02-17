@@ -65,6 +65,7 @@ export interface PortfolioItem {
   color: string
   cameraPosition: [number, number, number]
   cameraTarget: [number, number, number]
+  mobileCameraPosition?: [number, number, number]
   experienceEntries?: ExperienceEntry[]
   skillCategories?: SkillCategory[]
   projectEntries?: ProjectEntry[]
@@ -264,6 +265,7 @@ export const portfolioItems: PortfolioItem[] = [
     color: '#CC4444',
     cameraPosition: [-3.05, 1.6, 1.0],
     cameraTarget: [-3.05, 1.38, -0.9],
+    mobileCameraPosition: [-3.05, 1.8, 3.0],
   },
   {
     id: 'awards',

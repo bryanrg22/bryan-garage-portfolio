@@ -108,6 +108,9 @@ export default function CameraController() {
     gsap.killTweensOf(lookAtTarget.current)
 
     if (activeItem) {
+      const camPos = (isMobile && isPortrait && activeItem.mobileCameraPosition)
+        ? activeItem.mobileCameraPosition
+        : activeItem.cameraPosition
       mode.current = 'animating'
       const tl = gsap.timeline({
         onComplete: () => {
@@ -118,9 +121,9 @@ export default function CameraController() {
       tl.to(
         camera.position,
         {
-          x: activeItem.cameraPosition[0],
-          y: activeItem.cameraPosition[1],
-          z: activeItem.cameraPosition[2],
+          x: camPos[0],
+          y: camPos[1],
+          z: camPos[2],
           duration: 1.2,
           ease: 'power3.inOut',
         },
@@ -178,7 +181,7 @@ export default function CameraController() {
 
       tweenRef.current = tl
     }
-  }, [activeItem, camera, defaultPos])
+  }, [activeItem, camera, defaultPos, isMobile, isPortrait])
 
   // Parallax multipliers: larger on mobile for swipe-to-look (~35deg H, ~18deg V)
   const parallaxX = isMobile ? 1.2 : 0.3
