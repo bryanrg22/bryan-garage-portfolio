@@ -80,9 +80,9 @@ export default function CameraController() {
         const dy = (touch.clientY - lastTouch.current.y) / window.innerHeight
 
         if (isPortrait) {
-          // Mobile portrait: accumulate rotation (swipe left → look left)
-          const yawDelta = -dx * 3.0
-          const pitchDelta = -dy * 1.5
+          // Mobile portrait: accumulate rotation (swipe right → look left, like dragging the world)
+          const yawDelta = dx * 1.2
+          const pitchDelta = dy * 0.6
           rotation.current.yaw = Math.max(-1, Math.min(1, rotation.current.yaw + yawDelta))
           rotation.current.pitch = Math.max(-1, Math.min(1, rotation.current.pitch + pitchDelta))
           rotVelocity.current.yaw = yawDelta
