@@ -573,49 +573,7 @@ function ShopLight({ position, showPointLight = true }: { position: [number, num
   )
 }
 
-/** Garage roll-up door with segmented panels */
-function GarageDoor({ position }: { position: [number, number, number] }) {
-  const panelCount = 5
-  const panelHeight = 0.8
-  const doorWidth = 8
-  return (
-    <group position={position}>
-      {/* Door frame — thick metal */}
-      <mesh position={[-doorWidth / 2 - 0.15, panelCount * panelHeight / 2, 0]}>
-        <boxGeometry args={[0.3, panelCount * panelHeight + 0.4, 0.15]} />
-        <meshStandardMaterial color="#2a2a2a" roughness={0.5} metalness={0.7} />
-      </mesh>
-      <mesh position={[doorWidth / 2 + 0.15, panelCount * panelHeight / 2, 0]}>
-        <boxGeometry args={[0.3, panelCount * panelHeight + 0.4, 0.15]} />
-        <meshStandardMaterial color="#2a2a2a" roughness={0.5} metalness={0.7} />
-      </mesh>
-      {/* Door panels — rolled up at top */}
-      {Array.from({ length: panelCount }).map((_, i) => (
-        <mesh
-          key={i}
-          position={[0, panelCount * panelHeight - i * 0.12, -0.05 - i * 0.03]}
-          castShadow
-        >
-          <boxGeometry args={[doorWidth, panelHeight * 0.15, 0.04]} />
-          <meshStandardMaterial
-            color={i % 2 === 0 ? '#3a3a3a' : '#444444'}
-            roughness={0.6}
-            metalness={0.5}
-          />
-        </mesh>
-      ))}
-      {/* Door track rails */}
-      <mesh position={[-doorWidth / 2 + 0.1, 2, -0.1]}>
-        <boxGeometry args={[0.05, 4, 0.05]} />
-        <meshStandardMaterial color="#555" metalness={0.7} roughness={0.3} />
-      </mesh>
-      <mesh position={[doorWidth / 2 - 0.1, 2, -0.1]}>
-        <boxGeometry args={[0.05, 4, 0.05]} />
-        <meshStandardMaterial color="#555" metalness={0.7} roughness={0.3} />
-      </mesh>
-    </group>
-  )
-}
+
 
 export default function Garage() {
   const quality = useStore((s) => s.qualityConfig)
@@ -713,9 +671,6 @@ export default function Garage() {
           </mesh>
         </group>
       ))}
-
-      {/* ====== GARAGE DOOR — front wall opening ====== */}
-      <GarageDoor position={[0, 0, 5.5]} />
 
       {/* Front wall — panels on either side of the door opening */}
       <CorrugatedWall
