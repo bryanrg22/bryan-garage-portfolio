@@ -36,7 +36,8 @@ Single-page 3D experience with no client-side router. Navigation is driven by `a
 
 - `src/components/Scene/` — 3D scene: `GarageScene.tsx` (canvas + GLB loading), `Garage.tsx` (procedural geometry + signs), `CameraController.tsx` (GSAP camera), `objects/` (per-model GLB loaders + `InteractiveObject.tsx` wrapper)
 - `src/components/UI/` — 2D overlay: `TopBar`, `InfoPanel`, `BackButton`, `HintText`, `LoadingScreen`
-- `src/stores/useStore.ts` — Zustand store: `activeItem`, `hasInteracted`, `isLoaded`
+- `src/lib/gpuTier.ts` — GPU detection + quality config definitions (low/mid/high tiers)
+- `src/stores/useStore.ts` — Zustand store: `activeItem`, `hasInteracted`, `isLoaded`, `qualityConfig`
 - `src/data/portfolio.ts` — Portfolio content and camera presets
 - `public/models/` — Draco-compressed GLB files
 - `public/images/` — Organized subdirectories for portfolio content images (`experience/`, `projects/`, `soccer/`, `hackathons/`, `awards/`, `home/`, `breaAutoBody/`, `orgs/`, `skills/`) plus root-level logo/flag textures for garage signs
@@ -77,13 +78,16 @@ Fonts: `font-serif` = Playfair Display, `font-sans` = DM Sans (loaded from Googl
 - **Fallback geometry:** `InteractiveObject` renders custom Three.js mesh geometry when no GLB child is provided
 - **Invisible hitbox:** GLB models include a hidden `boxGeometry` mesh for reliable pointer event capture
 - **WebGL context loss** is handled in `GarageScene.tsx` by remounting the canvas via `sceneKey` state
-- **Render exceptions:** `CarLift` and `NissanGTR` are rendered as standalone decorative groups (not interactive) in `SceneContent`, gated by `allowedIds` from the load tier system
+- **Render exceptions:** `CarLift` and `NissanGTR` are rendered as standalone decorative groups (not interactive) in `SceneContent`, gated by `quality.showHeavyModels` and `allowedIds` from the load tier system
 - **Boombox Spotify embed:** Music playback uses a persistent architecture to survive panel close. `SpotifyPlayer.tsx` (rendered in `App.tsx`) owns the Spotify iframe and a "Now Playing" pill. The iframe is mounted whenever Zustand's `isMusicPlaying` is `true`. When the boombox panel is open, the iframe overlays the panel content area via fixed positioning; when closed, it's moved off-screen (`left: -9999px`) to keep audio alive. `InfoPanel.tsx` renders a spacer `<div>` instead of the iframe for the boombox branch, and uses the standard panel width (`md:w-[420px]`). The "Now Playing" pill (bottom-left) appears when music plays in the background and lets users reopen the boombox or stop playback. Tags and links are suppressed for the boombox item.
 - **Social logos** (LinkedIn, GitHub) in `Garage.tsx` open URLs directly via `window.open()` — they bypass `InteractiveObject` and the Zustand store
-- **Canvas performance flags:** `dpr={[1, 1.25]}` (caps pixel ratio on Retina), `powerPreference: 'high-performance'`, shadow maps at 512px, fog hides distant geometry
+- **GPU-tier quality scaling:** `detect-gpu` runs at module scope (`src/lib/gpuTier.ts`) and maps GPU tier 0–1 → low, 2 → mid, 3 → high. The `qualityConfig` in Zustand drives all rendering decisions: DPR, shadows, antialias, environment map, particles, decorative GLB loading, point light count, and ShopLight point lights. Defaults to `mid` before detection resolves and on detection failure.
+- **Decorative GLB tiers:** 9 pure-decorative GLBs (RedBullCan, RetroOil, WD40, DirtyRag, TrashCan, Bucket, CarJack, AirCompressor, ExtensionCord) load only on `high`. 7 semi-decorative GLBs (FifaTrophy, GoldTrophy, MLBTrophy, PythonLogo, JavaLogo, ReactLogo, GarageTools) load on `mid`+`high`. 7 essential GLBs (NvidiaLogo, AmazonLogo, MexicanFlag, WorkbenchModel, LinkedInLogo, GitHubLogo, ResumePaper) always load.
+- **Canvas performance flags:** DPR, shadows, and antialias are set from `qualityConfig` (not hardcoded). `powerPreference: 'high-performance'`, shadow maps at 512px, fog hides distant geometry
 - **InstancedMesh** is used in `Garage.tsx` for `CorrugatedWall` ridges (single draw call for repeated geometry)
 - **Texture preloading:** `useTexture.preload()` is called at module scope in `Garage.tsx` to eagerly load floor and wall textures
 - **PBR textures:** `ConcreteFloor` uses a concrete PBR set for the floor; `CorrugatedWall` uses a chipboard/plywood PBR set (color, normal, roughness) with per-wall texture repeat via `useMemo` cloning
+- **Loading screen:** `LoadingScreen` uses drei's `useProgress` to track real asset download progress. Dismisses when `progress >= 100` AND `isLoaded` (WebGL context created via `onCreated`)
 
 ### Animations
 
@@ -125,7 +129,6 @@ Scale and optional `rotation` vary per model. Decorative GLB loaders in `Garage.
 - **~40MB of GLB assets** in `public/models/` — cloning the repo is heavy.
 - **Unused dependencies:** `lenis` and `@gsap/react` are in `package.json` but never imported anywhere in `src/`. They are dead weight.
 - **Orphaned assets:** `public/models/` contains unused GLBs (`cardboard_boxes.glb`, `cpp_logo.glb`, `globe.glb`, `license_plate.glb`, `2020_kia_soul.glb`) not referenced by any component.
-- **`LoadingScreen` uses a fake progress bar** — it does not track actual GLB download progress. `isLoaded` is set when the WebGL renderer is created (`onCreated`), not when all models finish loading.
 - **`ErrorBoundary`** wraps only the 3D canvas, not the UI overlays. Its fallback shows a reload button with a WebGL compatibility hint.
 - **Mobile:** `InfoPanel` goes full-width on small screens (`w-full` → `md:w-[420px]`). No touch-specific parallax — idle camera parallax only responds to `mousemove`.
 
@@ -138,4 +141,5 @@ Scale and optional `rotation` vary per model. Decorative GLB loaders in `Garage.
    c. Create a loader component in `src/components/Scene/objects/`.
    d. Register the loader in the `GLBChild` switch in `GarageScene.tsx`.
    e. Add the item's id to the appropriate load tier in `loadTiers`.
-3. If not using a GLB, add a geometry case in `InteractiveObject.tsx` (`useObjectShape` + `ObjectGeometry`).
+3. If the model is purely decorative (not interactive), add it to `Garage.tsx` and wrap it in the appropriate quality tier conditional (`quality.showPureDecorative` or `quality.showSemiDecorative`). Essential models that must always be visible should render unconditionally.
+4. If not using a GLB, add a geometry case in `InteractiveObject.tsx` (`useObjectShape` + `ObjectGeometry`).
