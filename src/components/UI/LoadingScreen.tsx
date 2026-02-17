@@ -1,30 +1,20 @@
 import { AnimatePresence, motion } from 'motion/react'
 import { useEffect, useState } from 'react'
+import { useProgress } from '@react-three/drei'
 import { useStore } from '../../stores/useStore'
 
 export default function LoadingScreen() {
   const isLoaded = useStore((s) => s.isLoaded)
+  const progress = useProgress((s) => s.progress)
   const [show, setShow] = useState(true)
-  const [fakeProgress, setFakeProgress] = useState(0)
 
-  // Animate progress bar while waiting for actual scene render
+  // Dismiss when assets are loaded AND WebGL context is ready
   useEffect(() => {
-    if (isLoaded) {
-      // Scene confirmed rendering — fill to 100% then dismiss
-      setFakeProgress(100)
+    if (progress >= 100 && isLoaded) {
       const timer = setTimeout(() => setShow(false), 800)
       return () => clearTimeout(timer)
     }
-
-    // Slow fake progress to ~90% while loading
-    const interval = setInterval(() => {
-      setFakeProgress((p) => {
-        if (p >= 90) return 90
-        return p + (90 - p) * 0.08
-      })
-    }, 100)
-    return () => clearInterval(interval)
-  }, [isLoaded])
+  }, [progress, isLoaded])
 
   return (
     <AnimatePresence>
@@ -47,7 +37,7 @@ export default function LoadingScreen() {
           <div className="mt-6 h-0.5 w-48 overflow-hidden rounded-full bg-garage-mid">
             <motion.div
               className="h-full rounded-full bg-golden"
-              animate={{ width: `${fakeProgress}%` }}
+              animate={{ width: `${progress}%` }}
               transition={{ duration: 0.3 }}
             />
           </div>
@@ -58,7 +48,7 @@ export default function LoadingScreen() {
             transition={{ delay: 0.5 }}
             className="mt-3 text-xs text-stone"
           >
-            {Math.round(fakeProgress)}%
+            {Math.round(progress)}%
           </motion.p>
         </motion.div>
       )}

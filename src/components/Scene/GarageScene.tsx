@@ -14,7 +14,7 @@ import NissanGTR from './objects/NissanGTR'
 import ToolBox from './objects/ToolBox'
 import { portfolioItems } from '../../data/portfolio'
 import { useStore } from '../../stores/useStore'
-import { useIsMobile } from '../../hooks/useIsMobile'
+import type { QualityConfig } from '../../lib/gpuTier'
 
 // Draco decoder for compressed GLB models
 useGLTF.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/')
@@ -28,13 +28,16 @@ const loadTiers: string[][] = [
 ]
 
 /** Hook that progressively unlocks GLB model tiers with delays */
-function useProgressiveLoad() {
+function useProgressiveLoad(showHeavyModels: boolean) {
   const [allowedIds, setAllowedIds] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     let cancelled = false
     async function loadTiersSequentially() {
       for (let i = 0; i < loadTiers.length; i++) {
+        // Skip the GTR tier when heavy models are disabled
+        if (loadTiers[i].includes('gtr') && !showHeavyModels) continue
+
         // Wait before loading each tier to let the GPU breathe
         await new Promise((r) => setTimeout(r, i === 0 ? 500 : 1500))
         if (cancelled) return
@@ -47,7 +50,7 @@ function useProgressiveLoad() {
     }
     loadTiersSequentially()
     return () => { cancelled = true }
-  }, [])
+  }, [showHeavyModels])
 
   return allowedIds
 }
@@ -68,8 +71,8 @@ function GLBChild({ id }: { id: string }) {
   }
 }
 
-function SceneContent({ isMobile }: { isMobile: boolean }) {
-  const allowedIds = useProgressiveLoad()
+function SceneContent({ quality }: { quality: QualityConfig }) {
+  const allowedIds = useProgressiveLoad(quality.showHeavyModels)
 
   return (
     <>
@@ -86,16 +89,16 @@ function SceneContent({ isMobile }: { isMobile: boolean }) {
           </InteractiveObject>
         )
       })}
-      {/* Car lift — decorative only, not interactive. Hidden on mobile for performance. */}
-      {!isMobile && allowedIds.has('projects') && (
+      {/* Car lift — decorative only, not interactive. Hidden on low/mid tiers for performance. */}
+      {quality.showHeavyModels && allowedIds.has('projects') && (
         <Suspense fallback={null}>
           <group position={[2.5, 0, 2.8]}>
             <CarLift />
           </group>
         </Suspense>
       )}
-      {/* Nissan GTR R34 — decorative only, not interactive. Hidden on mobile for performance. */}
-      {!isMobile && allowedIds.has('gtr') && (
+      {/* Nissan GTR R34 — decorative only, not interactive. Hidden on low/mid tiers for performance. */}
+      {quality.showHeavyModels && allowedIds.has('gtr') && (
         <Suspense fallback={null}>
           <group position={[-4.1, 1.04, -0.82]}>
             <NissanGTR />
@@ -109,8 +112,8 @@ function SceneContent({ isMobile }: { isMobile: boolean }) {
 export default function GarageScene() {
   const setActiveItem = useStore((s) => s.setActiveItem)
   const setIsLoaded = useStore((s) => s.setIsLoaded)
+  const quality = useStore((s) => s.qualityConfig)
   const [sceneKey, setSceneKey] = useState(0)
-  const isMobile = useIsMobile()
 
   const handleCreated = useCallback(
     (state: { gl: THREE.WebGLRenderer }) => {
@@ -140,10 +143,10 @@ export default function GarageScene() {
     <div className="absolute inset-0" style={{ background: '#14120F', touchAction: 'none' }}>
       <Canvas
         key={sceneKey}
-        shadows={!isMobile}
-        dpr={isMobile ? 1 : [1, 1.25]}
+        shadows={quality.shadows}
+        dpr={quality.dpr}
         gl={{
-          antialias: !isMobile,
+          antialias: quality.antialias,
           powerPreference: 'high-performance',
           failIfMajorPerformanceCaveat: false,
         }}
@@ -152,13 +155,15 @@ export default function GarageScene() {
         onCreated={handleCreated}
       >
         <fog attach="fog" args={['#1a1408', 6, 22]} />
-        <Suspense fallback={null}>
-          <Environment preset="warehouse" environmentIntensity={0.3} />
-        </Suspense>
+        {quality.showEnvironment && (
+          <Suspense fallback={null}>
+            <Environment preset="warehouse" environmentIntensity={quality.environmentIntensity} />
+          </Suspense>
+        )}
         <CameraController />
         <Garage />
-        <Particles />
-        <SceneContent isMobile={isMobile} />
+        {quality.showParticles && <Particles />}
+        <SceneContent quality={quality} />
       </Canvas>
     </div>
   )

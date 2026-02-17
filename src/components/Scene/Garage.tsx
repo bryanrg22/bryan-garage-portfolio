@@ -2,6 +2,7 @@ import { useRef, useEffect, useState, useMemo, Suspense } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { useGLTF, useTexture, Html } from '@react-three/drei'
 import * as THREE from 'three'
+import { useStore } from '../../stores/useStore'
 
 /** Brea Auto Body sign — image texture on a plane */
 function BreaBoardSign() {
@@ -532,7 +533,7 @@ function OilDrum({ position, color = '#3d5a3d' }: { position: [number, number, n
 }
 
 /** Shop fluorescent light fixture */
-function ShopLight({ position }: { position: [number, number, number] }) {
+function ShopLight({ position, showPointLight = true }: { position: [number, number, number]; showPointLight?: boolean }) {
   return (
     <group position={position}>
       {/* Housing */}
@@ -558,14 +559,16 @@ function ShopLight({ position }: { position: [number, number, number] }) {
           emissiveIntensity={1.2}
         />
       </mesh>
-      {/* Light source */}
-      <pointLight
-        position={[0, -0.15, 0]}
-        intensity={0.4}
-        color="#fffaf0"
-        distance={5}
-        decay={2}
-      />
+      {/* Light source — skipped on low tier */}
+      {showPointLight && (
+        <pointLight
+          position={[0, -0.15, 0]}
+          intensity={0.4}
+          color="#fffaf0"
+          distance={5}
+          decay={2}
+        />
+      )}
     </group>
   )
 }
@@ -615,6 +618,8 @@ function GarageDoor({ position }: { position: [number, number, number] }) {
 }
 
 export default function Garage() {
+  const quality = useStore((s) => s.qualityConfig)
+
   return (
     <group>
       {/* ====== FLOOR ====== */}
@@ -780,8 +785,8 @@ export default function Garage() {
       </Suspense>
 
       {/* ====== SHOP LIGHTS (reduced from 3 to 2) ====== */}
-      <ShopLight position={[-2.5, 4.8, 0]} />
-      <ShopLight position={[2.5, 4.8, 0]} />
+      <ShopLight position={[-2.5, 4.8, 0]} showPointLight={quality.showShopLightPoints} />
+      <ShopLight position={[2.5, 4.8, 0]} showPointLight={quality.showShopLightPoints} />
 
       {/* ====== WORKBENCH — left side ====== */}
       {/* Tabletop */}
@@ -809,20 +814,20 @@ export default function Garage() {
       <HarvardSign />
       <CaltechSign />
 
-      {/* ====== FIFA TROPHY — on workbench, right side ====== */}
-      <Suspense fallback={null}>
-        <FifaTrophy position={[1.98, 1.46, -2.5]} />
-      </Suspense>
-
-      {/* ====== GOLD TROPHY — on workbench, next to FIFA ====== */}
-      <Suspense fallback={null}>
-        <GoldTrophy position={[2.43, 1.41, -2.5]} />
-      </Suspense>
-
-      {/* ====== MLB TROPHY — on workbench, next to gold ====== */}
-      <Suspense fallback={null}>
-        <MLBTrophy position={[2.9, 1.57, -2.5]} />
-      </Suspense>
+      {/* ====== TROPHIES — semi-decorative, on mid + high tiers ====== */}
+      {quality.showSemiDecorative && (
+        <>
+          <Suspense fallback={null}>
+            <FifaTrophy position={[1.98, 1.46, -2.5]} />
+          </Suspense>
+          <Suspense fallback={null}>
+            <GoldTrophy position={[2.43, 1.41, -2.5]} />
+          </Suspense>
+          <Suspense fallback={null}>
+            <MLBTrophy position={[2.9, 1.57, -2.5]} />
+          </Suspense>
+        </>
+      )}
 
       {/* ====== NVIDIA LOGO — on workbench, near macbook ====== */}
       <Suspense fallback={null}>
@@ -834,25 +839,30 @@ export default function Garage() {
         <AmazonLogo position={[-2.85, 1.36, -1.1]} />
       </Suspense>
 
-      {/* ====== RED BULL CAN — on workbench ====== */}
-      <Suspense fallback={null}>
-        <RedBullCan position={[-1.45, 1.21, -1.1]} />
-      </Suspense>
+      {/* ====== PURE DECORATIVE — only on high tier ====== */}
+      {quality.showPureDecorative && (
+        <>
+          {/* RED BULL CAN — on workbench */}
+          <Suspense fallback={null}>
+            <RedBullCan position={[-1.45, 1.21, -1.1]} />
+          </Suspense>
 
-      {/* ====== RETRO OIL — under workbench ====== */}
-      <Suspense fallback={null}>
-        <RetroOil position={[-3, 0.0, 0.5]} />
-      </Suspense>
+          {/* RETRO OIL — under workbench */}
+          <Suspense fallback={null}>
+            <RetroOil position={[-3, 0.0, 0.5]} />
+          </Suspense>
 
-      {/* ====== WD-40 — near retro oil ====== */}
-      <Suspense fallback={null}>
-        <WD40 position={[-2.5, 0, 0.5]} />
-      </Suspense>
+          {/* WD-40 — near retro oil */}
+          <Suspense fallback={null}>
+            <WD40 position={[-2.5, 0, 0.5]} />
+          </Suspense>
 
-      {/* ====== DIRTY RAG — near retro oil ====== */}
-      <Suspense fallback={null}>
-        <DirtyRag position={[-3.5, 0, 0.8]} />
-      </Suspense>
+          {/* DIRTY RAG — near retro oil */}
+          <Suspense fallback={null}>
+            <DirtyRag position={[-3.5, 0, 0.8]} />
+          </Suspense>
+        </>
+      )}
 
       {/* ====== TIRE STACKS — right front corner ====== */}
       <TireStack position={[4.3, 0.1, 3.5]} count={3} />
@@ -881,27 +891,35 @@ export default function Garage() {
         </mesh>
       </group>
 
-      {/* ====== TRASH CAN — in front of oil drums ====== */}
-      <Suspense fallback={null}>
-        <TrashCan position={[-2.8, 0.25, 1.85]} />
-      </Suspense>
+      {quality.showPureDecorative && (
+        <>
+          {/* TRASH CAN — in front of oil drums */}
+          <Suspense fallback={null}>
+            <TrashCan position={[-2.8, 0.25, 1.85]} />
+          </Suspense>
 
-      {/* ====== BUCKET — next to tires ====== */}
-      <Suspense fallback={null}>
-        <Bucket position={[3.5, 0, 3.5]} />
-      </Suspense>
+          {/* BUCKET — next to tires */}
+          <Suspense fallback={null}>
+            <Bucket position={[3.5, 0, 3.5]} />
+          </Suspense>
+        </>
+      )}
 
-
-      {/* ====== PROGRAMMING LOGOS — floor, in front of toolbox ====== */}
-      <Suspense fallback={null}>
-        <PythonLogo position={[1.3, 0.05, 1.16]} />
-      </Suspense>
-      <Suspense fallback={null}>
-        <JavaLogo position={[2.2, 0.18, 1.6]} />
-      </Suspense>
-      <Suspense fallback={null}>
-        <ReactLogo position={[2.7, 0.05, 1.1]} />
-      </Suspense>
+      {/* ====== SEMI-DECORATIVE — on mid + high tiers ====== */}
+      {quality.showSemiDecorative && (
+        <>
+          {/* PROGRAMMING LOGOS — floor, in front of toolbox */}
+          <Suspense fallback={null}>
+            <PythonLogo position={[1.3, 0.05, 1.16]} />
+          </Suspense>
+          <Suspense fallback={null}>
+            <JavaLogo position={[2.2, 0.18, 1.6]} />
+          </Suspense>
+          <Suspense fallback={null}>
+            <ReactLogo position={[2.7, 0.05, 1.1]} />
+          </Suspense>
+        </>
+      )}
 
       {/* ====== SOCIAL LOGOS — floor, front-center, clickable ====== */}
       <Suspense fallback={null}>
@@ -914,34 +932,36 @@ export default function Garage() {
         <ResumePaper position={[0.7, 0.01, 3.1]} />
       </Suspense>
 
-      {/* ====== GARAGE TOOLS — right side, near toolbox ====== */}
-      <Suspense fallback={null}>
-        <GarageTools position={[1.9, 0, 1.5]} />
-      </Suspense>
+      {/* ====== SEMI-DECORATIVE — garage tools ====== */}
+      {quality.showSemiDecorative && (
+        <Suspense fallback={null}>
+          <GarageTools position={[1.9, 0, 1.5]} />
+        </Suspense>
+      )}
 
-      {/* ====== CAR JACK — right side ====== */}
-      <Suspense fallback={null}>
-        <CarJack position={[3.75, 0, 1]} />
-      </Suspense>
+      {/* ====== PURE DECORATIVE — car jack, air compressor, extension cord ====== */}
+      {quality.showPureDecorative && (
+        <>
+          <Suspense fallback={null}>
+            <CarJack position={[3.75, 0, 1]} />
+          </Suspense>
+          <Suspense fallback={null}>
+            <AirCompressor position={[3.8, 0, -1]} />
+          </Suspense>
+          <Suspense fallback={null}>
+            <ExtensionCord position={[-2, 0, 1.5]} />
+          </Suspense>
+        </>
+      )}
 
-      {/* ====== AIR COMPRESSOR — right wall ====== */}
-      <Suspense fallback={null}>
-        <AirCompressor position={[3.8, 0, -1]} />
-      </Suspense>
-
-      {/* ====== EXTENSION CORD — on the floor ====== */}
-      <Suspense fallback={null}>
-        <ExtensionCord position={[-2, 0, 1.5]} />
-      </Suspense>
-
-      {/* ====== LIGHTING (reduced from 11 to 8) ====== */}
+      {/* ====== LIGHTING — scaled by quality tier ====== */}
 
       {/* Main warm directional — sun streaming through open garage door */}
       <directionalLight
         position={[3, 6, 8]}
         intensity={2.5}
         color="#F4C963"
-        castShadow
+        castShadow={quality.shadows}
         shadow-mapSize-width={512}
         shadow-mapSize-height={512}
         shadow-camera-far={25}
@@ -961,17 +981,21 @@ export default function Garage() {
       {/* Warm fill ambient */}
       <ambientLight intensity={0.5} color="#E8A838" />
 
-      {/* Cool accent — workbench area */}
-      <pointLight position={[-3, 2.5, 0]} intensity={0.5} color="#5B9BD5" distance={6} />
-
-      {/* Warm center area */}
+      {/* Warm center area — always present (essential illumination) */}
       <pointLight position={[0, 3, 2]} intensity={0.8} color="#F4C963" distance={10} />
 
       {/* Back fill — prevents pure black */}
       <hemisphereLight args={['#F4C963', '#2a2420', 0.4]} />
 
-      {/* Car lift spotlight */}
-      <pointLight position={[2, 2.5, 0.5]} intensity={0.5} color="#F4C963" distance={4} decay={2} />
+      {/* Cool accent — workbench area (mid + high only) */}
+      {quality.maxPointLights >= 2 && (
+        <pointLight position={[-3, 2.5, 0]} intensity={0.5} color="#5B9BD5" distance={6} />
+      )}
+
+      {/* Car lift spotlight (mid + high only) */}
+      {quality.maxPointLights >= 3 && (
+        <pointLight position={[2, 2.5, 0.5]} intensity={0.5} color="#F4C963" distance={4} decay={2} />
+      )}
     </group>
   )
 }
