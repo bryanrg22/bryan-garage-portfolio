@@ -16,6 +16,18 @@ const MOBILE_CAMERA_POSITION: [number, number, number] = [
   DEFAULT_CAMERA_POSITION[2] + 2.5,
 ]
 
+// Default yaw/pitch for mobile portrait idle (camera faces center of room)
+const defaultTarget = new THREE.Vector3(...DEFAULT_CAMERA_TARGET)
+const mobileDefaultPos = new THREE.Vector3(...MOBILE_CAMERA_POSITION)
+const defaultDirection = new THREE.Vector3().subVectors(defaultTarget, mobileDefaultPos)
+const DEFAULT_YAW = Math.atan2(defaultDirection.x, defaultDirection.z)
+const DEFAULT_PITCH = Math.atan2(defaultDirection.y, Math.sqrt(defaultDirection.x ** 2 + defaultDirection.z ** 2))
+
+// Rotation limits for mobile portrait swipe-to-look
+const YAW_RANGE = (130 / 180) * Math.PI   // ±65 degrees from center
+const PITCH_RANGE = (20 / 180) * Math.PI  // ±10 degrees from center
+const LOOK_DISTANCE = defaultDirection.length()
+
 export default function CameraController() {
   const { camera } = useThree()
   const mode = useRef<CameraMode>('idle')
@@ -28,13 +40,21 @@ export default function CameraController() {
   const tweenRef = useRef<gsap.core.Timeline | null>(null)
   const isMobile = useIsMobile()
 
+  // Mobile portrait rotation state (yaw/pitch as normalized -1..1)
+  const rotation = useRef({ yaw: 0, pitch: 0 })
+  const smoothRotation = useRef({ yaw: 0, pitch: 0 })
+  const rotVelocity = useRef({ yaw: 0, pitch: 0 })
+  const isTouching = useRef(false)
+
   const isPortrait = useIsPortrait()
   const activeItem = useStore((s) => s.activeItem)
 
-  // Effective default position based on device — only zoom out in portrait
-  const defaultPos = (isMobile && isPortrait) ? MOBILE_CAMERA_POSITION : DEFAULT_CAMERA_POSITION
+  const isMobilePortrait = isMobile && isPortrait
 
-  // Track mouse/touch position for parallax
+  // Effective default position based on device — only zoom out in portrait
+  const defaultPos = isMobilePortrait ? MOBILE_CAMERA_POSITION : DEFAULT_CAMERA_POSITION
+
+  // Track mouse/touch position for parallax / rotation
   useEffect(() => {
     if (isMobile) {
       let tracking = false
@@ -42,12 +62,15 @@ export default function CameraController() {
       const onTouchStart = (e: TouchEvent) => {
         if (e.touches.length !== 1) return
         tracking = true
+        isTouching.current = true
         const touch = e.touches[0]
         lastTouch.current.x = touch.clientX
         lastTouch.current.y = touch.clientY
         // Kill momentum when finger touches down
         velocity.current.x = 0
         velocity.current.y = 0
+        rotVelocity.current.yaw = 0
+        rotVelocity.current.pitch = 0
       }
 
       const onTouchMove = (e: TouchEvent) => {
@@ -56,13 +79,21 @@ export default function CameraController() {
         const dx = (touch.clientX - lastTouch.current.x) / window.innerWidth
         const dy = (touch.clientY - lastTouch.current.y) / window.innerHeight
 
-        // Accumulate position (scaled for ~35deg horizontal, ~18deg vertical)
-        mouse.current.x = Math.max(-1, Math.min(1, mouse.current.x - dx * 2.5))
-        mouse.current.y = Math.max(-1, Math.min(1, mouse.current.y - dy * 2.5))
-
-        // Track velocity for momentum
-        velocity.current.x = -dx * 2.5
-        velocity.current.y = -dy * 2.5
+        if (isPortrait) {
+          // Mobile portrait: accumulate rotation (swipe left → look left)
+          const yawDelta = -dx * 3.0
+          const pitchDelta = -dy * 1.5
+          rotation.current.yaw = Math.max(-1, Math.min(1, rotation.current.yaw + yawDelta))
+          rotation.current.pitch = Math.max(-1, Math.min(1, rotation.current.pitch + pitchDelta))
+          rotVelocity.current.yaw = yawDelta
+          rotVelocity.current.pitch = pitchDelta
+        } else {
+          // Mobile landscape: position-based parallax (existing behavior)
+          mouse.current.x = Math.max(-1, Math.min(1, mouse.current.x - dx * 2.5))
+          mouse.current.y = Math.max(-1, Math.min(1, mouse.current.y - dy * 2.5))
+          velocity.current.x = -dx * 2.5
+          velocity.current.y = -dy * 2.5
+        }
 
         lastTouch.current.x = touch.clientX
         lastTouch.current.y = touch.clientY
@@ -70,6 +101,7 @@ export default function CameraController() {
 
       const onTouchEnd = () => {
         tracking = false
+        isTouching.current = false
         // velocity is preserved — useFrame will apply inertia decay
       }
 
@@ -89,7 +121,7 @@ export default function CameraController() {
       window.addEventListener('mousemove', onMouseMove)
       return () => window.removeEventListener('mousemove', onMouseMove)
     }
-  }, [isMobile])
+  }, [isMobile, isPortrait])
 
   // Set initial camera position
   useEffect(() => {
@@ -108,7 +140,7 @@ export default function CameraController() {
     gsap.killTweensOf(lookAtTarget.current)
 
     if (activeItem) {
-      const camPos = (isMobile && isPortrait && activeItem.mobileCameraPosition)
+      const camPos = (isMobilePortrait && activeItem.mobileCameraPosition)
         ? activeItem.mobileCameraPosition
         : activeItem.cameraPosition
       mode.current = 'animating'
@@ -145,6 +177,15 @@ export default function CameraController() {
       tweenRef.current = tl
     } else {
       mode.current = 'animating'
+
+      // Reset rotation state when returning home
+      rotation.current.yaw = 0
+      rotation.current.pitch = 0
+      smoothRotation.current.yaw = 0
+      smoothRotation.current.pitch = 0
+      rotVelocity.current.yaw = 0
+      rotVelocity.current.pitch = 0
+
       const tl = gsap.timeline({
         onComplete: () => {
           // Force-set final positions to guarantee reset even if tween was imprecise
@@ -181,33 +222,64 @@ export default function CameraController() {
 
       tweenRef.current = tl
     }
-  }, [activeItem, camera, defaultPos, isMobile, isPortrait])
+  }, [activeItem, camera, defaultPos, isMobilePortrait])
 
-  // Parallax multipliers: larger on mobile for swipe-to-look (~35deg H, ~18deg V)
-  const parallaxX = isMobile ? 1.2 : 0.3
-  const parallaxY = isMobile ? 0.6 : 0.15
+  // Desktop parallax multipliers
+  const parallaxX = 0.3
+  const parallaxY = 0.15
+
+  // Mobile landscape parallax multipliers
+  const mLandscapeX = 1.2
+  const mLandscapeY = 0.6
 
   useFrame(() => {
     if (mode.current === 'idle') {
-      if (isMobile) {
-        // Apply momentum/inertia: decay velocity and accumulate into position
+      if (isMobilePortrait) {
+        // Mobile portrait: rotation-based swipe-to-look (Street View style)
+        const friction = 0.92
+        if (!isTouching.current) {
+          rotVelocity.current.yaw *= friction
+          rotVelocity.current.pitch *= friction
+          rotation.current.yaw = Math.max(-1, Math.min(1, rotation.current.yaw + rotVelocity.current.yaw))
+          rotation.current.pitch = Math.max(-1, Math.min(1, rotation.current.pitch + rotVelocity.current.pitch))
+        }
+
+        // Smooth interpolation
+        smoothRotation.current.yaw += (rotation.current.yaw - smoothRotation.current.yaw) * 0.1
+        smoothRotation.current.pitch += (rotation.current.pitch - smoothRotation.current.pitch) * 0.1
+
+        // Convert normalized rotation to yaw/pitch angles
+        const yaw = DEFAULT_YAW + smoothRotation.current.yaw * YAW_RANGE
+        const pitch = DEFAULT_PITCH + smoothRotation.current.pitch * PITCH_RANGE
+
+        // Compute look-at target from yaw/pitch
+        const lookX = defaultPos[0] + Math.sin(yaw) * Math.cos(pitch) * LOOK_DISTANCE
+        const lookY = defaultPos[1] + Math.sin(pitch) * LOOK_DISTANCE
+        const lookZ = defaultPos[2] + Math.cos(yaw) * Math.cos(pitch) * LOOK_DISTANCE
+
+        lookAtTarget.current.set(lookX, lookY, lookZ)
+        camera.position.set(...defaultPos)
+      } else if (isMobile) {
+        // Mobile landscape: position-based parallax (existing behavior)
         const friction = 0.92
         velocity.current.x *= friction
         velocity.current.y *= friction
         mouse.current.x = Math.max(-1, Math.min(1, mouse.current.x + velocity.current.x))
         mouse.current.y = Math.max(-1, Math.min(1, mouse.current.y + velocity.current.y))
 
-        // Smooth follow
         smoothMouse.current.x += (mouse.current.x - smoothMouse.current.x) * 0.08
         smoothMouse.current.y += (mouse.current.y - smoothMouse.current.y) * 0.08
+
+        camera.position.x = defaultPos[0] + smoothMouse.current.x * mLandscapeX
+        camera.position.y = defaultPos[1] - smoothMouse.current.y * mLandscapeY
       } else {
         // Desktop: direct smooth follow
         smoothMouse.current.x += (mouse.current.x - smoothMouse.current.x) * 0.05
         smoothMouse.current.y += (mouse.current.y - smoothMouse.current.y) * 0.05
-      }
 
-      camera.position.x = defaultPos[0] + smoothMouse.current.x * parallaxX
-      camera.position.y = defaultPos[1] - smoothMouse.current.y * parallaxY
+        camera.position.x = defaultPos[0] + smoothMouse.current.x * parallaxX
+        camera.position.y = defaultPos[1] - smoothMouse.current.y * parallaxY
+      }
     }
 
     // Always look at the target (during idle + animating + focused)

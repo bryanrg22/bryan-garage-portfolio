@@ -226,6 +226,7 @@ export const portfolioItems: PortfolioItem[] = [
     color: '#4DB8B0',
     cameraPosition: [2, 1, 3],
     cameraTarget: [2, 0.3, 0.5],
+    mobileCameraPosition: [2, 1.3, 5.5],
   },
   {
     id: 'experience',
