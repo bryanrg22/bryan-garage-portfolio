@@ -1,27 +1,19 @@
-import { useSyncExternalStore } from 'react'
 import { useStore } from '../../stores/useStore'
 import { useIsMobile } from '../../hooks/useIsMobile'
+import { useIsPortrait } from '../../hooks/useIsPortrait'
 import { portfolioItems } from '../../data/portfolio'
-
-// Portrait-only check: hide tab bar in landscape
-const portraitQuery = '(orientation: portrait)'
-function subscribePortrait(cb: () => void) {
-  const mql = window.matchMedia(portraitQuery)
-  mql.addEventListener('change', cb)
-  return () => mql.removeEventListener('change', cb)
-}
-function getPortrait() { return window.matchMedia(portraitQuery).matches }
-function getPortraitServer() { return true }
-
-function useIsPortrait() {
-  return useSyncExternalStore(subscribePortrait, getPortrait, getPortraitServer)
-}
 
 const tabs = [
   { id: '_home', label: 'Home', icon: (
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
       <path d="M3 10l7-7 7 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M5 8.5V16a1 1 0 001 1h8a1 1 0 001-1V8.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  ) },
+  { id: 'experience', label: 'Work', icon: (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <rect x="2" y="6" width="16" height="11" rx="1.5" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M7 6V4.5A1.5 1.5 0 018.5 3h3A1.5 1.5 0 0113 4.5V6" stroke="currentColor" strokeWidth="1.5" />
     </svg>
   ) },
   { id: 'projects', label: 'Projects', icon: (
@@ -42,12 +34,6 @@ const tabs = [
       <path d="M14.5 6.5L17 4M17 4l-1-3M17 4l3-1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M10.5 10.5l-7 7a1.4 1.4 0 002 2l7-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M12.5 8.5l-2 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  ) },
-  { id: 'experience', label: 'Work', icon: (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-      <rect x="2" y="6" width="16" height="11" rx="1.5" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M7 6V4.5A1.5 1.5 0 018.5 3h3A1.5 1.5 0 0113 4.5V6" stroke="currentColor" strokeWidth="1.5" />
     </svg>
   ) },
   { id: 'awards', label: 'Awards', icon: (

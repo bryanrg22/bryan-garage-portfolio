@@ -508,7 +508,7 @@ function MobileBottomSheet() {
             style={isDragging ? { transform: `translateY(${Math.max(0, translateY)}px)` } : undefined}
             className={`pointer-events-auto fixed bottom-0 left-0 right-0 z-[45] flex flex-col rounded-t-2xl border-t border-golden/10 bg-[rgba(20,18,15,0.97)] backdrop-blur-xl ${sheetItem.id === 'boombox' ? 'overflow-hidden' : 'overflow-y-auto'}`}
           >
-            <div style={{ height: isExpanded ? '92vh' : '60vh', display: 'flex', flexDirection: 'column' }}>
+            <div style={{ height: isExpanded ? '92vh' : '70vh', display: 'flex', flexDirection: 'column' }}>
               {/* Drag handle */}
               <div
                 {...handleProps}

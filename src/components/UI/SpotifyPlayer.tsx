@@ -37,7 +37,7 @@ export default function SpotifyPlayer() {
                   bottom: 0,
                   left: 0,
                   right: 0,
-                  height: '60vh',
+                  height: '70vh',
                   zIndex: 50,
                   pointerEvents: 'none',
                   overflow: 'hidden',

@@ -1,12 +1,15 @@
 import { AnimatePresence, motion } from 'motion/react'
 import { useStore } from '../../stores/useStore'
 import { useIsMobile } from '../../hooks/useIsMobile'
+import { useIsPortrait } from '../../hooks/useIsPortrait'
 
 export default function HintText() {
   const activeItem = useStore((s) => s.activeItem)
   const hasInteracted = useStore((s) => s.hasInteracted)
   const isMobile = useIsMobile()
-  const showHint = activeItem === null
+  const isPortrait = useIsPortrait()
+  // Hide in landscape — tab bar is also hidden there
+  const showHint = activeItem === null && !(isMobile && !isPortrait)
 
   return (
     <AnimatePresence>

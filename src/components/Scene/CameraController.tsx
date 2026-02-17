@@ -5,6 +5,7 @@ import gsap from 'gsap'
 import { useStore } from '../../stores/useStore'
 import { DEFAULT_CAMERA_POSITION, DEFAULT_CAMERA_TARGET } from '../../data/portfolio'
 import { useIsMobile } from '../../hooks/useIsMobile'
+import { useIsPortrait } from '../../hooks/useIsPortrait'
 
 type CameraMode = 'idle' | 'animating' | 'focused'
 
@@ -27,10 +28,11 @@ export default function CameraController() {
   const tweenRef = useRef<gsap.core.Timeline | null>(null)
   const isMobile = useIsMobile()
 
+  const isPortrait = useIsPortrait()
   const activeItem = useStore((s) => s.activeItem)
 
-  // Effective default position based on device
-  const defaultPos = isMobile ? MOBILE_CAMERA_POSITION : DEFAULT_CAMERA_POSITION
+  // Effective default position based on device — only zoom out in portrait
+  const defaultPos = (isMobile && isPortrait) ? MOBILE_CAMERA_POSITION : DEFAULT_CAMERA_POSITION
 
   // Track mouse/touch position for parallax
   useEffect(() => {
