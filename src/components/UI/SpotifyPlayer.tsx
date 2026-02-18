@@ -1,10 +1,13 @@
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useStore } from '../../stores/useStore'
 import { useIsMobile } from '../../hooks/useIsMobile'
 import { portfolioItems } from '../../data/portfolio'
 
 const boomboxItem = portfolioItems.find((item) => item.id === 'boombox')!
+
+// Wait for camera fly-in before revealing the Spotify embed in the panel
+const REVEAL_DELAY = 1000
 
 export default function SpotifyPlayer() {
   const activeItem = useStore((s) => s.activeItem)
@@ -13,16 +16,28 @@ export default function SpotifyPlayer() {
   const setMusicPlaying = useStore((s) => s.setMusicPlaying)
   const isMobile = useIsMobile()
 
+  const isSheetExpanded = useStore((s) => s.isBottomSheetExpanded)
+
   const isBoomboxActive = activeItem?.id === 'boombox'
 
-  // Auto-activate music when boombox panel opens
+  // Delay visible positioning until after the camera animation finishes
+  const [panelReady, setPanelReady] = useState(false)
+
   useEffect(() => {
     if (isBoomboxActive) {
-      setMusicPlaying(true)
+      const timer = setTimeout(() => setPanelReady(true), REVEAL_DELAY)
+      return () => clearTimeout(timer)
     }
-  }, [isBoomboxActive, setMusicPlaying])
+    setPanelReady(false)
+  }, [isBoomboxActive])
 
-  if (!isMusicPlaying) return null
+  // Show iframe when boombox panel is open OR when music is playing in background
+  const showIframe = isBoomboxActive || isMusicPlaying
+
+  // Only position the iframe visually in the panel after the delay
+  const showInPanel = isBoomboxActive && panelReady
+
+  if (!showIframe) return null
 
   return (
     <>
@@ -30,17 +45,18 @@ export default function SpotifyPlayer() {
            Wrapper is pointer-events:none so the InfoPanel close button stays clickable. */}
       <div
         style={
-          isBoomboxActive
+          showInPanel
             ? isMobile
               ? {
                   position: 'fixed',
                   bottom: 0,
                   left: 0,
                   right: 0,
-                  height: '70vh',
+                  height: isSheetExpanded ? '92vh' : '70vh',
                   zIndex: 50,
                   pointerEvents: 'none',
                   overflow: 'hidden',
+                  transition: 'height 0.3s ease',
                 }
               : {
                   position: 'fixed',
@@ -68,11 +84,11 @@ export default function SpotifyPlayer() {
           allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
           loading="lazy"
           style={
-            isBoomboxActive
+            showInPanel
               ? isMobile
                 ? {
                     position: 'absolute',
-                    top: '80px',
+                    top: '150px',
                     left: '0',
                     right: '0',
                     bottom: '0',
@@ -92,6 +108,12 @@ export default function SpotifyPlayer() {
                   }
               : undefined
           }
+          onLoad={() => {
+            // Mark music as playing once the iframe loads while the panel is open
+            if (isBoomboxActive) {
+              setMusicPlaying(true)
+            }
+          }}
         />
       </div>
 

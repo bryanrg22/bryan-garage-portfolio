@@ -465,9 +465,16 @@ function MobileBottomSheet() {
     setActiveItem(null)
   }, [setActiveItem])
 
-  const { translateY, isDragging, isExpanded, handleProps, reset } = useBottomSheetDrag({
+  const setBottomSheetExpanded = useStore((s) => s.setBottomSheetExpanded)
+
+  const { translateY, isDragging, snapState, heightVh, handleProps, reset } = useBottomSheetDrag({
     onDismiss: dismiss,
   })
+
+  // Sync expanded state to the store so SpotifyPlayer can match the sheet height
+  useEffect(() => {
+    setBottomSheetExpanded(snapState === 'full')
+  }, [snapState, setBottomSheetExpanded])
 
   // Reset drag state when sheet item changes
   useEffect(() => {
@@ -502,13 +509,13 @@ function MobileBottomSheet() {
           <motion.aside
             key={sheetItem.id}
             initial={{ y: '100%' }}
-            animate={{ y: 0 }}
+            animate={{ y: 0, height: `${heightVh}vh` }}
             exit={{ y: '100%' }}
-            transition={isDragging ? { duration: 0 } : { type: 'spring', damping: 28, stiffness: 260 }}
-            style={isDragging ? { transform: `translateY(${Math.max(0, translateY)}px)` } : undefined}
+            transition={isDragging ? { duration: 0 } : { type: 'spring', damping: 25, stiffness: 300 }}
+            style={isDragging ? { transform: `translateY(${translateY}px)`, height: `${heightVh}vh` } : undefined}
             className={`pointer-events-auto fixed bottom-0 left-0 right-0 z-[45] flex flex-col rounded-t-2xl border-t border-golden/10 bg-[rgba(20,18,15,0.97)] backdrop-blur-xl ${sheetItem.id === 'boombox' ? 'overflow-hidden' : 'overflow-y-auto'}`}
           >
-            <div style={{ height: isExpanded ? '92vh' : '70vh', display: 'flex', flexDirection: 'column' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
               {/* Drag handle */}
               <div
                 {...handleProps}

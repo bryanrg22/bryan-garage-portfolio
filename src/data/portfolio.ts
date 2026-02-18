@@ -101,17 +101,17 @@ export const portfolioItems: PortfolioItem[] = [
     projectEntries: [
       {
         name: 'Basis',
-        description: 'AI-powered cost segregation platform with multi-agent AI using YOLOv8, CLIP, and OpenAI Vision for automated building component classification.',
-        achievement: 'Won LavaLab Demo Night (Best Traction)',
-        techStack: ['Next.js', 'React', 'TypeScript', 'Python', 'PyTorch', 'OpenAI Vision', 'CLIP', 'YOLOv8', 'Docker', 'RAG'],
+        description: 'Award-winning agentic AI platform for cost segregation. Built a full-stack workflow with LangGraph and a multi-agent vision pipeline (Grounding DINO → SAM2 → GPT-5.2). Features an IRS-grounded Agentic RAG system combining BM25 and FAISS search with citation-backed results. 2 paying customers from top-5 firms.',
+        achievement: "Won LavaLab Demo Night F'25 (Best Traction)",
+        techStack: ['LangGraph', 'Python', 'GPT-5.2', 'Grounding DINO', 'SAM2', 'FAISS', 'BM25', 'MCP', 'React', 'TypeScript'],
         links: [{ label: 'GitHub', url: 'https://github.com/bryanrg22/Basis_Info' }],
         logo: '/images/projects/basis_logo.png',
       },
       {
         name: 'Lambda Rim',
-        description: 'NBA fantasy sports analytics with Poisson distributions, Monte Carlo simulations, and GARCH volatility forecasting.',
-        achievement: '78%+ win rate, $10 → $3,000 profit',
-        techStack: ['React', 'Vite', 'Python', 'Flask', 'Monte Carlo', 'GARCH', 'Poisson', 'OpenCV', 'NumPy'],
+        description: 'Quantitative fantasy sports analytics platform. Built a probabilistic forecasting pipeline with Poisson modeling, 100k-run Monte Carlo simulation, and GARCH(1,1) volatility forecasting for NBA player props. Includes a cross-platform arbitrage engine aggregating odds from 3+ sportsbooks to surface +EV opportunities, plus automated data pipelines pulling live stats, injury reports, and betting lines.',
+        achievement: '78% win rate, $10 → $3,000 profit',
+        techStack: ['React', 'Flask', 'Python', 'Monte Carlo', 'GARCH', 'Poisson', 'Firestore', 'NBA API', 'Cloud Scheduler'],
         links: [
           { label: 'GitHub', url: 'https://github.com/bryanrg22/lambda-rim' },
         ],
@@ -119,11 +119,11 @@ export const portfolioItems: PortfolioItem[] = [
       },
       {
         name: 'Swerve',
-        description: 'Agentic AI procurement co-pilot with LangChain-powered agents and interactive map visualization.',
-        achievement: '1st Place Dryft Challenge @ Caltech',
-        techStack: ['React', 'Python', 'Flask', 'LangChain', 'MapLibre GL', 'Firebase'],
+        description: "Agentic procurement platform built at Caltech's HackTech. Features 'Hugo,' an event-driven LangChain agent that routes procurement queries through OpenAI models with intent classification and multi-step reasoning to generate audit-traceable alerts and reorder recommendations. Includes CSV/CAD ingestion into Firestore with Slack automation for real-time alerts. Invited by Dryft to SF Neo offices for post-hackathon collaboration.",
+        achievement: '1st Place Dryft Challenge @ Caltech HackTech',
+        techStack: ['LangChain', 'Python', 'Flask', 'OpenAI', 'Firestore', 'Slack API', 'MapLibre GL', 'React'],
         links: [
-          { label: 'GitHub', url: 'https://github.com/bryanrg22/CalTech-Hacks' },
+          { label: 'GitHub', url: 'https://github.com/bryanrg22/swerve' },
           { label: 'DevPost', url: 'https://devpost.com/software/swerve-gqmenk' },
         ],
         logo: '/images/projects/swerveLogo.png',

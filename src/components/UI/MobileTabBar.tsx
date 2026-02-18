@@ -23,17 +23,17 @@ const tabs = [
       <path d="M10 14v3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
     </svg>
   ) },
-  { id: 'education', label: 'Edu', icon: (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-      <path d="M10 2L1 7l9 5 9-5-9-5z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
-      <path d="M4 9v5c0 1.7 2.7 3 6 3s6-1.3 6-3V9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  ) },
   { id: 'skills', label: 'Skills', icon: (
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
       <path d="M14.5 6.5L17 4M17 4l-1-3M17 4l3-1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M10.5 10.5l-7 7a1.4 1.4 0 002 2l7-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M12.5 8.5l-2 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  ) },
+  { id: 'education', label: 'Edu', icon: (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <path d="M10 2L1 7l9 5 9-5-9-5z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+      <path d="M4 9v5c0 1.7 2.7 3 6 3s6-1.3 6-3V9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   ) },
   { id: 'awards', label: 'Awards', icon: (
@@ -48,13 +48,6 @@ const tabs = [
       <path d="M4 14v3h12v-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   ) },
-  { id: 'about', label: 'About', icon: (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-      <circle cx="10" cy="10" r="7.5" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M10 9v5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-      <circle cx="10" cy="6.5" r="0.75" fill="currentColor" />
-    </svg>
-  ) },
   { id: 'cultura', label: 'Cultura', icon: (
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
       <rect x="3" y="5" width="14" height="10" rx="1" stroke="currentColor" strokeWidth="1.5" />
@@ -66,6 +59,18 @@ const tabs = [
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
       <circle cx="10" cy="10" r="7.5" stroke="currentColor" strokeWidth="1.5" />
       <path d="M10 2.5v3l3 2 3-1M10 2.5l-3 4.5-1 3.5M17 9l-4 .5-2 3M13 7.5l-2 5M6 7l4.5 0M5 10.5l5 2M6.5 17l.5-3.5 3 0M13.5 12.5l1 4.5M10 17v-4.5" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" opacity="0.5" />
+    </svg>
+  ) },
+  { id: 'about', label: 'Brea', icon: (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <circle cx="10" cy="10" r="7.5" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M10 9v5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <circle cx="10" cy="6.5" r="0.75" fill="currentColor" />
+    </svg>
+  ) },
+  { id: 'home', label: 'Origin', icon: (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <path d="M10 1L2 7v2h2v8h4v-5h4v5h4V9h2V7l-8-6z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   ) },
   { id: 'boombox', label: 'Music', icon: (

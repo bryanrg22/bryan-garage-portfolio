@@ -35,7 +35,7 @@ Single-page 3D experience with no client-side router. Navigation is driven by `a
 ### Key Directories
 
 - `src/components/Scene/` — 3D scene: `GarageScene.tsx` (canvas + GLB loading), `Garage.tsx` (procedural geometry + signs), `CameraController.tsx` (GSAP camera), `objects/` (per-model GLB loaders + `InteractiveObject.tsx` wrapper)
-- `src/components/UI/` — 2D overlay: `TopBar`, `InfoPanel`, `BackButton`, `HintText`, `LoadingScreen`
+- `src/components/UI/` — 2D overlay: `TopBar`, `InfoPanel`, `BackButton`, `HintText`, `LoadingScreen`, `MobileTabBar`, `SpotifyPlayer`
 - `src/lib/gpuTier.ts` — GPU detection + quality config definitions (low/mid/high tiers)
 - `src/stores/useStore.ts` — Zustand store: `activeItem`, `hasInteracted`, `isLoaded`, `qualityConfig`
 - `src/data/portfolio.ts` — Portfolio content and camera presets
@@ -79,7 +79,7 @@ Fonts: `font-serif` = Playfair Display, `font-sans` = DM Sans (loaded from Googl
 - **Invisible hitbox:** GLB models include a hidden `boxGeometry` mesh for reliable pointer event capture
 - **WebGL context loss** is handled in `GarageScene.tsx` by remounting the canvas via `sceneKey` state
 - **Render exceptions:** `CarLift` and `NissanGTR` are rendered as standalone decorative groups (not interactive) in `SceneContent`, gated by `quality.showHeavyModels` and `allowedIds` from the load tier system
-- **Boombox Spotify embed:** Music playback uses a persistent architecture to survive panel close. `SpotifyPlayer.tsx` (rendered in `App.tsx`) owns the Spotify iframe and a "Now Playing" pill. The iframe is mounted whenever Zustand's `isMusicPlaying` is `true`. When the boombox panel is open, the iframe overlays the panel content area via fixed positioning; when closed, it's moved off-screen (`left: -9999px`) to keep audio alive. `InfoPanel.tsx` renders a spacer `<div>` instead of the iframe for the boombox branch, and uses the standard panel width (`md:w-[420px]`). The "Now Playing" pill (bottom-left) appears when music plays in the background and lets users reopen the boombox or stop playback. Tags and links are suppressed for the boombox item.
+- **Boombox Spotify embed:** Music playback uses a persistent architecture to survive panel close. `SpotifyPlayer.tsx` (rendered in `App.tsx`) owns the Spotify iframe and a "Now Playing" pill. The iframe is shown when the boombox panel is open OR `isMusicPlaying` is `true`. When the panel is open, the iframe overlays the content area via fixed positioning; when closed but music is playing, it's moved off-screen (`left: -9999px`) to keep audio alive. `isMusicPlaying` is only set to `true` on the iframe's `onLoad` event (not on panel open), so opening the boombox panel without interacting won't trigger the "Now Playing" pill. `InfoPanel.tsx` renders a spacer `<div>` instead of the iframe for the boombox branch. The "Now Playing" pill (bottom-left) appears when music plays in the background and lets users reopen the boombox or stop playback. Tags and links are suppressed for the boombox item.
 - **Social logos** (LinkedIn, GitHub) in `Garage.tsx` open URLs directly via `window.open()` — they bypass `InteractiveObject` and the Zustand store
 - **GPU-tier quality scaling:** `detect-gpu` runs at module scope (`src/lib/gpuTier.ts`) and maps GPU tier 0–1 → low, 2 → mid, 3 → high. The `qualityConfig` in Zustand drives all rendering decisions: DPR, shadows, antialias, environment map, particles, decorative GLB loading, point light count, and ShopLight point lights. Defaults to `mid` before detection resolves and on detection failure.
 - **Decorative GLB tiers:** 9 pure-decorative GLBs (RedBullCan, RetroOil, WD40, DirtyRag, TrashCan, Bucket, CarJack, AirCompressor, ExtensionCord) load only on `high`. 7 semi-decorative GLBs (FifaTrophy, GoldTrophy, MLBTrophy, PythonLogo, JavaLogo, ReactLogo, GarageTools) load on `mid`+`high`. 7 essential GLBs (NvidiaLogo, AmazonLogo, MexicanFlag, WorkbenchModel, LinkedInLogo, GitHubLogo, ResumePaper) always load.
@@ -89,12 +89,19 @@ Fonts: `font-serif` = Playfair Display, `font-sans` = DM Sans (loaded from Googl
 - **PBR textures:** `ConcreteFloor` uses a concrete PBR set for the floor; `CorrugatedWall` uses a chipboard/plywood PBR set (color, normal, roughness) with per-wall texture repeat via `useMemo` cloning
 - **Loading screen:** `LoadingScreen` uses drei's `useProgress` to track real asset download progress. Dismisses when `progress >= 100` AND `isLoaded` (WebGL context created via `onCreated`)
 
+### Mobile
+
+- **Tab bar:** `MobileTabBar.tsx` renders a horizontally scrollable tab bar in portrait mode. Tab order: Home, Work, Projects, Skills, Edu, Awards, Hacks, Cultura, Soccer, Brea, Origin, Music. Tapping a tab sets/clears `activeItem` via Zustand.
+- **Portrait camera:** `CameraController` uses rotation-based swipe-to-look (Street View style) in portrait mode. Yaw range is ±12.5 degrees from center, pitch ±10 degrees. Touch sensitivity: horizontal 1.2x, vertical 0.6x. Includes momentum with 0.92 friction decay. Touches on UI overlays (`nav`, `button`, `InfoPanel`, `TopBar`) are ignored. Rotation resets when navigating back to home.
+- **Landscape camera:** Position-based parallax (swipe shifts camera position, not rotation).
+- **`mobileCameraPosition`:** Portfolio items can define an optional `mobileCameraPosition` in `portfolio.ts` for a different camera angle on mobile portrait (used by skills section to pull the camera back).
+
 ### Animations
 
 - **Camera transitions:** GSAP timelines with `power3.inOut` easing, 1.2s duration
 - **UI components:** `motion/react` (`AnimatePresence` + `motion.*`) for entrance/exit
 - **Hover scale:** `useFrame` lerp on `THREE.Vector3` scale
-- **Idle parallax:** Mouse tracking in `CameraController` when no item is focused
+- **Desktop idle parallax:** Smooth mouse-follow parallax in `CameraController` when no item is focused
 
 ## TypeScript
 
@@ -130,11 +137,12 @@ Scale and optional `rotation` vary per model. Decorative GLB loaders in `Garage.
 - **Unused dependencies:** `lenis` and `@gsap/react` are in `package.json` but never imported anywhere in `src/`. They are dead weight.
 - **Orphaned assets:** `public/models/` contains unused GLBs (`cardboard_boxes.glb`, `cpp_logo.glb`, `globe.glb`, `license_plate.glb`, `2020_kia_soul.glb`) not referenced by any component.
 - **`ErrorBoundary`** wraps only the 3D canvas, not the UI overlays. Its fallback shows a reload button with a WebGL compatibility hint.
-- **Mobile:** `InfoPanel` goes full-width on small screens (`w-full` → `md:w-[420px]`). No touch-specific parallax — idle camera parallax only responds to `mousemove`.
+- **Mobile:** `InfoPanel` goes full-width on small screens (`w-full` → `md:w-[420px]`).
+- **No garage door:** The `GarageDoor` component was removed from `Garage.tsx`. The garage is open-air.
 
 ## Adding a New Portfolio Item
 
-1. Add entry to `portfolioItems` in `src/data/portfolio.ts` with required fields: `id`, `objectName`, `title`, `subtitle`, `description`, `position`, `color`, `cameraPosition`, `cameraTarget`.
+1. Add entry to `portfolioItems` in `src/data/portfolio.ts` with required fields: `id`, `objectName`, `title`, `subtitle`, `description`, `position`, `color`, `cameraPosition`, `cameraTarget`. Optionally add `mobileCameraPosition` if the default camera is too close on mobile portrait.
 2. If using a 3D model:
    a. **Compress the GLB with Draco first** — raw GLB files are too large to use directly. Use `gltf-transform` or the [glTF Draco compressor](https://gltf.report/) to apply Draco compression before adding to the project.
    b. Place the compressed `.glb` file in `public/models/`.
