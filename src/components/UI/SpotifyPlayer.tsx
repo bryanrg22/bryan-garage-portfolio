@@ -31,6 +31,23 @@ export default function SpotifyPlayer() {
     setPanelReady(false)
   }, [isBoomboxActive])
 
+  // Detect actual Spotify playback via postMessage from the embed
+  useEffect(() => {
+    const onMessage = (e: MessageEvent) => {
+      if (e.origin !== 'https://open.spotify.com') return
+      try {
+        const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data
+        if (data?.type === 'playback_update' && data.payload?.isPaused === false) {
+          setMusicPlaying(true)
+        }
+      } catch {
+        // ignore non-JSON messages
+      }
+    }
+    window.addEventListener('message', onMessage)
+    return () => window.removeEventListener('message', onMessage)
+  }, [setMusicPlaying])
+
   // Show iframe when boombox panel is open OR when music is playing in background
   const showIframe = isBoomboxActive || isMusicPlaying
 
@@ -52,7 +69,7 @@ export default function SpotifyPlayer() {
                   bottom: 0,
                   left: 0,
                   right: 0,
-                  height: isSheetExpanded ? '92vh' : '70vh',
+                  height: isSheetExpanded ? '85vh' : '70vh',
                   zIndex: 50,
                   pointerEvents: 'none',
                   overflow: 'hidden',
@@ -108,12 +125,6 @@ export default function SpotifyPlayer() {
                   }
               : undefined
           }
-          onLoad={() => {
-            // Mark music as playing once the iframe loads while the panel is open
-            if (isBoomboxActive) {
-              setMusicPlaying(true)
-            }
-          }}
         />
       </div>
 
