@@ -24,7 +24,7 @@ const DEFAULT_YAW = Math.atan2(defaultDirection.x, defaultDirection.z)
 const DEFAULT_PITCH = Math.atan2(defaultDirection.y, Math.sqrt(defaultDirection.x ** 2 + defaultDirection.z ** 2))
 
 // Rotation limits for mobile portrait swipe-to-look
-const YAW_RANGE = (60 / 180) * Math.PI    // ±30 degrees from center
+const YAW_RANGE = (30 / 180) * Math.PI    // ±15 degrees from center
 const PITCH_RANGE = (20 / 180) * Math.PI  // ±10 degrees from center
 const LOOK_DISTANCE = defaultDirection.length()
 
