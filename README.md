@@ -10,7 +10,7 @@ An immersive 3D portfolio experience built as an interactive auto body garage.
 
 ## Why a 3D Garage?
 
-My family runs Brea Auto Body, a collision repair shop in Southern California. I grew up around cars, tools, and the hum of a working garage. This portfolio recreates that environment in 3D — every object you click (the workbench, the toolbox, the boombox) maps to a real section of my story: experience, projects, skills, cultura, and more.
+My dad works at Brea Auto Body, a collision repair shop in Southern California. I started working there at 15 during the pandemic to help bring more money home for my family. I grew up around cars, tools, and the hum of a working garage — so this portfolio recreates that environment in 3D. Every object you click (the workbench, the toolbox, the boombox) maps to a real section of my story: experience, projects, skills, cultura, and more.
 
 ---
 
