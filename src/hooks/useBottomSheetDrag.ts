@@ -15,7 +15,7 @@ interface UseBottomSheetDragOptions {
 
 export function useBottomSheetDrag({
   onDismiss,
-  fullHeight = 92,
+  fullHeight = 85,
   halfHeight = 70,
   snapThreshold = 60,
   velocityThreshold = 0.4,
