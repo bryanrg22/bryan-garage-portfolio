@@ -4,16 +4,17 @@ import { PostHogProvider } from '@posthog/react'
 import './index.css'
 import App from './App'
 
-// Side-effect: initializes PostHog if VITE_POSTHOG_KEY is set
+// Side-effect: initializes PostHog custom event helpers
 import './lib/analytics'
 
 const options = {
-  api_host: import.meta.env.VITE_POSTHOG_HOST || 'https://us.i.posthog.com',
+  api_host: import.meta.env.VITE_PUBLIC_POSTHOG_HOST,
+  defaults: '2026-01-30',
 } as const
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <PostHogProvider apiKey={import.meta.env.VITE_POSTHOG_KEY} options={options}>
+    <PostHogProvider apiKey={import.meta.env.VITE_PUBLIC_POSTHOG_KEY} options={options}>
       <App />
     </PostHogProvider>
   </StrictMode>,
