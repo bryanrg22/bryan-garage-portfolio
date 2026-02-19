@@ -29,7 +29,10 @@ const PITCH_RANGE = (20 / 180) * Math.PI  // ±10 degrees from center
 const LOOK_DISTANCE = defaultDirection.length()
 
 export default function CameraController() {
-  const { camera, invalidate } = useThree()
+  const camera = useThree((s) => s.camera)
+  const invalidate = useThree((s) => s.invalidate)
+  const invalidateRef = useRef(invalidate)
+  invalidateRef.current = invalidate
   const mode = useRef<CameraMode>('idle')
   const mouse = useRef({ x: 0, y: 0 })
   const smoothMouse = useRef({ x: 0, y: 0 })
@@ -100,14 +103,14 @@ export default function CameraController() {
 
         lastTouch.current.x = touch.clientX
         lastTouch.current.y = touch.clientY
-        invalidate()
+        if (mode.current === 'idle') invalidate()
       }
 
       const onTouchEnd = () => {
         tracking = false
         isTouching.current = false
         // velocity is preserved — useFrame will apply inertia decay
-        invalidate()
+        if (mode.current === 'idle') invalidate()
       }
 
       window.addEventListener('touchstart', onTouchStart, { passive: true })
@@ -122,7 +125,9 @@ export default function CameraController() {
       const onMouseMove = (e: MouseEvent) => {
         mouse.current.x = (e.clientX / window.innerWidth - 0.5) * 2
         mouse.current.y = (e.clientY / window.innerHeight - 0.5) * 2
-        invalidate()
+        // Only trigger rendering when parallax is active (idle mode)
+        // Avoids wasting frames while viewing panels or during GSAP animations
+        if (mode.current === 'idle') invalidate()
       }
       window.addEventListener('mousemove', onMouseMove)
       return () => window.removeEventListener('mousemove', onMouseMove)
@@ -151,10 +156,10 @@ export default function CameraController() {
         : activeItem.cameraPosition
       mode.current = 'animating'
       const tl = gsap.timeline({
-        onUpdate: () => invalidate(),
+        onUpdate: () => invalidateRef.current(),
         onComplete: () => {
           mode.current = 'focused'
-          invalidate()
+          invalidateRef.current()
         },
       })
 
@@ -195,14 +200,14 @@ export default function CameraController() {
       rotVelocity.current.pitch = 0
 
       const tl = gsap.timeline({
-        onUpdate: () => invalidate(),
+        onUpdate: () => invalidateRef.current(),
         onComplete: () => {
           // Force-set final positions to guarantee reset even if tween was imprecise
           camera.position.set(...defaultPos)
           lookAtTarget.current.set(...DEFAULT_CAMERA_TARGET)
           basePosition.current.set(...defaultPos)
           mode.current = 'idle'
-          invalidate()
+          invalidateRef.current()
         },
       })
 
@@ -232,7 +237,8 @@ export default function CameraController() {
 
       tweenRef.current = tl
     }
-  }, [activeItem, camera, defaultPos, isMobilePortrait, invalidate])
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- invalidate accessed via ref to avoid effect re-runs
+  }, [activeItem, camera, defaultPos, isMobilePortrait])
 
   // Desktop parallax multipliers
   const parallaxX = 0.3
@@ -242,7 +248,9 @@ export default function CameraController() {
   const mLandscapeX = 1.2
   const mLandscapeY = 0.6
 
-  useFrame((_, delta) => {
+  useFrame((_, rawDelta) => {
+    // Cap delta to prevent overshoot after long idle gaps (e.g. tab switch)
+    const delta = Math.min(rawDelta, 0.1)
     // Normalize per-frame factors to behave consistently at any framerate
     // e.g. 0.92 friction at 60fps → Math.pow(0.92, delta * 60) at any fps
     const dt60 = delta * 60
