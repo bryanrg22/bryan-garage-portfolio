@@ -37,7 +37,7 @@ Single-page 3D experience with no client-side router. Navigation is driven by `a
 ### Key Directories
 
 - `src/components/Scene/` — 3D scene: `GarageScene.tsx` (canvas + GLB loading), `Garage.tsx` (procedural geometry + signs), `CameraController.tsx` (GSAP camera), `RenderController.tsx` (demand-driven rendering + Page Visibility API), `objects/` (per-model GLB loaders + `InteractiveObject.tsx` wrapper)
-- `src/components/UI/` — 2D overlay: `TopBar`, `InfoPanel`, `BackButton`, `HintText`, `LoadingScreen`, `MobileTabBar`, `SpotifyPlayer`, `RotatePrompt`
+- `src/components/UI/` — 2D overlay: `TopBar`, `InfoPanel`, `BackButton`, `HintText`, `LoadingScreen`, `MobileTabBar`, `SpotifyPlayer`
 - `src/lib/gpuTier.ts` — GPU detection + quality config definitions (low/mid/high tiers)
 - `src/stores/useStore.ts` — Zustand store: `activeItem`, `hasInteracted`, `isLoaded`, `isMusicPlaying`, `isMobileNavOpen`, `isBottomSheetExpanded`, `qualityConfig`
 - `src/data/portfolio.ts` — Portfolio content and camera presets
@@ -100,7 +100,6 @@ Fonts: `font-serif` = Playfair Display, `font-sans` = DM Sans (loaded from Googl
 - **Portrait camera:** `CameraController` uses rotation-based swipe-to-look (Street View style) in portrait mode. Yaw range is ±12.5 degrees from center, pitch ±10 degrees. Touch sensitivity: horizontal 1.2x, vertical 0.6x. Includes momentum with 0.92 time-based friction decay (`Math.pow(0.92, delta * 60)`). Touches on UI overlays (`nav`, `button`, `InfoPanel`, `TopBar`) are ignored. Rotation resets when navigating back to home.
 - **Landscape camera:** Position-based parallax (swipe shifts camera position, not rotation).
 - **`mobileCameraPosition`:** Portfolio items can define an optional `mobileCameraPosition` in `portfolio.ts` for a different camera angle on mobile portrait (used by skills section to pull the camera back).
-- **Orientation prompt:** `RotatePrompt.tsx` shows a phone-to-desktop icon on mobile portrait (first visit only, auto-dismisses after 4s). Suggests exploring on desktop for the best experience. Dismissed state persisted in `sessionStorage`.
 
 ### Analytics (PostHog)
 

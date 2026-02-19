@@ -10,7 +10,6 @@ import HintText from './components/UI/HintText'
 import BackButton from './components/UI/BackButton'
 import LoadingScreen from './components/UI/LoadingScreen'
 import MobileTabBar from './components/UI/MobileTabBar'
-import RotatePrompt from './components/UI/RotatePrompt'
 
 function SceneFallback() {
   return (
@@ -40,7 +39,6 @@ export default function App() {
       </div>
 
       <LoadingScreen />
-      <RotatePrompt />
       <Analytics />
       <SpeedInsights />
     </div>
