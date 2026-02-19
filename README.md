@@ -1,10 +1,23 @@
 # Garage Portfolio
 
-An immersive 3D portfolio experience built as an interactive auto body garage. Visitors explore Bryan Ramirez-Gonzalez's work, projects, and story by clicking on objects scattered around a detailed garage scene. Each object triggers a cinematic camera fly-in and reveals a content panel.
+An immersive 3D portfolio experience built as an interactive auto body garage.
+
+<!-- Replace the src below with your actual screenshot URL (drag an image into a GitHub issue to get a hosted link) -->
+<img width="900" alt="Garage Portfolio Screenshot" src="https://github.com/user-attachments/assets/REPLACE_WITH_SCREENSHOT" />
 
 **Live site:** [bryanramirezgonzalez.com](https://bryanramirezgonzalez.com)
 
+---
+
+## Why a 3D Garage?
+
+My family runs [Brea Auto Body](https://bryanramirezgonzalez.com), a collision repair shop in Southern California. I grew up around cars, tools, and the hum of a working garage. This portfolio recreates that environment in 3D — every object you click (the workbench, the toolbox, the boombox) maps to a real section of my story: experience, projects, skills, cultura, and more.
+
+---
+
 ## Tech Stack
+
+![React] ![TypeScript] ![Vite] ![Three.js] ![TailwindCSS] ![GSAP]
 
 - **React 19** + **TypeScript** + **Vite 7**
 - **Three.js** via React Three Fiber + Drei
@@ -13,6 +26,8 @@ An immersive 3D portfolio experience built as an interactive auto body garage. V
 - **Zustand** for state management
 - **Motion** (Framer Motion) for UI transitions
 - **detect-gpu** for adaptive quality scaling
+
+---
 
 ## Features
 
@@ -24,6 +39,23 @@ An immersive 3D portfolio experience built as an interactive auto body garage. V
 - **Progressive model loading** — GLBs load in priority tiers to minimize initial load time
 - **Real loading progress** — tracks actual asset downloads via drei's useProgress
 - **Responsive design** — scrollable tab bar on mobile, side panel on desktop
+
+---
+
+## GPU-Adaptive Rendering
+
+The garage scene ships ~40 MB of Draco-compressed GLB models, PBR textures, shadow maps, and particle effects. To make it run smoothly on everything from integrated-GPU laptops to dedicated graphics cards, the site uses `detect-gpu` at startup to classify hardware into three quality tiers and automatically scales rendering accordingly:
+
+| Setting | Low | Mid | High |
+|---------|-----|-----|------|
+| Pixel Ratio | 1 | up to 1.5 | up to 1.25 |
+| Shadows | Off | On | On |
+| Environment Map | Off | On | On |
+| Particles | Off | On | On |
+| Decorative Models | Essential only | +Semi-decorative | All models |
+| Point Lights | 1 | 3 | 3 |
+
+---
 
 ## Sections
 
@@ -41,59 +73,19 @@ An immersive 3D portfolio experience built as an interactive auto body garage. V
 | Origin | House | California and Azusa roots |
 | Music | Boombox | Spotify playlist player |
 
-## Getting Started
+---
 
-```bash
-# Install dependencies
-npm install
+## About Me
 
-# Start dev server
-npm run dev
+**Bryan Ramirez-Gonzalez** — First-gen Latino, Undergrad Honors CS @ USC '28, 3x Hackathon Winner
 
-# Type-check + production build
-npm run build
+- Website: [bryanramirezgonzalez.com](https://bryanramirezgonzalez.com)
+- LinkedIn: [@bryanrg22](https://linkedin.com/in/bryanrg22)
+- GitHub: [@bryanrg22](https://github.com/bryanrg22)
 
-# Preview production build
-npm run preview
-
-# Lint
-npm run lint
-```
-
-## Project Structure
-
-```
-src/
-  components/
-    Scene/          # 3D scene (Canvas, Garage, Camera, interactive objects)
-    UI/             # 2D overlays (InfoPanel, TopBar, TabBar, LoadingScreen)
-  data/
-    portfolio.ts    # All portfolio content, camera positions, and metadata
-  stores/
-    useStore.ts     # Zustand store (activeItem, qualityConfig, music state)
-  lib/
-    gpuTier.ts      # GPU detection and quality tier configuration
-  hooks/            # Custom hooks (useIsMobile, useIsPortrait)
-public/
-  models/           # Draco-compressed GLB 3D models
-  images/           # Portfolio content images organized by section
-  concrete_floor/   # PBR floor textures
-  chipboard_wall/   # PBR wall textures
-```
-
-## Quality Tiers
-
-The site automatically adapts rendering quality based on GPU capability:
-
-| Setting | Low | Mid | High |
-|---------|-----|-----|------|
-| Pixel Ratio | 1 | up to 1.5 | up to 1.25 |
-| Shadows | Off | On | On |
-| Environment Map | Off | On | On |
-| Particles | Off | On | On |
-| Decorative Models | Essential only | +Semi-decorative | All models |
-| Point Lights | 1 | 3 | 3 |
-
-## Deployment
-
-The project is deployed on **Vercel**. Pushing to the main branch triggers an automatic build and deploy.
+[React]:       https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB
+[TypeScript]:  https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white
+[Vite]:        https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white
+[Three.js]:    https://img.shields.io/badge/three.js-black?style=for-the-badge&logo=three.js&logoColor=white
+[TailwindCSS]: https://img.shields.io/badge/TailwindCSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white
+[GSAP]:        https://img.shields.io/badge/GSAP-88CE02?style=for-the-badge&logo=greensock&logoColor=white
