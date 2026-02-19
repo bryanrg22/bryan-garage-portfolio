@@ -9,6 +9,7 @@ const options = {
   defaults: '2026-01-30',
   person_profiles: 'always',
   advanced_disable_feature_flags: true,
+  debug: true,
 } as const
 
 createRoot(document.getElementById('root')!).render(
