@@ -2,7 +2,7 @@
 
 An immersive 3D portfolio experience built as an interactive auto body garage.
 
-<img width="1512" height="860" alt="Garage Portfolio" src="https://github.com/user-attachments/assets/afe2bcd8-0df8-4964-ad8c-912fe8a04458" />
+<img width="1512" height="860" alt="Garage Portfolio" src="public/README_image/garage_photo.png" />
 
 **Live site:** [bryanram.com](https://bryanram.com)
 
