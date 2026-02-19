@@ -4,13 +4,13 @@ An immersive 3D portfolio experience built as an interactive auto body garage.
 
 <img width="1512" height="860" alt="Garage Portfolio" src="https://github.com/user-attachments/assets/afe2bcd8-0df8-4964-ad8c-912fe8a04458" />
 
-**Live site:** [bryanramirezgonzalez.com](https://bryanramirezgonzalez.com)
+**Live site:** [bryanram.com](https://bryanram.com)
 
 ---
 
 ## Why a 3D Garage?
 
-My family runs [Brea Auto Body](https://bryanramirezgonzalez.com), a collision repair shop in Southern California. I grew up around cars, tools, and the hum of a working garage. This portfolio recreates that environment in 3D — every object you click (the workbench, the toolbox, the boombox) maps to a real section of my story: experience, projects, skills, cultura, and more.
+My family runs Brea Auto Body, a collision repair shop in Southern California. I grew up around cars, tools, and the hum of a working garage. This portfolio recreates that environment in 3D — every object you click (the workbench, the toolbox, the boombox) maps to a real section of my story: experience, projects, skills, cultura, and more.
 
 ---
 
@@ -78,7 +78,7 @@ The garage scene ships ~40 MB of Draco-compressed GLB models, PBR textures, shad
 
 **Bryan Ramirez-Gonzalez** — First-gen Latino, Undergrad Honors CS @ USC '28, 3x Hackathon Winner
 
-- Website: [bryanramirezgonzalez.com](https://bryanramirezgonzalez.com)
+- Website: [bryanram.com](https://bryanram.com)
 - LinkedIn: [@bryanrg22](https://linkedin.com/in/bryanrg22)
 - GitHub: [@bryanrg22](https://github.com/bryanrg22)
 

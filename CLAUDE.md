@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 An immersive 3D portfolio built as an interactive auto body garage scene. Visitors explore Bryan Ramirez-Gonzalez's portfolio (projects, hackathons, soccer, skills, experience, awards, education, home, cultura, about/Brea Auto Body, boombox) by clicking on garage objects. Each object triggers a smooth camera fly-in and opens a side panel with details.
 
+**Live site:** [bryanram.com](https://bryanram.com)
+
 Tech stack: **React 19 + TypeScript + Vite 7 + Three.js (via React Three Fiber) + Tailwind CSS v4 + GSAP + Zustand + Motion (Framer Motion)**
 
 ## Commands
