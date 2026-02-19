@@ -4,6 +4,7 @@ import { Environment, useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 import Garage from './Garage'
 import CameraController from './CameraController'
+import RenderController from './RenderController'
 import Particles from './Particles'
 import InteractiveObject from './objects/InteractiveObject'
 import SoccerBall from './objects/SoccerBall'
@@ -143,6 +144,7 @@ export default function GarageScene() {
     <div className="absolute inset-0" style={{ background: '#14120F', touchAction: 'none' }}>
       <Canvas
         key={sceneKey}
+        frameloop="demand"
         shadows={quality.shadows}
         dpr={quality.dpr}
         gl={{
@@ -160,6 +162,7 @@ export default function GarageScene() {
             <Environment preset="warehouse" environmentIntensity={quality.environmentIntensity} />
           </Suspense>
         )}
+        <RenderController />
         <CameraController />
         <Garage />
         {quality.showParticles && <Particles />}

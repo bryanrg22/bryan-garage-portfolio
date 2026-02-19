@@ -36,7 +36,7 @@ Single-page 3D experience with no client-side router. Navigation is driven by `a
 
 ### Key Directories
 
-- `src/components/Scene/` — 3D scene: `GarageScene.tsx` (canvas + GLB loading), `Garage.tsx` (procedural geometry + signs), `CameraController.tsx` (GSAP camera), `objects/` (per-model GLB loaders + `InteractiveObject.tsx` wrapper)
+- `src/components/Scene/` — 3D scene: `GarageScene.tsx` (canvas + GLB loading), `Garage.tsx` (procedural geometry + signs), `CameraController.tsx` (GSAP camera), `RenderController.tsx` (demand-driven rendering + Page Visibility API), `objects/` (per-model GLB loaders + `InteractiveObject.tsx` wrapper)
 - `src/components/UI/` — 2D overlay: `TopBar`, `InfoPanel`, `BackButton`, `HintText`, `LoadingScreen`, `MobileTabBar`, `SpotifyPlayer`, `RotatePrompt`
 - `src/lib/gpuTier.ts` — GPU detection + quality config definitions (low/mid/high tiers)
 - `src/stores/useStore.ts` — Zustand store: `activeItem`, `hasInteracted`, `isLoaded`, `isMusicPlaying`, `isMobileNavOpen`, `isBottomSheetExpanded`, `qualityConfig`
@@ -90,12 +90,14 @@ Fonts: `font-serif` = Playfair Display, `font-sans` = DM Sans (loaded from Googl
 - **Texture preloading:** `useTexture.preload()` is called at module scope in `Garage.tsx` to eagerly load floor and wall textures
 - **PBR textures:** `ConcreteFloor` uses a concrete PBR set for the floor; `CorrugatedWall` uses a chipboard/plywood PBR set (color, normal, roughness) with per-wall texture repeat via `useMemo` cloning
 - **Loading screen:** `LoadingScreen` uses drei's `useProgress` to track real asset download progress. Dismisses when `progress >= 100` AND `isLoaded` (WebGL context created via `onCreated`)
+- **Demand-driven rendering:** The Canvas uses `frameloop="demand"` — it only renders when `invalidate()` is called, instead of running at 60fps constantly. `RenderController.tsx` (rendered inside Canvas, returns `null`) handles two responsibilities: (1) Page Visibility API — calls `invalidate()` once when the tab becomes visible so the scene refreshes; when hidden, no invalidation = no rendering. (2) Mobile 30fps loop — runs a `requestAnimationFrame` loop throttled to 30fps (`1000/30` ms interval) that calls `invalidate()` to keep pulse animations running (sine waves look identical at 30fps, half the GPU work/heat); the loop checks `document.hidden` so it goes dormant when the tab is backgrounded. On desktop, `invalidate()` is called from: mouse/touch event handlers in `CameraController`, GSAP timeline `onUpdate` callbacks during camera animations, and epsilon-based convergence checks in `useFrame` (parallax lerp in `CameraController`, scale lerp in `InteractiveObject`, `LinkedInLogo`, `GitHubLogo`, `ResumePaper`). Once all lerps settle within epsilon threshold (~0.001 for scale, ~0.0001 for parallax), no more `invalidate()` calls are made and the GPU goes fully idle at 0fps. All interactive components with `useFrame` hover animations (`InteractiveObject`, `LinkedInLogo`, `GitHubLogo`, `ResumePaper`) call `invalidate()` in their `onPointerOver`/`onPointerOut` handlers to kick off the lerp chain, and use module-level `THREE.Vector3` constants for scale targets to avoid per-frame GC allocation.
+- **Time-based friction/lerps:** All per-frame friction and interpolation in `CameraController` uses `Math.pow` normalization against `delta * 60` so animations feel identical at any framerate (30fps mobile, 60fps desktop, 144hz monitors). Pattern: friction `Math.pow(0.92, dt60)`, lerp `1 - Math.pow(1 - factor, dt60)`. This is critical because the mobile render loop runs at 30fps — without time-based normalization, momentum would decay half as fast.
 
 ### Mobile
 
 - **Tab bar:** `MobileTabBar.tsx` renders a horizontally scrollable tab bar in portrait mode. Tab order: Home, Work, Projects, Skills, Edu, Awards, Hacks, Cultura, Soccer, Brea, Origin, Music. Tapping a tab sets/clears `activeItem` via Zustand.
 - **Bottom sheet:** `MobileBottomSheet` in `InfoPanel.tsx` uses `useBottomSheetDrag` hook with three snap states: `half` (70vh, default), `full` (85vh, dragged up), and `dismissed` (dragged down). Snap transitions are velocity-aware (fast swipes trigger snap). The current `snapState` is synced to the Zustand store as `isBottomSheetExpanded` so `SpotifyPlayer` can match the sheet height. Rubber-band resistance is applied when dragging past the full-screen boundary.
-- **Portrait camera:** `CameraController` uses rotation-based swipe-to-look (Street View style) in portrait mode. Yaw range is ±12.5 degrees from center, pitch ±10 degrees. Touch sensitivity: horizontal 1.2x, vertical 0.6x. Includes momentum with 0.92 friction decay. Touches on UI overlays (`nav`, `button`, `InfoPanel`, `TopBar`) are ignored. Rotation resets when navigating back to home.
+- **Portrait camera:** `CameraController` uses rotation-based swipe-to-look (Street View style) in portrait mode. Yaw range is ±12.5 degrees from center, pitch ±10 degrees. Touch sensitivity: horizontal 1.2x, vertical 0.6x. Includes momentum with 0.92 time-based friction decay (`Math.pow(0.92, delta * 60)`). Touches on UI overlays (`nav`, `button`, `InfoPanel`, `TopBar`) are ignored. Rotation resets when navigating back to home.
 - **Landscape camera:** Position-based parallax (swipe shifts camera position, not rotation).
 - **`mobileCameraPosition`:** Portfolio items can define an optional `mobileCameraPosition` in `portfolio.ts` for a different camera angle on mobile portrait (used by skills section to pull the camera back).
 - **Orientation prompt:** `RotatePrompt.tsx` shows a phone-to-desktop icon on mobile portrait (first visit only, auto-dismisses after 4s). Suggests exploring on desktop for the best experience. Dismissed state persisted in `sessionStorage`.
@@ -113,10 +115,10 @@ Fonts: `font-serif` = Playfair Display, `font-sans` = DM Sans (loaded from Googl
 
 ### Animations
 
-- **Camera transitions:** GSAP timelines with `power3.inOut` easing, 1.2s duration
+- **Camera transitions:** GSAP timelines with `power3.inOut` easing, 1.2s duration. `onUpdate` callback calls `invalidate()` to drive frame rendering during the tween.
 - **UI components:** `motion/react` (`AnimatePresence` + `motion.*`) for entrance/exit
-- **Hover scale:** `useFrame` lerp on `THREE.Vector3` scale
-- **Desktop idle parallax:** Smooth mouse-follow parallax in `CameraController` when no item is focused
+- **Hover scale:** `useFrame` lerp on `THREE.Vector3` scale with epsilon guard — self-schedules via `invalidate()` until settled, then stops
+- **Desktop idle parallax:** Smooth mouse-follow parallax in `CameraController` when no item is focused. Epsilon convergence detection stops rendering once settled.
 
 ## TypeScript
 

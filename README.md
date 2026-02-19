@@ -56,6 +56,85 @@ The garage scene ships ~40 MB of Draco-compressed GLB models, PBR textures, shad
 
 ---
 
+## Performance Engineering
+
+Shipping a 3D scene with ~40 MB of assets to a browser demands careful optimization at every layer — assets, rendering, React, network, and delivery. Here's how the garage stays smooth and battery-friendly.
+
+### Asset Optimization
+
+- **Draco compression** on all GLB models (80–90% mesh size reduction)
+- Draco decoder served from **Google CDN** — likely already cached from other Three.js sites
+- **1K PBR textures** for good fidelity at low VRAM footprint (~4 MB each uncompressed in GPU memory)
+- **WebP format** for applicable textures
+- **Texture tiling** — a single 1K texture repeated 8x8 across the floor instead of a massive bespoke texture
+
+### Progressive Model Loading
+
+- **3-tier sequential loading** with GPU breathing room between tiers
+  - Tier 0 (500 ms): small models first
+  - Tier 1 (+1500 ms): medium models
+  - Tier 2 (+1500 ms, HIGH GPU only): heaviest model (~15 MB)
+- **Suspense fallbacks** render `null` while GLBs stream — no broken meshes
+- Procedural geometry (walls, floor, signs) renders immediately — it's code-generated, not downloaded
+
+### Rendering Pipeline
+
+- **DPR capping** prevents 2x/3x retina rendering — a 4x difference in fragment shader work
+- **Shadow maps at 512x512** keep shadow texture VRAM low
+- **Fog (6–22 units)** hides distant geometry, reducing effective rendering area
+- `powerPreference: 'high-performance'` requests the discrete GPU on multi-GPU laptops
+- Antialias and shadows **disabled entirely** on low-tier GPUs
+
+### Draw Call Reduction
+
+- **InstancedMesh** for corrugated wall ridges — ~280 individual boxes consolidated into 5 draw calls
+- Invisible hitbox meshes use `meshBasicMaterial` (no lighting shader) instead of `meshStandardMaterial`
+- Low polygon counts on non-focal background props (8–16 segments vs default 32)
+
+### React Performance
+
+- **Zustand selectors** prevent over-rendering — each component subscribes only to the state it needs
+- All per-frame animation logic uses **refs** (not state) to avoid React re-renders
+- Direct Three.js object mutation in `useFrame` **bypasses the React reconciler** entirely
+- `useCallback`/`useMemo` on handlers and computed values for stable prop references
+- Module-scope `useTexture.preload()` warms the texture cache before React mounts
+
+### Mobile Optimization
+
+- Native Three.js mesh dots instead of DOM-projected HTML labels (cheaper rendering)
+- **Passive touch listeners** (`{ passive: true }`) — browser scrolls immediately without waiting for JS
+- `touch-action: manipulation` eliminates the 300 ms tap delay
+- Per-item `mobileCameraPosition` overrides for proper framing on small viewports
+- Bottom sheet appears after 1250 ms delay to not obstruct camera fly-in animation
+
+### Demand-Driven Rendering
+
+The canvas uses `frameloop="demand"` — it only renders when something visually changes, instead of burning GPU at 60 fps while idle.
+
+- **Page Visibility API** pauses all rendering when the browser tab is hidden
+- **Desktop idle: 0 fps** when the mouse isn't moving and no interaction is happening
+- **Mobile: 30 fps cap** for pulse animations (visually identical to 60 fps for slow sine waves, half the GPU work) — fully paused when the tab is backgrounded
+- GSAP camera animations drive frame rendering via `onUpdate` callbacks
+- **Epsilon-based convergence detection** stops rendering once hover/parallax lerps settle within threshold
+- All friction and lerp factors are **time-based** (`Math.pow` normalization) so animations feel identical at any framerate
+
+### Network Resilience
+
+- Loading screen **dual-gate**: won't dismiss until all assets are downloaded AND WebGL context is created
+- **WebGL context loss recovery** — `contextlost` allows restoration, `contextrestored` remounts the canvas
+- `ErrorBoundary` wraps the 3D canvas (not UI) — UI stays functional if WebGL crashes
+- Broken image fallbacks in panels — `onError` hides images instead of showing broken icons
+- Inline CSS background color prevents white flash before JS loads
+
+### Build & Delivery
+
+- Font `preconnect` hints for Google Fonts (DNS/TLS handshake starts early)
+- `font-display: swap` — text visible immediately, custom fonts swap in later
+- Vite tree-shaking removes unused code
+- Tailwind CSS v4 emits only used utility classes
+
+---
+
 ## Sections
 
 | Section | Garage Object | Content |

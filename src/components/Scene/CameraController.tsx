@@ -29,7 +29,7 @@ const PITCH_RANGE = (20 / 180) * Math.PI  // ±10 degrees from center
 const LOOK_DISTANCE = defaultDirection.length()
 
 export default function CameraController() {
-  const { camera } = useThree()
+  const { camera, invalidate } = useThree()
   const mode = useRef<CameraMode>('idle')
   const mouse = useRef({ x: 0, y: 0 })
   const smoothMouse = useRef({ x: 0, y: 0 })
@@ -100,12 +100,14 @@ export default function CameraController() {
 
         lastTouch.current.x = touch.clientX
         lastTouch.current.y = touch.clientY
+        invalidate()
       }
 
       const onTouchEnd = () => {
         tracking = false
         isTouching.current = false
         // velocity is preserved — useFrame will apply inertia decay
+        invalidate()
       }
 
       window.addEventListener('touchstart', onTouchStart, { passive: true })
@@ -120,11 +122,12 @@ export default function CameraController() {
       const onMouseMove = (e: MouseEvent) => {
         mouse.current.x = (e.clientX / window.innerWidth - 0.5) * 2
         mouse.current.y = (e.clientY / window.innerHeight - 0.5) * 2
+        invalidate()
       }
       window.addEventListener('mousemove', onMouseMove)
       return () => window.removeEventListener('mousemove', onMouseMove)
     }
-  }, [isMobile, isPortrait])
+  }, [isMobile, isPortrait, invalidate])
 
   // Set initial camera position
   useEffect(() => {
@@ -148,8 +151,10 @@ export default function CameraController() {
         : activeItem.cameraPosition
       mode.current = 'animating'
       const tl = gsap.timeline({
+        onUpdate: () => invalidate(),
         onComplete: () => {
           mode.current = 'focused'
+          invalidate()
         },
       })
 
@@ -190,12 +195,14 @@ export default function CameraController() {
       rotVelocity.current.pitch = 0
 
       const tl = gsap.timeline({
+        onUpdate: () => invalidate(),
         onComplete: () => {
           // Force-set final positions to guarantee reset even if tween was imprecise
           camera.position.set(...defaultPos)
           lookAtTarget.current.set(...DEFAULT_CAMERA_TARGET)
           basePosition.current.set(...defaultPos)
           mode.current = 'idle'
+          invalidate()
         },
       })
 
@@ -225,7 +232,7 @@ export default function CameraController() {
 
       tweenRef.current = tl
     }
-  }, [activeItem, camera, defaultPos, isMobilePortrait])
+  }, [activeItem, camera, defaultPos, isMobilePortrait, invalidate])
 
   // Desktop parallax multipliers
   const parallaxX = 0.3
@@ -235,11 +242,15 @@ export default function CameraController() {
   const mLandscapeX = 1.2
   const mLandscapeY = 0.6
 
-  useFrame(() => {
+  useFrame((_, delta) => {
+    // Normalize per-frame factors to behave consistently at any framerate
+    // e.g. 0.92 friction at 60fps → Math.pow(0.92, delta * 60) at any fps
+    const dt60 = delta * 60
+
     if (mode.current === 'idle') {
       if (isMobilePortrait) {
         // Mobile portrait: rotation-based swipe-to-look (Street View style)
-        const friction = 0.92
+        const friction = Math.pow(0.92, dt60)
         if (!isTouching.current) {
           rotVelocity.current.yaw *= friction
           rotVelocity.current.pitch *= friction
@@ -247,9 +258,10 @@ export default function CameraController() {
           rotation.current.pitch = Math.max(-1, Math.min(1, rotation.current.pitch + rotVelocity.current.pitch))
         }
 
-        // Smooth interpolation
-        smoothRotation.current.yaw += (rotation.current.yaw - smoothRotation.current.yaw) * 0.1
-        smoothRotation.current.pitch += (rotation.current.pitch - smoothRotation.current.pitch) * 0.1
+        // Smooth interpolation (time-based)
+        const rotLerp = 1 - Math.pow(1 - 0.1, dt60)
+        smoothRotation.current.yaw += (rotation.current.yaw - smoothRotation.current.yaw) * rotLerp
+        smoothRotation.current.pitch += (rotation.current.pitch - smoothRotation.current.pitch) * rotLerp
 
         // Convert normalized rotation to yaw/pitch angles
         const yaw = DEFAULT_YAW + smoothRotation.current.yaw * YAW_RANGE
@@ -264,24 +276,33 @@ export default function CameraController() {
         camera.position.set(...defaultPos)
       } else if (isMobile) {
         // Mobile landscape: position-based parallax (existing behavior)
-        const friction = 0.92
+        const friction = Math.pow(0.92, dt60)
         velocity.current.x *= friction
         velocity.current.y *= friction
         mouse.current.x = Math.max(-1, Math.min(1, mouse.current.x + velocity.current.x))
         mouse.current.y = Math.max(-1, Math.min(1, mouse.current.y + velocity.current.y))
 
-        smoothMouse.current.x += (mouse.current.x - smoothMouse.current.x) * 0.08
-        smoothMouse.current.y += (mouse.current.y - smoothMouse.current.y) * 0.08
+        const landscapeLerp = 1 - Math.pow(1 - 0.08, dt60)
+        smoothMouse.current.x += (mouse.current.x - smoothMouse.current.x) * landscapeLerp
+        smoothMouse.current.y += (mouse.current.y - smoothMouse.current.y) * landscapeLerp
 
         camera.position.x = defaultPos[0] + smoothMouse.current.x * mLandscapeX
         camera.position.y = defaultPos[1] - smoothMouse.current.y * mLandscapeY
       } else {
-        // Desktop: direct smooth follow
-        smoothMouse.current.x += (mouse.current.x - smoothMouse.current.x) * 0.05
-        smoothMouse.current.y += (mouse.current.y - smoothMouse.current.y) * 0.05
+        // Desktop: direct smooth follow (time-based lerp)
+        const desktopLerp = 1 - Math.pow(1 - 0.05, dt60)
+        smoothMouse.current.x += (mouse.current.x - smoothMouse.current.x) * desktopLerp
+        smoothMouse.current.y += (mouse.current.y - smoothMouse.current.y) * desktopLerp
 
         camera.position.x = defaultPos[0] + smoothMouse.current.x * parallaxX
         camera.position.y = defaultPos[1] - smoothMouse.current.y * parallaxY
+
+        // Keep rendering while parallax lerp hasn't settled
+        const dx = Math.abs(smoothMouse.current.x - mouse.current.x)
+        const dy = Math.abs(smoothMouse.current.y - mouse.current.y)
+        if (dx > 0.0001 || dy > 0.0001) {
+          invalidate()
+        }
       }
     }
 

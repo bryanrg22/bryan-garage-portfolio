@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState, useMemo, Suspense } from 'react'
-import { useFrame } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 import { useGLTF, useTexture, Html } from '@react-three/drei'
 import * as THREE from 'three'
 import { useStore } from '../../stores/useStore'
@@ -115,6 +115,11 @@ useTexture.preload('/concrete_floor/Concrete035_1K-JPG_Roughness.jpg')
 useTexture.preload('/chipboard_wall/Chipboard002_1K-JPG_Color.jpg')
 useTexture.preload('/chipboard_wall/Chipboard002_1K-JPG_NormalGL.jpg')
 useTexture.preload('/chipboard_wall/Chipboard002_1K-JPG_Roughness.jpg')
+
+// Reusable Vector3s for scale lerps — avoids per-frame GC allocation
+const _linkedInScale = new THREE.Vector3()
+const _gitHubScale = new THREE.Vector3()
+const _resumeScale = new THREE.Vector3()
 
 /** Concrete floor with PBR textures */
 function ConcreteFloor() {
@@ -267,6 +272,7 @@ function LinkedInLogo({ position }: { position: [number, number, number] }) {
   const { scene } = useGLTF('/models/linkedin_logo.glb')
   const groupRef = useRef<THREE.Group>(null)
   const [hovered, setHovered] = useState(false)
+  const invalidate = useThree((s) => s.invalidate)
 
   useEffect(() => {
     scene.traverse((child) => {
@@ -283,7 +289,8 @@ function LinkedInLogo({ position }: { position: [number, number, number] }) {
   useFrame((_, delta) => {
     if (!groupRef.current) return
     const target = hovered ? 1.05 : 1
-    groupRef.current.scale.lerp(new THREE.Vector3(target, target, target), delta * 8)
+    _linkedInScale.setScalar(target)
+    groupRef.current.scale.lerp(_linkedInScale, delta * 8)
     scene.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
         const mat = (child as THREE.Mesh).material as THREE.MeshStandardMaterial
@@ -292,13 +299,17 @@ function LinkedInLogo({ position }: { position: [number, number, number] }) {
         }
       }
     })
+    // Keep rendering while scale/emissive lerp hasn't settled
+    if (Math.abs(groupRef.current.scale.x - target) > 0.001) {
+      invalidate()
+    }
   })
 
   return (
     <group ref={groupRef} position={position}>
       <group
-        onPointerOver={(e: any) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer' }}
-        onPointerOut={() => { setHovered(false); document.body.style.cursor = 'default' }}
+        onPointerOver={(e: any) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer'; invalidate() }}
+        onPointerOut={() => { setHovered(false); document.body.style.cursor = 'default'; invalidate() }}
         onClick={(e: any) => { e.stopPropagation(); window.open('https://www.linkedin.com/in/bryanrg22', '_blank') }}
       >
         <primitive
@@ -329,6 +340,7 @@ function GitHubLogo({ position }: { position: [number, number, number] }) {
   const { scene } = useGLTF('/models/github_logo.glb')
   const groupRef = useRef<THREE.Group>(null)
   const [hovered, setHovered] = useState(false)
+  const invalidate = useThree((s) => s.invalidate)
 
   useEffect(() => {
     scene.traverse((child) => {
@@ -346,7 +358,12 @@ function GitHubLogo({ position }: { position: [number, number, number] }) {
   useFrame((_, delta) => {
     if (!groupRef.current) return
     const target = hovered ? 1.08 : 1
-    groupRef.current.scale.lerp(new THREE.Vector3(target, target, target), delta * 8)
+    _gitHubScale.setScalar(target)
+    groupRef.current.scale.lerp(_gitHubScale, delta * 8)
+    // Keep rendering while scale lerp hasn't settled
+    if (Math.abs(groupRef.current.scale.x - target) > 0.001) {
+      invalidate()
+    }
   })
 
   return (
@@ -356,8 +373,8 @@ function GitHubLogo({ position }: { position: [number, number, number] }) {
         scale={0.005}
         rotation={[-Math.PI / 2 + 0.3, -Math.PI / 2 + 0.8, 0.2]}
         castShadow
-        onPointerOver={(e: any) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer' }}
-        onPointerOut={() => { setHovered(false); document.body.style.cursor = 'default' }}
+        onPointerOver={(e: any) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer'; invalidate() }}
+        onPointerOut={() => { setHovered(false); document.body.style.cursor = 'default'; invalidate() }}
         onClick={(e: any) => { e.stopPropagation(); window.open('https://github.com/bryanrg22', '_blank') }}
       />
       {hovered && (
@@ -377,14 +394,20 @@ function ResumePaper({ position }: { position: [number, number, number] }) {
   const groupRef = useRef<THREE.Group>(null)
   const meshRef = useRef<THREE.Mesh>(null)
   const [hovered, setHovered] = useState(false)
+  const invalidate = useThree((s) => s.invalidate)
 
   useFrame((_, delta) => {
     if (!groupRef.current) return
     const target = hovered ? 1.05 : 1
-    groupRef.current.scale.lerp(new THREE.Vector3(target, target, target), delta * 8)
+    _resumeScale.setScalar(target)
+    groupRef.current.scale.lerp(_resumeScale, delta * 8)
     if (meshRef.current) {
       const mat = meshRef.current.material as THREE.MeshStandardMaterial
       mat.emissiveIntensity = THREE.MathUtils.lerp(mat.emissiveIntensity, hovered ? 0.3 : 0.0, delta * 8)
+    }
+    // Keep rendering while scale/emissive lerp hasn't settled
+    if (Math.abs(groupRef.current.scale.x - target) > 0.001) {
+      invalidate()
     }
   })
 
@@ -395,8 +418,8 @@ function ResumePaper({ position }: { position: [number, number, number] }) {
         rotation={[-Math.PI / 2, 0, 0]}
         castShadow
         receiveShadow
-        onPointerOver={(e: any) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer' }}
-        onPointerOut={() => { setHovered(false); document.body.style.cursor = 'default' }}
+        onPointerOver={(e: any) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer'; invalidate() }}
+        onPointerOut={() => { setHovered(false); document.body.style.cursor = 'default'; invalidate() }}
         onClick={(e: any) => { e.stopPropagation(); window.open('/resume.pdf', '_blank') }}
       >
         <planeGeometry args={[0.7, 0.9]} />

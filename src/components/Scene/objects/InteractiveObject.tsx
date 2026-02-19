@@ -1,5 +1,5 @@
 import { useRef, useState, useMemo } from 'react'
-import { useFrame } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 import { Html } from '@react-three/drei'
 import type { ThreeEvent } from '@react-three/fiber'
 import * as THREE from 'three'
@@ -269,6 +269,9 @@ function ObjectGeometry({ id, color, hovered }: { id: string; color: string; hov
 
 const goldenColor = new THREE.Color('#F4C963')
 
+// Reusable Vector3 for scale lerp — avoids per-frame GC allocation across all instances
+const _targetScale = new THREE.Vector3()
+
 export default function InteractiveObject({ item, children }: InteractiveObjectProps) {
   const groupRef = useRef<THREE.Group>(null)
   const [hovered, setHovered] = useState(false)
@@ -278,22 +281,26 @@ export default function InteractiveObject({ item, children }: InteractiveObjectP
   const isActive = activeItem?.id === item.id
   const shape = useObjectShape(item.id)
   const isMobile = useIsMobile()
+  const invalidate = useThree((s) => s.invalidate)
   const dotRef = useRef<THREE.Mesh>(null)
 
   useFrame((state, delta) => {
     if (!groupRef.current) return
 
     if (isMobile && !isActive) {
-      // Mobile: subtle pulse animation
+      // Mobile: subtle pulse animation (RenderController drives frames)
       const pulse = 1 + Math.sin(state.clock.elapsedTime * Math.PI) * 0.015
       groupRef.current.scale.setScalar(pulse)
     } else {
       // Desktop: hover scale lerp
-      const targetScale = hovered && !isActive ? 1.05 : 1
-      groupRef.current.scale.lerp(
-        new THREE.Vector3(targetScale, targetScale, targetScale),
-        delta * 8,
-      )
+      const target = hovered && !isActive ? 1.05 : 1
+      _targetScale.setScalar(target)
+      groupRef.current.scale.lerp(_targetScale, delta * 8)
+
+      // Keep rendering while scale lerp hasn't settled
+      if (Math.abs(groupRef.current.scale.x - target) > 0.001) {
+        invalidate()
+      }
     }
 
     // Golden dot pulse on mobile
@@ -318,10 +325,12 @@ export default function InteractiveObject({ item, children }: InteractiveObjectP
           e.stopPropagation()
           setHovered(true)
           document.body.style.cursor = 'pointer'
+          invalidate()
         }}
         onPointerOut={() => {
           setHovered(false)
           document.body.style.cursor = 'default'
+          invalidate()
         }}
       >
         {children ? (
