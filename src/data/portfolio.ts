@@ -144,7 +144,7 @@ export const portfolioItems: PortfolioItem[] = [
         description: 'This very website. It is an immersive 3D portfolio built as an interactive auto body garage scene. Visitors explore projects, experience, and skills by clicking on garage objects with smooth camera fly-ins.',
         achievement: "You're looking at it right now",
         techStack: ['React', 'TypeScript', 'Three.js', 'React Three Fiber', 'Vite', 'Tailwind CSS', 'GSAP', 'Zustand', 'Framer Motion'],
-        links: [{ label: 'GitHub', url: 'https://github.com/bryanrg22/garage-portfolio' }],
+        links: [{ label: 'GitHub', url: 'https://github.com/bryanrg22/bryan-garage-portfolio' }],
         logo: '/images/websiteLogo.png',
       },
     ],
