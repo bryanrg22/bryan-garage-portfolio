@@ -103,14 +103,14 @@ Fonts: `font-serif` = Playfair Display, `font-sans` = DM Sans (loaded from Googl
 
 ### Analytics (PostHog)
 
-- **Integration:** `posthog-js` initialized in `src/lib/analytics.ts`, React provider in `src/main.tsx`
+- **Integration:** `@posthog/react` `PostHogProvider` in `src/main.tsx` with `apiKey` and `options` props. API key and host are **hardcoded** directly in source (not env vars) — the key is public (visible in the JS bundle regardless), and env vars caused persistent caching/deployment issues with Vercel.
+- **Config:** `defaults: '2026-01-30'` (PostHog recommended defaults), `api_host: 'https://us.i.posthog.com'` (US Cloud ingestion endpoint)
 - **Wrapper:** `src/lib/analytics.ts` exports `trackEvent()` and `setUserProps()` — all other files use these helpers instead of importing `posthog-js` directly
 - **Custom events:** `portfolio_item_viewed` (with `item_id`, `item_title`, `source`), `portfolio_item_closed` (with `item_id`, `item_title`), `music_started`, `music_stopped`
 - **Source tracking:** `portfolio_item_viewed` includes `source: '3d_click' | 'mobile_tab'` to distinguish navigation method
 - **User properties:** `gpu_tier` (`low`/`mid`/`high`) set as a PostHog person property after GPU detection
-- **Environment:** Requires `VITE_POSTHOG_KEY` and `VITE_POSTHOG_HOST` in `.env` (see `.env.example`)
-- **No-op in dev:** Analytics is silently disabled when no key is set — no crashes, no errors
-- **Auto-captured by PostHog:** Page views, device type, browser, OS, country, referrer
+- **Auto-captured by PostHog:** Page views, clicks, device type, browser, OS, country, referrer
+- **Key rotation gotcha:** If the API key is ever regenerated, users must **clear site data** (localStorage) in their browser — PostHog caches the token in localStorage and will keep sending the old one otherwise
 
 ### Animations
 
