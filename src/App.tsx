@@ -1,5 +1,6 @@
 import { Suspense } from 'react'
 import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/react'
 import GarageScene from './components/Scene/GarageScene'
 import ErrorBoundary from './components/ErrorBoundary'
 import TopBar from './components/UI/TopBar'
@@ -41,6 +42,7 @@ export default function App() {
       <LoadingScreen />
       <RotatePrompt />
       <Analytics />
+      <SpeedInsights />
     </div>
   )
 }
