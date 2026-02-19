@@ -105,13 +105,13 @@ export default function MobileTabBar() {
                 onClick={() => {
                   if (isHome) {
                     // Home tab resets camera to default
-                    setActiveItem(null)
+                    setActiveItem(null, 'mobile_tab')
                   } else if (isActive) {
-                    setActiveItem(null)
+                    setActiveItem(null, 'mobile_tab')
                   } else {
                     const item = portfolioItems.find((p) => p.id === tab.id)
                     if (item) {
-                      setActiveItem(item)
+                      setActiveItem(item, 'mobile_tab')
                       setHasInteracted()
                     }
                   }

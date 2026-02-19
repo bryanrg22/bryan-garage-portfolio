@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import { useStore } from '../../stores/useStore'
 import { useIsMobile } from '../../hooks/useIsMobile'
 import { portfolioItems } from '../../data/portfolio'
+import { trackEvent } from '../../lib/analytics'
 
 const boomboxItem = portfolioItems.find((item) => item.id === 'boombox')!
 
@@ -39,6 +40,7 @@ export default function SpotifyPlayer() {
         const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data
         if (data?.type === 'playback_update' && data.payload?.isPaused === false) {
           setMusicPlaying(true)
+          trackEvent('music_started')
         }
       } catch {
         // ignore non-JSON messages
@@ -148,7 +150,10 @@ export default function SpotifyPlayer() {
               <span className="font-sans text-xs font-medium">Now Playing</span>
             </button>
             <button
-              onClick={() => setMusicPlaying(false)}
+              onClick={() => {
+                setMusicPlaying(false)
+                trackEvent('music_stopped')
+              }}
               className="ml-1 flex h-5 w-5 items-center justify-center rounded-full text-stone transition-colors hover:bg-cream/10 hover:text-cream"
             >
               <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
