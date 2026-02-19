@@ -2,8 +2,7 @@
 
 An immersive 3D portfolio experience built as an interactive auto body garage.
 
-<!-- Replace the src below with your actual screenshot URL (drag an image into a GitHub issue to get a hosted link) -->
-<img width="900" alt="Garage Portfolio Screenshot" src="https://github.com/user-attachments/assets/REPLACE_WITH_SCREENSHOT" />
+<img width="1512" height="860" alt="Garage Portfolio" src="https://github.com/user-attachments/assets/afe2bcd8-0df8-4964-ad8c-912fe8a04458" />
 
 **Live site:** [bryanramirezgonzalez.com](https://bryanramirezgonzalez.com)
 
