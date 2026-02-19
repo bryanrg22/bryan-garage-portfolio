@@ -153,6 +153,18 @@ The canvas uses `frameloop="demand"` — it only renders when something visually
 
 ---
 
+## Analytics (PostHog)
+
+Product analytics are integrated via **PostHog** to understand how visitors navigate the 3D experience.
+
+- **Custom event tracking** — `portfolio_item_viewed`, `portfolio_item_closed`, `music_started`, `music_stopped` fire on user interactions
+- **Source attribution** — every item view is tagged with `source: '3d_click' | 'mobile_tab'` to distinguish how users navigate (clicking 3D objects vs. mobile tab bar)
+- **Device intelligence** — GPU tier (`low`/`mid`/`high`) is set as a PostHog person property after hardware detection, enabling analysis of performance vs. engagement
+- **Auto-capture** — page views, clicks, device type, browser, OS, country, and referrer are tracked out of the box
+- **Privacy-conscious defaults** — person profiles use `identified_only` mode; no login or PII is collected
+
+---
+
 ## About Me
 
 **Bryan Ramirez-Gonzalez** — First-gen Latino, Undergrad Honors CS @ USC '28, 3x Hackathon Winner
