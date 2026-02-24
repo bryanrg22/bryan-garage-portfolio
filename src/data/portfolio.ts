@@ -90,13 +90,14 @@ export const portfolioItems: PortfolioItem[] = [
     title: 'Projects',
     subtitle: "What I've Built",
     description:
-      'Basis — AI-powered cost segregation. Co-founder & lead dev. Multi-agent AI using YOLOv8, CLIP, and OpenAI Vision for automated building component classification. Won LavaLab Demo Night (Best Traction). Lambda Rim — full-stack NBA fantasy analytics. Poisson distributions, Monte Carlo sims, GARCH volatility forecasting. Turned $10 into $3,000 with a 78%+ win rate. Swerve — agentic AI procurement co-pilot, 1st place Dryft Challenge at Caltech. CleanSweep — smart waste management with OpenCV, won Best Use of Terraform at Harvard.',
+      'Basis — AI-powered cost segregation. Co-founder & lead dev. Multi-agent AI using YOLOv8, CLIP, and OpenAI Vision for automated building component classification. Won LavaLab Demo Night (Best Traction). Lambda Rim — full-stack NBA fantasy analytics. Poisson distributions, Monte Carlo sims, GARCH volatility forecasting. Turned $10 into $3,000 with a 78%+ win rate. Swerve — agentic AI procurement co-pilot, 1st place Dryft Challenge at Caltech. CleanSweep — smart waste management with OpenCV, won Best Use of Terraform at Harvard. Nosu — AI video-to-soundtrack generator built at HackMIT 2025, multi-model vision pipeline with YOLO, BLIP, VideoMAE, and Suno AI music generation.',
     tags: ['Next.js', 'TypeScript', 'PyTorch', 'YOLOv8', 'CLIP', 'Firebase', 'Flask', 'Docker'],
     links: [
       { label: 'Basis', url: 'https://github.com/bryanrg22/Basis_Info' },
       { label: 'Lambda Rim', url: 'https://github.com/bryanrg22/lambda-rim' },
       { label: 'Swerve', url: 'https://devpost.com/software/swerve-gqmenk' },
       { label: 'CleanSweep', url: 'https://devpost.com/software/cleansweep-tjq36w' },
+      { label: 'Nosu', url: 'https://github.com/bryanrg22/Mit_Hacks' },
     ],
     projectEntries: [
       {
@@ -138,6 +139,16 @@ export const portfolioItems: PortfolioItem[] = [
           { label: 'DevPost', url: 'https://devpost.com/software/cleansweep-tjq36w' },
         ],
         logo: '/images/projects/cleansweeplogo.png',
+      },
+      {
+        name: 'Nosu',
+        description: 'AI video-to-soundtrack generator built at HackMIT 2025. Multi-model vision pipeline runs YOLO v5, BLIP, and VideoMAE locally to analyze objects, captions, and scene actions per frame. Outputs are fused with confidence-weighted scoring and distilled by GPT into a music prompt for Suno AI. MoviePy merges the generated track back into a shareable MP4.',
+        achievement: 'Built at HackMIT 2025',
+        techStack: ['FastAPI', 'Python', 'YOLOv5', 'BLIP', 'VideoMAE', 'CLAP', 'OpenAI', 'Suno AI', 'React', 'Firebase'],
+        links: [
+          { label: 'GitHub', url: 'https://github.com/bryanrg22/Mit_Hacks' },
+        ],
+        logo: '/images/projects/NosuLogo.png',
       },
       {
         name: "Bryan's Portfolio",
