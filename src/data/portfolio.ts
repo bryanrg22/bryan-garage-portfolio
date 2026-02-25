@@ -291,9 +291,9 @@ export const portfolioItems: PortfolioItem[] = [
       { label: 'DevPost Profile', url: 'https://devpost.com/bryanrg22' },
     ],
     awardEntries: [
-      { name: "LavaLab Demo Night F'25", description: '(Best Traction) Demo Night Winner', location: 'Los Angeles, CA', year: 2025, iconType: 'trophy', photo: '/images/awards/photos/lava_award.jpg', logo: '/images/awards/logos/lavalabLogo.jpg' },
       { name: "CalTech's HackTech Hackathon", description: '(Winner) Dryft Challenge Winner', location: 'Pasadena, CA', year: 2025, iconType: 'trophy', photo: '/images/awards/photos/hacktechteam.jpeg', logo: '/images/awards/logos/awards_caltechLogo.png' },
       { name: "Harvard's HackHarvard Hackathon", description: '(Winner) Best Use of Terraform', location: 'Cambridge, MA', year: 2024, iconType: 'trophy', photo: '/images/awards/photos/hackharvardteam.jpeg', logo: '/images/awards/logos/awards_harvardLogo.png' },
+      { name: "LavaLab Demo Night F'25", description: '(Best Traction) Demo Night Winner', location: 'Los Angeles, CA', year: 2025, iconType: 'trophy', photo: '/images/awards/photos/lava_award.jpg', logo: '/images/awards/logos/lavalabLogo.jpg' },
       { name: 'AstroHacks Hackathon', description: '(Winner) Gold Medalist, Best Execution', location: 'Irvine, CA', year: 2024, iconType: 'trophy', photo: '/images/awards/photos/astroMedals.jpg', logo: '/images/awards/logos/awards_astrohacksLogo.jpeg' },
       { name: 'SkillsUSA CA Engineering Technology/Design', description: 'REGIONAL Finalist && STATE Bronze — 3rd Best Engineering Project in the State of California', location: 'Ontario, CA', year: 2024, iconType: 'medal', photo: '/images/awards/photos/skillsMedals.jpeg', logo: '/images/awards/logos/awards_skillsusaLogo.png' },
       { name: 'FIRST Tech Challenge CENTERSTAGE Robotics', description: 'REGIONAL Semifinalist — Top 5 out of 32 Teams', location: 'Pasadena, CA', year: 2024, iconType: 'award', photo: '/images/awards/photos/firstMedals.jpeg', logo: '/images/awards/logos/awards_firstLogo.jpeg' },
