@@ -1,6 +1,4 @@
 import { useStore } from '../../stores/useStore'
-import { useIsMobile } from '../../hooks/useIsMobile'
-import { useIsPortrait } from '../../hooks/useIsPortrait'
 import { portfolioItems } from '../../data/portfolio'
 
 const tabs = [
@@ -83,14 +81,9 @@ const tabs = [
 ]
 
 export default function MobileTabBar() {
-  const isMobile = useIsMobile()
-  const isPortrait = useIsPortrait()
   const activeItem = useStore((s) => s.activeItem)
   const setActiveItem = useStore((s) => s.setActiveItem)
   const setHasInteracted = useStore((s) => s.setHasInteracted)
-
-  // Only show in mobile portrait
-  if (!isMobile || !isPortrait) return null
 
   return (
     <nav className="pointer-events-auto fixed bottom-0 left-0 right-0 z-[46] border-t border-golden/10 bg-garage-dark/95 backdrop-blur-xl">

@@ -5,7 +5,7 @@ import type { ThreeEvent } from '@react-three/fiber'
 import * as THREE from 'three'
 import type { PortfolioItem } from '../../../data/portfolio'
 import { useStore } from '../../../stores/useStore'
-import { useIsMobile } from '../../../hooks/useIsMobile'
+import { useIsTouchDevice } from '../../../hooks/useIsTouchDevice'
 
 interface InteractiveObjectProps {
   item: PortfolioItem
@@ -280,14 +280,14 @@ export default function InteractiveObject({ item, children }: InteractiveObjectP
   const activeItem = useStore((s) => s.activeItem)
   const isActive = activeItem?.id === item.id
   const shape = useObjectShape(item.id)
-  const isMobile = useIsMobile()
+  const isTouchDevice = useIsTouchDevice()
   const invalidate = useThree((s) => s.invalidate)
   const dotRef = useRef<THREE.Mesh>(null)
 
   useFrame((state, delta) => {
     if (!groupRef.current) return
 
-    if (isMobile && !isActive) {
+    if (isTouchDevice && !isActive) {
       // Mobile: subtle pulse animation (RenderController drives frames)
       const pulse = 1 + Math.sin(state.clock.elapsedTime * Math.PI) * 0.015
       groupRef.current.scale.setScalar(pulse)
@@ -304,7 +304,7 @@ export default function InteractiveObject({ item, children }: InteractiveObjectP
     }
 
     // Golden dot pulse on mobile
-    if (dotRef.current && isMobile && !isActive) {
+    if (dotRef.current && isTouchDevice && !isActive) {
       const dotPulse = 0.5 + Math.sin(state.clock.elapsedTime * 2) * 0.5
       const mat = dotRef.current.material as THREE.MeshStandardMaterial
       mat.opacity = dotPulse * 0.8
@@ -348,7 +348,7 @@ export default function InteractiveObject({ item, children }: InteractiveObjectP
       </group>
 
       {/* Mobile: golden dot marker above objects */}
-      {isMobile && !isActive && (
+      {isTouchDevice && !isActive && (
         <mesh
           ref={dotRef}
           position={[0, shape.labelY + 0.15, 0]}
@@ -365,7 +365,7 @@ export default function InteractiveObject({ item, children }: InteractiveObjectP
       )}
 
       {/* Hover label (desktop only) */}
-      {!isMobile && hovered && !isActive && (
+      {!isTouchDevice && hovered && !isActive && (
         <Html
           position={[0, shape.labelY, 0]}
           center

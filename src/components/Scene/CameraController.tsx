@@ -6,6 +6,7 @@ import { useStore } from '../../stores/useStore'
 import { DEFAULT_CAMERA_POSITION, DEFAULT_CAMERA_TARGET } from '../../data/portfolio'
 import { useIsMobile } from '../../hooks/useIsMobile'
 import { useIsPortrait } from '../../hooks/useIsPortrait'
+import { useIsTouchDevice } from '../../hooks/useIsTouchDevice'
 
 type CameraMode = 'idle' | 'animating' | 'focused'
 
@@ -42,6 +43,7 @@ export default function CameraController() {
   const basePosition = useRef(new THREE.Vector3(...DEFAULT_CAMERA_POSITION))
   const tweenRef = useRef<gsap.core.Timeline | null>(null)
   const isMobile = useIsMobile()
+  const isTouchDevice = useIsTouchDevice()
 
   // Mobile portrait rotation state (yaw/pitch as normalized -1..1)
   const rotation = useRef({ yaw: 0, pitch: 0 })
@@ -52,14 +54,17 @@ export default function CameraController() {
   const isPortrait = useIsPortrait()
   const activeItem = useStore((s) => s.activeItem)
 
+  // Width-based: camera position/animation (narrow viewports need pulled-back camera)
   const isMobilePortrait = isMobile && isPortrait
+  // Touch-based: input controls (desktop always gets mouse controls regardless of width)
+  const isTouchPortrait = isTouchDevice && isPortrait
 
   // Effective default position based on device — only zoom out in portrait
   const defaultPos = isMobilePortrait ? MOBILE_CAMERA_POSITION : DEFAULT_CAMERA_POSITION
 
   // Track mouse/touch position for parallax / rotation
   useEffect(() => {
-    if (isMobile) {
+    if (isTouchDevice) {
       let tracking = false
 
       const onTouchStart = (e: TouchEvent) => {
@@ -132,7 +137,7 @@ export default function CameraController() {
       window.addEventListener('mousemove', onMouseMove)
       return () => window.removeEventListener('mousemove', onMouseMove)
     }
-  }, [isMobile, isPortrait, invalidate])
+  }, [isTouchDevice, isPortrait, invalidate])
 
   // Set initial camera position
   useEffect(() => {
@@ -256,8 +261,8 @@ export default function CameraController() {
     const dt60 = delta * 60
 
     if (mode.current === 'idle') {
-      if (isMobilePortrait) {
-        // Mobile portrait: rotation-based swipe-to-look (Street View style)
+      if (isTouchPortrait) {
+        // Touch portrait: rotation-based swipe-to-look (Street View style)
         const friction = Math.pow(0.92, dt60)
         if (!isTouching.current) {
           rotVelocity.current.yaw *= friction
@@ -282,8 +287,8 @@ export default function CameraController() {
 
         lookAtTarget.current.set(lookX, lookY, lookZ)
         camera.position.set(...defaultPos)
-      } else if (isMobile) {
-        // Mobile landscape: position-based parallax (existing behavior)
+      } else if (isTouchDevice) {
+        // Touch landscape: position-based parallax (existing behavior)
         const friction = Math.pow(0.92, dt60)
         velocity.current.x *= friction
         velocity.current.y *= friction
@@ -296,8 +301,31 @@ export default function CameraController() {
 
         camera.position.x = defaultPos[0] + smoothMouse.current.x * mLandscapeX
         camera.position.y = defaultPos[1] - smoothMouse.current.y * mLandscapeY
+      } else if (isMobile) {
+        // Narrow desktop: rotation-based look driven by mouse position
+        // Mouse at left edge → look left, mouse at right edge → look right
+        const desktopLerp = 1 - Math.pow(1 - 0.05, dt60)
+        smoothMouse.current.x += (mouse.current.x - smoothMouse.current.x) * desktopLerp
+        smoothMouse.current.y += (mouse.current.y - smoothMouse.current.y) * desktopLerp
+
+        const yaw = DEFAULT_YAW - smoothMouse.current.x * YAW_RANGE
+        const pitch = DEFAULT_PITCH - smoothMouse.current.y * PITCH_RANGE
+
+        const lookX = defaultPos[0] + Math.sin(yaw) * Math.cos(pitch) * LOOK_DISTANCE
+        const lookY = defaultPos[1] + Math.sin(pitch) * LOOK_DISTANCE
+        const lookZ = defaultPos[2] + Math.cos(yaw) * Math.cos(pitch) * LOOK_DISTANCE
+
+        lookAtTarget.current.set(lookX, lookY, lookZ)
+        camera.position.set(...defaultPos)
+
+        // Keep rendering while lerp hasn't settled
+        const dx = Math.abs(smoothMouse.current.x - mouse.current.x)
+        const dy = Math.abs(smoothMouse.current.y - mouse.current.y)
+        if (dx > 0.0001 || dy > 0.0001) {
+          invalidate()
+        }
       } else {
-        // Desktop: direct smooth follow (time-based lerp)
+        // Full desktop: subtle position parallax
         const desktopLerp = 1 - Math.pow(1 - 0.05, dt60)
         smoothMouse.current.x += (mouse.current.x - smoothMouse.current.x) * desktopLerp
         smoothMouse.current.y += (mouse.current.y - smoothMouse.current.y) * desktopLerp
