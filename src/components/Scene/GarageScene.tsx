@@ -143,14 +143,16 @@ export default function GarageScene() {
   return (
     <div className="absolute inset-0" style={{ background: '#14120F', touchAction: 'none' }}>
       <Canvas
-        key={sceneKey}
+        // Remount on tier change so gl props (antialias, powerPreference) reflect the detected tier —
+        // those are read once at context creation and can't be toggled later.
+        key={`${sceneKey}-${quality.tier}`}
         frameloop="demand"
         shadows={quality.shadows}
         dpr={quality.dpr}
         gl={{
           antialias: quality.antialias,
-          powerPreference: 'high-performance',
-          failIfMajorPerformanceCaveat: false,
+          powerPreference: 'default',
+          failIfMajorPerformanceCaveat: true,
         }}
         camera={{ fov: 50, near: 0.1, far: 100 }}
         onPointerMissed={() => setActiveItem(null)}

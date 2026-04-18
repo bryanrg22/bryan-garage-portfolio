@@ -66,13 +66,27 @@ function tierFromGPU(gpuTier: number): QualityConfig {
   return HIGH
 }
 
-/** Default config used before detection resolves */
-export const defaultQuality: QualityConfig = MID
+/** Default config used before detection resolves — LOW so we fail safe, not fail pretty */
+export const defaultQuality: QualityConfig = LOW
 
-/** Promise that resolves to the detected quality config */
-export const detectionPromise: Promise<QualityConfig> = getGPUTier({
-  failIfMajorPerformanceCaveat: false,
-}).then(
+const DETECTION_TIMEOUT_MS = 2500
+
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error('gpu-detect-timeout')), ms)
+    promise.then(
+      (value) => { clearTimeout(timer); resolve(value) },
+      (err) => { clearTimeout(timer); reject(err) },
+    )
+  })
+}
+
+// detect-gpu spins up a throwaway WebGL context and runs a benchmark; on some
+// integrated GPUs / broken drivers it stalls indefinitely. Race it against a timeout.
+export const detectionPromise: Promise<QualityConfig> = withTimeout(
+  getGPUTier({ failIfMajorPerformanceCaveat: false }),
+  DETECTION_TIMEOUT_MS,
+).then(
   (result) => tierFromGPU(result.tier),
-  () => MID, // fallback on detection failure
+  () => LOW, // fallback on timeout or detection failure
 )

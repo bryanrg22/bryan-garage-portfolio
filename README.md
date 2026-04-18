@@ -82,7 +82,7 @@ Shipping a 3D scene with ~40 MB of assets to a browser demands careful optimizat
 - **DPR capping** prevents 2x/3x retina rendering — a 4x difference in fragment shader work
 - **Shadow maps at 512x512** keep shadow texture VRAM low
 - **Fog (6–22 units)** hides distant geometry, reducing effective rendering area
-- `powerPreference: 'high-performance'` requests the discrete GPU on multi-GPU laptops
+- `powerPreference: 'default'` lets the browser pick the right GPU (earlier `'high-performance'` caused driver-level stalls on some hybrid-GPU laptops)
 - Antialias and shadows **disabled entirely** on low-tier GPUs
 
 ### Draw Call Reduction
@@ -125,6 +125,15 @@ The canvas uses `frameloop="demand"` — it only renders when something visually
 - `ErrorBoundary` wraps the 3D canvas (not UI) — UI stays functional if WebGL crashes
 - Broken image fallbacks in panels — `onError` hides images instead of showing broken icons
 - Inline CSS background color prevents white flash before JS loads
+
+### Reliability on Low-End & Broken-Driver Desktops
+
+After reports of hard freezes and blank screens on integrated-GPU desktops, the boot path was hardened against the worst-case device:
+
+- **GPU detection is time-boxed** — `detect-gpu` runs a real WebGL benchmark at startup and can stall indefinitely on misbehaving drivers. It's wrapped in a 2.5s `Promise.race` that falls back to the LOW tier on timeout or error, so the page is never blocked by GPU probing.
+- **Fail safe, not fail pretty** — the default tier *before* detection resolves is now LOW (not MID). The scene boots with shadows/antialias/environment/particles off and upgrades only when a capable GPU is confirmed. Users on weak hardware never briefly render the heavy config.
+- **Software-renderer detection** — `failIfMajorPerformanceCaveat: true` tells the browser to fail WebGL creation rather than silently fall back to SwiftShader (software rasterizer). The failure surfaces through the `ErrorBoundary`, which shows a clear "your browser can't run the 3D scene" fallback instead of a frozen 2 fps scene.
+- **Canvas remounts on tier change** — `gl` options like `antialias` and `powerPreference` are read once at WebGL context creation and can't be toggled later. Keying the canvas on `quality.tier` ensures that when LOW → MID/HIGH is detected, the context is rebuilt with the right flags so high-tier users still get AA.
 
 ### Build & Delivery
 
