@@ -90,9 +90,10 @@ export const portfolioItems: PortfolioItem[] = [
     title: 'Projects',
     subtitle: "What I've Built",
     description:
-      'Basis — AI-powered cost segregation. Co-founder & lead dev. Multi-agent AI using YOLOv8, CLIP, and OpenAI Vision for automated building component classification. Won LavaLab Demo Night (Best Traction). Lambda Rim — full-stack NBA fantasy analytics. Poisson distributions, Monte Carlo sims, GARCH volatility forecasting. Turned $10 into $3,000 with a 78%+ win rate. Swerve — agentic AI procurement co-pilot, 1st place Dryft Challenge at Caltech. CleanSweep — smart waste management with OpenCV, won Best Use of Terraform at Harvard. Nosu — AI video-to-soundtrack generator built at HackMIT 2025, multi-model vision pipeline with YOLO, BLIP, VideoMAE, and Suno AI music generation.',
-    tags: ['Next.js', 'TypeScript', 'PyTorch', 'YOLOv8', 'CLIP', 'Firebase', 'Flask', 'Docker'],
+      'Agentic Automation on iOS — voice-controlled Claude agent that operates a real iPhone for blind and low-vision users. 3rd place at the Claude Builder Hackathon @ UCLA. Basis — AI-powered cost segregation. Co-founder & lead dev. Multi-agent AI using YOLOv8, CLIP, and OpenAI Vision for automated building component classification. Won LavaLab Demo Night (Best Traction). Lambda Rim — full-stack NBA fantasy analytics. Poisson distributions, Monte Carlo sims, GARCH volatility forecasting. Turned $10 into $3,000 with a 78%+ win rate. Swerve — agentic AI procurement co-pilot, 1st place Dryft Challenge at Caltech. CleanSweep — smart waste management with OpenCV, won Best Use of Terraform at Harvard. Nosu — AI video-to-soundtrack generator built at HackMIT 2025, multi-model vision pipeline with YOLO, BLIP, VideoMAE, and Suno AI music generation.',
+    tags: ['Claude', 'Next.js', 'TypeScript', 'PyTorch', 'YOLOv8', 'CLIP', 'Firebase', 'Flask', 'Docker'],
     links: [
+      { label: 'Agentic iOS', url: 'https://github.com/bryanrg22/claude_hacakthon' },
       { label: 'Basis', url: 'https://github.com/bryanrg22/Basis_Info' },
       { label: 'Lambda Rim', url: 'https://github.com/bryanrg22/lambda-rim' },
       { label: 'Swerve', url: 'https://devpost.com/software/swerve-gqmenk' },
@@ -100,6 +101,14 @@ export const portfolioItems: PortfolioItem[] = [
       { label: 'Nosu', url: 'https://github.com/bryanrg22/Mit_Hacks' },
     ],
     projectEntries: [
+      {
+        name: 'Agentic Automation on iOS',
+        description: 'Voice-controlled AI agent that operates a real iPhone — built on Claude Sonnet 4.6. Hold the iPhone Action Button, speak a task, and Claude takes over the phone, narrating every step out loud so blind and low-vision users can use any iOS app. Vision + tool-calling loop with ~22 tools (tap, type, scroll, drag, openApp, askUser, …), prompt caching on the 5k-token system prompt + tool schemas, rolling text summaries for 3.40× speedup, CoALA-style semantic/episodic/procedural memory, Dynamic Island live progress, and human-in-the-loop confirmation before irreversible actions. Node.js agent drives a physical iPhone over USB via XCTest + Maestro bridge, with a Swift companion app for narration and status.',
+        achievement: '3rd Place — Claude Builder Hackathon @ UCLA',
+        techStack: ['Claude Sonnet 4.6', 'Node.js', 'Swift', 'XCTest', 'Maestro', 'AVSpeechSynthesizer', 'Dynamic Island', 'iOS Shortcuts', 'Prompt Caching'],
+        links: [{ label: 'GitHub', url: 'https://github.com/bryanrg22/claude_hacakthon' }],
+        logo: '/images/hackathons/claudeLogo.webp',
+      },
       {
         name: 'Basis',
         description: 'Award-winning agentic AI platform for cost segregation. Built a full-stack workflow with LangGraph and a multi-agent vision pipeline (Grounding DINO → SAM2 → GPT-5.2). Features an IRS-grounded Agentic RAG system combining BM25 and FAISS search with citation-backed results. 2 paying customers from top-5 firms.',
@@ -168,16 +177,18 @@ export const portfolioItems: PortfolioItem[] = [
     id: 'hackathons',
     objectName: 'mlh-banner',
     title: 'Hackathons & Competitions',
-    subtitle: '11 Hackathons. 3 Wins. Coast to Coast.',
+    subtitle: '12 Hackathons. 4 Wins. Coast to Coast.',
     description:
-      'My first projects were mediocre. I flew across the country and learned from failure. Then I won at Harvard (CleanSweep — Best Use of Terraform). Then Caltech (Swerve — 1st place Dryft Challenge). AstroHacks Gold Medalist. LavaLab Demo Night Winner (Best Traction). SkillsUSA State Bronze — 3rd best engineering project in California. FIRST Robotics Regional Semifinalist. MIT, Stanford TreeHacks, Princeton, Yale, UPenn, Berkeley — I showed up to all of them.',
-    tags: ['Harvard', 'Caltech', 'MIT', 'Stanford', 'Princeton', 'Yale', 'UPenn'],
+      'My first projects were mediocre. I flew across the country and learned from failure. Then I won at Harvard (CleanSweep — Best Use of Terraform). Then Caltech (Swerve — 1st place Dryft Challenge). Then UCLA (Agentic Automation on iOS — 3rd place at the Claude Builder Hackathon). AstroHacks Gold Medalist. LavaLab Demo Night Winner (Best Traction). SkillsUSA State Bronze — 3rd best engineering project in California. FIRST Robotics Regional Semifinalist. MIT, Stanford TreeHacks, Princeton, Yale, UPenn, Berkeley — I showed up to all of them.',
+    tags: ['UCLA', 'Harvard', 'Caltech', 'MIT', 'Stanford', 'Princeton', 'Yale', 'UPenn'],
     links: [
+      { label: 'Agentic iOS (UCLA Winner)', url: 'https://github.com/bryanrg22/claude_hacakthon' },
       { label: 'Swerve (Caltech Winner)', url: 'https://devpost.com/software/swerve-gqmenk' },
       { label: 'CleanSweep (Harvard Winner)', url: 'https://devpost.com/software/cleansweep-tjq36w' },
       { label: 'DevPost Profile', url: 'https://devpost.com/bryanrg22' },
     ],
     hackathonEntries: [
+      { name: 'Claude Builder Hackathon', institution: 'UCLA', startDate: '2026-04-18', endDate: '2026-04-19', location: 'Los Angeles, California', status: 'COMPLETED', highlight: 'Hackathon Winner', logo: '/images/hackathons/claudeLogo.webp' },
       { name: 'MITHacks', institution: 'MIT', startDate: '2025-09-14', endDate: '2025-09-15', location: 'Boston, Massachusetts', status: 'COMPLETED', logo: '/images/hackathons/mitLogo.png' },
       { name: '2025 HackTech', institution: 'California Institute of Technology', startDate: '2025-04-26', endDate: '2025-04-28', location: 'Pasadena, California', status: 'COMPLETED', highlight: 'Hackathon Winner', logo: '/images/hackathons/caltechLogo.png' },
       { name: 'TreeHacks', institution: 'Stanford University', startDate: '2025-02-15', endDate: '2025-02-17', location: 'Stanford, California', status: 'COMPLETED', logo: '/images/hackathons/stanfordLogo.png' },
@@ -285,12 +296,13 @@ export const portfolioItems: PortfolioItem[] = [
     title: 'Awards',
     subtitle: 'Recognition & Honors',
     description:
-      'Harvard Hack Lodge — Winner (CleanSweep, Best Use of Terraform). Caltech Hackathon — Winner (Swerve, 1st Place Dryft Challenge). AstroHacks — Gold Medalist. Jane Street FOCUS \'25 (1 of 14) & UNBOXED \'24 (1 of 37). D.E. Shaw Connect Fellowship. Two Sigma New Seekers Fellowship. USC Merit Scholar. LavaLab Demo Night Winner (Best Traction). SkillsUSA State Bronze — 3rd best engineering project in California.',
-    tags: ['Jane Street', 'D.E. Shaw', 'Two Sigma', 'Harvard', 'Caltech', 'USC'],
+      'Claude Builder Hackathon — 3rd Place (Agentic Automation on iOS @ UCLA). Harvard Hack Lodge — Winner (CleanSweep, Best Use of Terraform). Caltech Hackathon — Winner (Swerve, 1st Place Dryft Challenge). AstroHacks — Gold Medalist. Jane Street FOCUS \'25 (1 of 14) & UNBOXED \'24 (1 of 37). D.E. Shaw Connect Fellowship. Two Sigma New Seekers Fellowship. USC Merit Scholar. LavaLab Demo Night Winner (Best Traction). SkillsUSA State Bronze — 3rd best engineering project in California.',
+    tags: ['Claude', 'Jane Street', 'D.E. Shaw', 'Two Sigma', 'Harvard', 'Caltech', 'USC'],
     links: [
       { label: 'DevPost Profile', url: 'https://devpost.com/bryanrg22' },
     ],
     awardEntries: [
+      { name: 'Claude Builder Hackathon', description: '(3rd Place) Agentic Automation on iOS — voice-controlled Claude agent driving a real iPhone', location: 'UCLA — Los Angeles, CA', year: 2026, iconType: 'medal', logo: '/images/hackathons/claudeLogo.webp' },
       { name: "CalTech's HackTech Hackathon", description: '(Winner) Dryft Challenge Winner', location: 'Pasadena, CA', year: 2025, iconType: 'trophy', photo: '/images/awards/photos/hacktechteam.jpeg', logo: '/images/awards/logos/awards_caltechLogo.png' },
       { name: "Harvard's HackHarvard Hackathon", description: '(Winner) Best Use of Terraform', location: 'Cambridge, MA', year: 2024, iconType: 'trophy', photo: '/images/awards/photos/hackharvardteam.jpeg', logo: '/images/awards/logos/awards_harvardLogo.png' },
       { name: "LavaLab Demo Night F'25", description: '(Best Traction) Demo Night Winner', location: 'Los Angeles, CA', year: 2025, iconType: 'trophy', photo: '/images/awards/photos/lava_award.jpg', logo: '/images/awards/logos/lavalabLogo.jpg' },
