@@ -18,7 +18,7 @@ import { useStore } from '../../stores/useStore'
 import type { QualityConfig } from '../../lib/gpuTier'
 
 // Draco decoder for compressed GLB models
-useGLTF.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/')
+useGLTF.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.10/')
 
 // Load priority tiers — lightest first, heaviest last.
 // Each tier waits for the previous to mount before loading.

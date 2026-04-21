@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useMemo, Suspense } from 'react'
+import { useRef, useEffect, useState, Suspense } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useGLTF, useTexture, Html } from '@react-three/drei'
 import * as THREE from 'three'
@@ -120,6 +120,22 @@ useTexture.preload('/chipboard_wall/Chipboard002_1K-JPG_Roughness.jpg')
 const _linkedInScale = new THREE.Vector3()
 const _gitHubScale = new THREE.Vector3()
 const _resumeScale = new THREE.Vector3()
+
+// Shared texture clones keyed by (source uuid, repeatX, repeatY). Walls with
+// matching textureRepeat values reuse the same cloned texture instead of each
+// component creating its own, which keeps GPU uniform bindings deduped.
+const _repeatedTextureCache = new Map<string, THREE.Texture>()
+function getRepeatedTexture(tex: THREE.Texture, rx: number, ry: number): THREE.Texture {
+  const key = `${tex.uuid}:${rx},${ry}`
+  const cached = _repeatedTextureCache.get(key)
+  if (cached) return cached
+  const clone = tex.clone()
+  clone.wrapS = clone.wrapT = THREE.RepeatWrapping
+  clone.repeat.set(rx, ry)
+  clone.needsUpdate = true
+  _repeatedTextureCache.set(key, clone)
+  return clone
+}
 
 /** Concrete floor with PBR textures */
 function ConcreteFloor() {
@@ -465,17 +481,10 @@ function CorrugatedWall({
   const normalTex = useTexture('/chipboard_wall/Chipboard002_1K-JPG_NormalGL.jpg')
   const roughnessTex = useTexture('/chipboard_wall/Chipboard002_1K-JPG_Roughness.jpg')
 
-  const [colorMap, normalMap, roughnessMap] = useMemo(() => {
-    const c = colorTex.clone()
-    const n = normalTex.clone()
-    const r = roughnessTex.clone()
-    for (const tex of [c, n, r]) {
-      tex.wrapS = tex.wrapT = THREE.RepeatWrapping
-      tex.repeat.set(textureRepeat[0], textureRepeat[1])
-      tex.needsUpdate = true
-    }
-    return [c, n, r]
-  }, [colorTex, normalTex, roughnessTex, textureRepeat])
+  const [rx, ry] = textureRepeat
+  const colorMap = getRepeatedTexture(colorTex, rx, ry)
+  const normalMap = getRepeatedTexture(normalTex, rx, ry)
+  const roughnessMap = getRepeatedTexture(roughnessTex, rx, ry)
 
   useEffect(() => {
     if (!meshRef.current) return

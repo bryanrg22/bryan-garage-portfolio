@@ -2,7 +2,6 @@ import { getGPUTier } from 'detect-gpu'
 
 export interface QualityConfig {
   tier: 'low' | 'mid' | 'high'
-  platform: 'mobile' | 'desktop'
   dpr: number | [number, number]
   shadows: boolean
   antialias: boolean
@@ -21,7 +20,6 @@ export interface QualityConfig {
 
 const DESKTOP_LOW: QualityConfig = {
   tier: 'low',
-  platform: 'desktop',
   dpr: 1,
   shadows: false,
   antialias: false,
@@ -37,7 +35,6 @@ const DESKTOP_LOW: QualityConfig = {
 
 const DESKTOP_MID: QualityConfig = {
   tier: 'mid',
-  platform: 'desktop',
   dpr: [1, 1.5],
   shadows: true,
   antialias: true,
@@ -53,7 +50,6 @@ const DESKTOP_MID: QualityConfig = {
 
 const DESKTOP_HIGH: QualityConfig = {
   tier: 'high',
-  platform: 'desktop',
   dpr: [1, 1.25],
   shadows: true,
   antialias: true,
@@ -67,14 +63,16 @@ const DESKTOP_HIGH: QualityConfig = {
   maxPointLights: 3,
 }
 
-// Mobile tiers — deliberately more conservative than their desktop namesakes.
-// Even on an A17 Pro, iOS Safari has tight memory ceilings and no parallel
-// shader compile, so we trade some fidelity for reliability. Heavy models
-// (Nissan GTR ~15 MB) stay desktop-only regardless of phone class.
+// Mobile tiers — every tier shows the full decorative set (trophies, programming
+// logos, garage tools, red bull, wd-40, etc.). Losing those makes the scene feel
+// empty; keeping them costs ~20 MB of download but almost nothing at render time
+// once shaders are pre-compiled. What varies between mobile tiers is *rendering*
+// quality — DPR, environment, particles, lights. Shadows and antialias are off
+// across all mobile tiers (biggest GPU cost on iOS). Heavy models (GTR ~15 MB,
+// car lift) stay desktop-only — those genuinely stress mobile memory ceilings.
 
 const MOBILE_LOW: QualityConfig = {
   tier: 'low',
-  platform: 'mobile',
   dpr: 1,
   shadows: false,
   antialias: false,
@@ -82,15 +80,14 @@ const MOBILE_LOW: QualityConfig = {
   showEnvironment: false,
   showParticles: false,
   showHeavyModels: false,
-  showPureDecorative: false,
-  showSemiDecorative: false,
+  showPureDecorative: true,
+  showSemiDecorative: true,
   showShopLightPoints: false,
   maxPointLights: 1,
 }
 
 const MOBILE_MID: QualityConfig = {
   tier: 'mid',
-  platform: 'mobile',
   dpr: [1, 1.5],
   shadows: false,
   antialias: false,
@@ -98,15 +95,14 @@ const MOBILE_MID: QualityConfig = {
   showEnvironment: true,
   showParticles: false,
   showHeavyModels: false,
-  showPureDecorative: false,
-  showSemiDecorative: false,
+  showPureDecorative: true,
+  showSemiDecorative: true,
   showShopLightPoints: false,
   maxPointLights: 2,
 }
 
 const MOBILE_HIGH: QualityConfig = {
   tier: 'high',
-  platform: 'mobile',
   dpr: [1, 2],
   shadows: false,
   antialias: false,
@@ -114,34 +110,52 @@ const MOBILE_HIGH: QualityConfig = {
   showEnvironment: true,
   showParticles: true,
   showHeavyModels: false,
-  showPureDecorative: false,
+  showPureDecorative: true,
   showSemiDecorative: true,
-  showShopLightPoints: false,
+  showShopLightPoints: true,
   maxPointLights: 2,
 }
 
 /** Synchronous mobile detection — available at module load, no async needed. */
 function detectIsMobile(): boolean {
   if (typeof window === 'undefined') return false
-  // Primary signal: touch-only pointer (no hover capability)
   if (window.matchMedia?.('(hover: none) and (pointer: coarse)').matches) return true
-  // UA fallback (iPad Pro in desktop mode can slip past matchMedia)
   const ua = navigator.userAgent || ''
   return /iPhone|iPad|iPod|Android|Mobile/i.test(ua)
 }
 
-/** Mobile tier picker — devicePixelRatio + deviceMemory heuristic. No WebGL benchmark. */
+/**
+ * Mobile tier picker — UA-aware. iOS Safari caps navigator.hardwareConcurrency
+ * (returns 2 on a 6-core A17 Pro for fingerprinting mitigation) and doesn't
+ * implement navigator.deviceMemory at all, so we can't trust those signals on
+ * iOS. Retina display is a reliable proxy — every iPhone 8+ and iPad 2+ ships
+ * retina and all of them handle MOBILE_HIGH fine. Android keeps the
+ * deviceMemory heuristic which is accurate there.
+ */
 function pickMobileTier(): QualityConfig {
   if (typeof window === 'undefined') return MOBILE_LOW
   const dpr = window.devicePixelRatio || 1
-  // navigator.deviceMemory is Chrome/Android only; undefined on iOS Safari.
-  // Returns GiB, capped at 8. Use as a coarse signal when present.
+  const ua = navigator.userAgent || ''
+  // iPad Pro in desktop mode reports "Macintosh" but has touch — catch that too.
+  const isIOS =
+    /iPhone|iPad|iPod/i.test(ua) ||
+    (/Macintosh/i.test(ua) && typeof document !== 'undefined' && 'ontouchend' in document)
   const memory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory
   const cores = navigator.hardwareConcurrency || 1
 
-  // Conservative bar for HIGH: retina display AND (enough memory OR enough cores).
-  // iPhone 12+ hits this (dpr 3, 6 cores). Older/weaker phones fall to MID or LOW.
-  if (dpr >= 2 && (memory === undefined ? cores >= 6 : memory >= 4)) return MOBILE_HIGH
+  if (isIOS) {
+    return dpr >= 2 ? MOBILE_HIGH : MOBILE_MID
+  }
+
+  // Android / other: deviceMemory is implemented and reliable.
+  if (memory !== undefined) {
+    if (memory >= 4 && dpr >= 2) return MOBILE_HIGH
+    if (memory >= 2) return MOBILE_MID
+    return MOBILE_LOW
+  }
+
+  // Unknown UA with no memory API: fall back to cores + dpr.
+  if (dpr >= 2 && cores >= 6) return MOBILE_HIGH
   if (dpr >= 2 || cores >= 4) return MOBILE_MID
   return MOBILE_LOW
 }
