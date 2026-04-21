@@ -18,7 +18,7 @@ import { useStore } from '../../stores/useStore'
 import type { QualityConfig } from '../../lib/gpuTier'
 
 // Draco decoder for compressed GLB models
-useGLTF.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.10/')
+useGLTF.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/')
 
 // Load priority tiers — lightest first, heaviest last.
 // Each tier waits for the previous to mount before loading.
@@ -134,20 +134,14 @@ export default function GarageScene() {
         setSceneKey((k) => k + 1)
       })
 
-      // Pre-compile all shaders before dismissing the loading screen.
-      // iOS Safari lacks KHR_parallel_shader_compile, so the first frame a new
-      // material appears causes a main-thread stall (~70ms per material). Doing
-      // the compile up-front shifts the stall into the loading window, where
-      // it's already expected, instead of hitting the user's first interaction.
-      const compileAsync = (gl as THREE.WebGLRenderer & {
-        compileAsync?: (scene: THREE.Scene, camera: THREE.Camera) => Promise<unknown>
-      }).compileAsync
-      if (typeof compileAsync === 'function') {
-        compileAsync.call(gl, scene, camera).finally(() => setIsLoaded())
-      } else {
-        gl.compile(scene, camera)
-        setIsLoaded()
-      }
+      // Synchronous shader pre-compile. We deliberately do NOT use compileAsync
+      // here: compileAsync polls completion via requestAnimationFrame, and the
+      // Canvas is frameloop="demand" — rAF doesn't tick until invalidate(), so
+      // compileAsync's Promise would never resolve and setIsLoaded would never
+      // fire. Synchronous compile stalls the main thread for a beat, but it
+      // happens inside the loading window where the user is already waiting.
+      gl.compile(scene, camera)
+      setIsLoaded()
     },
     [setIsLoaded],
   )
