@@ -93,7 +93,7 @@ export const portfolioItems: PortfolioItem[] = [
       'Agentic Automation on iOS — voice-controlled Claude agent that operates a real iPhone for blind and low-vision users. 3rd place at the Claude Builder Hackathon @ UCLA. Basis — AI-powered cost segregation. Co-founder & lead dev. Multi-agent AI using YOLOv8, CLIP, and OpenAI Vision for automated building component classification. Won LavaLab Demo Night (Best Traction). Lambda Rim — full-stack NBA fantasy analytics. Poisson distributions, Monte Carlo sims, GARCH volatility forecasting. Turned $10 into $3,000 with a 78%+ win rate. Swerve — agentic AI procurement co-pilot, 1st place Dryft Challenge at Caltech. CleanSweep — smart waste management with OpenCV, won Best Use of Terraform at Harvard. Nosu — AI video-to-soundtrack generator built at HackMIT 2025, multi-model vision pipeline with YOLO, BLIP, VideoMAE, and Suno AI music generation.',
     tags: ['Claude', 'Next.js', 'TypeScript', 'PyTorch', 'YOLOv8', 'CLIP', 'Firebase', 'Flask', 'Docker'],
     links: [
-      { label: 'Agentic iOS', url: 'https://github.com/bryanrg22/claude_hacakthon' },
+      { label: 'Agentic iOS', url: 'https://github.com/bryanrg22/ios-agent_automation' },
       { label: 'Basis', url: 'https://github.com/bryanrg22/Basis_Info' },
       { label: 'Lambda Rim', url: 'https://github.com/bryanrg22/lambda-rim' },
       { label: 'Swerve', url: 'https://devpost.com/software/swerve-gqmenk' },
@@ -103,10 +103,10 @@ export const portfolioItems: PortfolioItem[] = [
     projectEntries: [
       {
         name: 'Agentic Automation on iOS',
-        description: 'Voice-controlled AI agent that operates a real iPhone — built on Claude Sonnet 4.6. Hold the iPhone Action Button, speak a task, and Claude takes over the phone, narrating every step out loud so blind and low-vision users can use any iOS app. Vision + tool-calling loop with ~22 tools (tap, type, scroll, drag, openApp, askUser, …), prompt caching on the 5k-token system prompt + tool schemas, rolling text summaries for 3.40× speedup, CoALA-style semantic/episodic/procedural memory, Dynamic Island live progress, and human-in-the-loop confirmation before irreversible actions. Node.js agent drives a physical iPhone over USB via XCTest + Maestro bridge, with a Swift companion app for narration and status.',
-        achievement: '3rd Place — Claude Builder Hackathon @ UCLA',
-        techStack: ['Claude Sonnet 4.6', 'Node.js', 'Swift', 'XCTest', 'Maestro', 'AVSpeechSynthesizer', 'Dynamic Island', 'iOS Shortcuts', 'Prompt Caching'],
-        links: [{ label: 'GitHub', url: 'https://github.com/bryanrg22/claude_hacakthon' }],
+        description: 'Voice-controlled Claude Sonnet 4.6 agent that drives a real iPhone — built as a hackathon winner and now an open research platform targeting UIST 2027. Hold the iPhone Action Button, speak a task, and Claude takes over: vision + tool calling over ~22 tools (tap, type, scroll, drag, swipe, openApp, askUser, …), with AVSpeechSynthesizer narrating every step so blind and low-vision users can operate any iOS app — not just Apple-native ones. The agent handles real-world friction autonomously; one demo has Claude open Freeform for the first time, dismiss three Apple onboarding modals on its own, select the pen tool, and compose a triangle from three swipe strokes. Six composed optimizations make it practical on physical hardware: prompt caching on the 5k-token system prompt + tool schemas (~90% cheaper per step), rolling text summaries for a 3.40× speedup, direct XCTest HTTP replacing the Maestro CLI for 10–100× action-latency wins, 50× screenshot payload reduction via JPEG compression (with accuracy gain), stuck detection, and CoALA-style semantic/episodic/procedural memory so resolved ambiguities (‘popcorn man = Zachary Chung’) persist across runs. Node.js agent on a Mac drives the phone over USB; a Swift companion app paints Dynamic Island progress and voices each step. Iterative loop tuning cut a representative task from 83s failed → 23.9s success.',
+        achievement: '3rd Place — Claude Builder Hackathon @ UCLA · Research platform targeting UIST 2027',
+        techStack: ['Claude Sonnet 4.6', 'Node.js', 'Swift', 'XCTest', 'Maestro', 'AVSpeechSynthesizer', 'Dynamic Island', 'iOS Shortcuts', 'Prompt Caching', 'CoALA Memory'],
+        links: [{ label: 'GitHub', url: 'https://github.com/bryanrg22/ios-agent_automation' }],
         logo: '/images/hackathons/claudeLogo.webp',
       },
       {
@@ -182,7 +182,7 @@ export const portfolioItems: PortfolioItem[] = [
       'My first projects were mediocre. I flew across the country and learned from failure. Then I won at Harvard (CleanSweep — Best Use of Terraform). Then Caltech (Swerve — 1st place Dryft Challenge). Then UCLA (Agentic Automation on iOS — 3rd place at the Claude Builder Hackathon). AstroHacks Gold Medalist. LavaLab Demo Night Winner (Best Traction). SkillsUSA State Bronze — 3rd best engineering project in California. FIRST Robotics Regional Semifinalist. MIT, Stanford TreeHacks, Princeton, Yale, UPenn, Berkeley — I showed up to all of them.',
     tags: ['UCLA', 'Harvard', 'Caltech', 'MIT', 'Stanford', 'Princeton', 'Yale', 'UPenn'],
     links: [
-      { label: 'Agentic iOS (UCLA Winner)', url: 'https://github.com/bryanrg22/claude_hacakthon' },
+      { label: 'Agentic iOS (UCLA Winner)', url: 'https://github.com/bryanrg22/ios-agent_automation' },
       { label: 'Swerve (Caltech Winner)', url: 'https://devpost.com/software/swerve-gqmenk' },
       { label: 'CleanSweep (Harvard Winner)', url: 'https://devpost.com/software/cleansweep-tjq36w' },
       { label: 'DevPost Profile', url: 'https://devpost.com/bryanrg22' },
