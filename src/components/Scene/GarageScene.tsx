@@ -117,8 +117,8 @@ export default function GarageScene() {
   const [sceneKey, setSceneKey] = useState(0)
 
   const handleCreated = useCallback(
-    (state: { gl: THREE.WebGLRenderer }) => {
-      const { gl } = state
+    (state: { gl: THREE.WebGLRenderer; scene: THREE.Scene; camera: THREE.Camera }) => {
+      const { gl, scene, camera } = state
 
       // Dark background so context loss doesn't flash white
       gl.setClearColor(new THREE.Color('#14120F'), 1)
@@ -134,8 +134,20 @@ export default function GarageScene() {
         setSceneKey((k) => k + 1)
       })
 
-      // Signal that the scene is actually rendering
-      setIsLoaded()
+      // Pre-compile all shaders before dismissing the loading screen.
+      // iOS Safari lacks KHR_parallel_shader_compile, so the first frame a new
+      // material appears causes a main-thread stall (~70ms per material). Doing
+      // the compile up-front shifts the stall into the loading window, where
+      // it's already expected, instead of hitting the user's first interaction.
+      const compileAsync = (gl as THREE.WebGLRenderer & {
+        compileAsync?: (scene: THREE.Scene, camera: THREE.Camera) => Promise<unknown>
+      }).compileAsync
+      if (typeof compileAsync === 'function') {
+        compileAsync.call(gl, scene, camera).finally(() => setIsLoaded())
+      } else {
+        gl.compile(scene, camera)
+        setIsLoaded()
+      }
     },
     [setIsLoaded],
   )
@@ -143,8 +155,11 @@ export default function GarageScene() {
   return (
     <div className="absolute inset-0" style={{ background: '#14120F', touchAction: 'none' }}>
       <Canvas
-        // Remount on tier change so gl props (antialias, powerPreference) reflect the detected tier —
-        // those are read once at context creation and can't be toggled later.
+        // Mobile: tier is resolved synchronously at module load (see gpuTier.ts),
+        // so this key is stable and never remounts. Desktop: tier starts at LOW
+        // and may upgrade once detect-gpu resolves — the remount lets gl props
+        // (antialias, shadows) reflect the new tier, since those are only read
+        // at context creation.
         key={`${sceneKey}-${quality.tier}`}
         frameloop="demand"
         shadows={quality.shadows}

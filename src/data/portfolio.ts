@@ -302,7 +302,7 @@ export const portfolioItems: PortfolioItem[] = [
       { label: 'DevPost Profile', url: 'https://devpost.com/bryanrg22' },
     ],
     awardEntries: [
-      { name: 'Claude Builder Hackathon', description: '(3rd Place) Agentic Automation on iOS — voice-controlled Claude agent driving a real iPhone', location: 'UCLA — Los Angeles, CA', year: 2026, iconType: 'medal', logo: '/images/hackathons/claudeLogo.webp' },
+      { name: 'Claude Builder Hackathon', description: '(3rd Place) Agentic Automation on iOS — voice-controlled Claude agent driving a real iPhone', location: 'UCLA — Los Angeles, CA', year: 2026, iconType: 'medal', photo: '/images/awards/photos/claudeAward.jpeg', logo: '/images/hackathons/claudeLogo.webp' },
       { name: "CalTech's HackTech Hackathon", description: '(Winner) Dryft Challenge Winner', location: 'Pasadena, CA', year: 2025, iconType: 'trophy', photo: '/images/awards/photos/hacktechteam.jpeg', logo: '/images/awards/logos/awards_caltechLogo.png' },
       { name: "Harvard's HackHarvard Hackathon", description: '(Winner) Best Use of Terraform', location: 'Cambridge, MA', year: 2024, iconType: 'trophy', photo: '/images/awards/photos/hackharvardteam.jpeg', logo: '/images/awards/logos/awards_harvardLogo.png' },
       { name: "LavaLab Demo Night F'25", description: '(Best Traction) Demo Night Winner', location: 'Los Angeles, CA', year: 2025, iconType: 'trophy', photo: '/images/awards/photos/lava_award.jpg', logo: '/images/awards/logos/lavalabLogo.jpg' },
