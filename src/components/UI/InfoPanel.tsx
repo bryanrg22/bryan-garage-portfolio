@@ -3,17 +3,40 @@ import { AnimatePresence, motion } from 'motion/react'
 import { useStore } from '../../stores/useStore'
 import { useIsMobile } from '../../hooks/useIsMobile'
 import { useBottomSheetDrag } from '../../hooks/useBottomSheetDrag'
-import type { ExperienceEntry, SkillCategory, ProjectEntry, AwardEntry, HackathonEntry, EducationEntry } from '../../data/portfolio'
+import type { ExperienceEntry, ExperienceCategory, SkillCategory, ProjectEntry, AwardEntry, HackathonEntry, EducationEntry } from '../../data/portfolio'
 
 const fadeUp = { hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0 } }
 
+const EXPERIENCE_FILTERS: ('All' | ExperienceCategory)[] = ['All', 'Tech', 'Quant', 'Research', 'Leadership']
+
 function ExperienceContent({ entries }: { entries: ExperienceEntry[] }) {
+  const [filter, setFilter] = useState<'All' | ExperienceCategory>('All')
+  const visibleEntries = filter === 'All' ? entries : entries.filter((e) => e.category === filter)
+
   return (
     <motion.div
       variants={fadeUp}
       className="mt-6 flex flex-col gap-3"
     >
-      {entries.map((entry, i) => (
+      <div className="flex flex-wrap gap-2">
+        {EXPERIENCE_FILTERS.map((f) => {
+          const active = filter === f
+          return (
+            <button
+              key={f}
+              onClick={() => setFilter(f)}
+              className={`rounded-full border px-3 py-1 text-xs font-semibold transition-colors ${
+                active
+                  ? 'border-golden bg-golden/15 text-golden'
+                  : 'border-golden/20 text-stone hover:border-golden/50 hover:text-cream'
+              }`}
+            >
+              {f}
+            </button>
+          )
+        })}
+      </div>
+      {visibleEntries.map((entry, i) => (
         <div
           key={`${entry.company}-${i}`}
           className="rounded-lg border border-golden/10 bg-[#1a1a1a] p-4"

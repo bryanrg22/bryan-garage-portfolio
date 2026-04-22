@@ -73,7 +73,7 @@ useTexture.preload('/images/mlh_logo.png')
 function JaneStreetSign() {
   const texture = useTexture('/images/janestreetLogo.png')
   return (
-    <mesh position={[-3.46, 2.15, -2.92]} castShadow>
+    <mesh position={[-3.96, 2.15, -2.92]} castShadow>
       <planeGeometry args={[1.8, 0.71]} />
       <meshStandardMaterial map={texture} roughness={0.8} metalness={0.05} transparent />
     </mesh>
@@ -81,6 +81,19 @@ function JaneStreetSign() {
 }
 
 useTexture.preload('/images/janestreetLogo.png')
+
+/** HRT logo — image texture on back wall, next to Jane Street */
+function HRTSign() {
+  const texture = useTexture('/images/experience/hrt_logo.png')
+  return (
+    <mesh position={[-2.4, 2.15, -2.92]} castShadow>
+      <planeGeometry args={[0.9, 0.525]} />
+      <meshStandardMaterial map={texture} roughness={0.8} metalness={0.05} transparent />
+    </mesh>
+  )
+}
+
+useTexture.preload('/images/experience/hrt_logo.png')
 
 /** Harvard logo — image texture on back wall above trophies */
 function HarvardSign() {
@@ -94,6 +107,19 @@ function HarvardSign() {
 }
 
 useTexture.preload('/images/harvardLogo.png')
+
+/** Claude logo — image texture on back wall above trophies (Claude Builder Hackathon award) */
+function ClaudeSign() {
+  const texture = useTexture('/images/Claude_AI_symbol.svg')
+  return (
+    <mesh position={[1.3, 2.4, -2.92]} castShadow>
+      <planeGeometry args={[0.7, 0.7]} />
+      <meshStandardMaterial map={texture} roughness={0.8} metalness={0.05} transparent />
+    </mesh>
+  )
+}
+
+useTexture.preload('/images/Claude_AI_symbol.svg')
 
 /** Caltech logo — image texture on back wall above trophies */
 function CaltechSign() {
@@ -341,7 +367,7 @@ function LinkedInLogo({ position }: { position: [number, number, number] }) {
         </mesh>
       </group>
       {hovered && (
-        <Html position={[0, 0.3, 0]} center style={{ pointerEvents: 'none' }}>
+        <Html position={[-0.2, 1.95, 0]} center style={{ pointerEvents: 'none' }}>
           <div className="whitespace-nowrap rounded-md bg-garage-dark/90 px-3 py-1.5 font-serif text-sm text-golden shadow-lg backdrop-blur-sm">
             LinkedIn
           </div>
@@ -797,7 +823,11 @@ export default function Garage() {
       {/* ====== JANE STREET LOGO — back wall, behind workbench ====== */}
       <JaneStreetSign />
 
-      {/* ====== HARVARD & CALTECH LOGOS — back wall, above trophies ====== */}
+      {/* ====== HRT LOGO — back wall, next to Jane Street ====== */}
+      <HRTSign />
+
+      {/* ====== CLAUDE, HARVARD & CALTECH LOGOS — back wall, above trophies ====== */}
+      <ClaudeSign />
       <HarvardSign />
       <CaltechSign />
 

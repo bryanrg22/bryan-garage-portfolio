@@ -8,6 +8,8 @@ export interface ExperienceSubRole {
   label?: string
 }
 
+export type ExperienceCategory = 'Tech' | 'Quant' | 'Research' | 'Leadership'
+
 export interface ExperienceEntry {
   company: string
   role: string
@@ -16,6 +18,7 @@ export interface ExperienceEntry {
   logo?: string
   label?: string
   subRoles?: ExperienceSubRole[]
+  category?: ExperienceCategory
 }
 
 export interface SkillCategory {
@@ -103,7 +106,7 @@ export const portfolioItems: PortfolioItem[] = [
     projectEntries: [
       {
         name: 'Agentic Automation on iOS',
-        description: 'Voice-controlled Claude Sonnet 4.6 agent that drives a real iPhone — built as a hackathon winner and now an open research platform targeting UIST 2027. Hold the iPhone Action Button, speak a task, and Claude takes over: vision + tool calling over ~22 tools (tap, type, scroll, drag, swipe, openApp, askUser, …), with AVSpeechSynthesizer narrating every step so blind and low-vision users can operate any iOS app — not just Apple-native ones. The agent handles real-world friction autonomously; one demo has Claude open Freeform for the first time, dismiss three Apple onboarding modals on its own, select the pen tool, and compose a triangle from three swipe strokes. Six composed optimizations make it practical on physical hardware: prompt caching on the 5k-token system prompt + tool schemas (~90% cheaper per step), rolling text summaries for a 3.40× speedup, direct XCTest HTTP replacing the Maestro CLI for 10–100× action-latency wins, 50× screenshot payload reduction via JPEG compression (with accuracy gain), stuck detection, and CoALA-style semantic/episodic/procedural memory so resolved ambiguities (‘popcorn man = Zachary Chung’) persist across runs. Node.js agent on a Mac drives the phone over USB; a Swift companion app paints Dynamic Island progress and voices each step. Iterative loop tuning cut a representative task from 83s failed → 23.9s success.',
+        description: 'Voice-controlled Claude Sonnet 4.6 agent that drives a real iPhone — hackathon winner and open research platform targeting UIST 2027. Hold the Action Button, speak a task, and Claude takes over with vision + tool calling over ~22 tools (tap, type, scroll, swipe, openApp, …). AVSpeechSynthesizer narrates every step so blind and low-vision users can operate any iOS app, not just Apple-native ones. Six composed optimizations — prompt caching, rolling summaries, direct XCTest HTTP, 50× JPEG screenshot compression, stuck detection, and CoALA-style memory — cut a representative task from 83s failed → 23.9s success. Node.js agent drives the phone over USB; a Swift companion app paints Dynamic Island progress.',
         achievement: '3rd Place — Claude Builder Hackathon @ UCLA · Research platform targeting UIST 2027',
         techStack: ['Claude Sonnet 4.6', 'Node.js', 'Swift', 'XCTest', 'Maestro', 'AVSpeechSynthesizer', 'Dynamic Island', 'iOS Shortcuts', 'Prompt Caching', 'CoALA Memory'],
         links: [{ label: 'GitHub', url: 'https://github.com/bryanrg22/ios-agent_automation' }],
@@ -256,33 +259,36 @@ export const portfolioItems: PortfolioItem[] = [
     title: 'Experience',
     subtitle: "Where I've Worked",
     description:
-      "NVIDIA — Incoming SWE Intern (Summer 2026), building agentic AI. Jane Street — FOCUS '25 (1 of 14) and UNBOXED '24 (1 of 37). D.E. Shaw — Connect Fellowship. USC ISI HUMANS Lab — Research Assistant across two labs. FIRST Robotics — Lead Developer, Regional Semifinalist. SkillsUSA — Team Leader, State Bronze Medalist.",
-    tags: ['NVIDIA', 'Jane Street', 'D.E. Shaw', 'USC ISI', 'FIRST Robotics'],
+      "NVIDIA — Incoming SWE Intern (Summer 2026), building agentic AI. Jane Street — FOCUS '25 (1 of 14) and UNBOXED '24 (1 of 37). Hudson River Trading — Algorithm Development (Quantitative Research) Track. D.E. Shaw — Connect Fellowship. USC ISI HUMANS Lab — Research Assistant across two labs. FIRST Robotics — Lead Developer, Regional Semifinalist. SkillsUSA — Team Leader, State Bronze Medalist.",
+    tags: ['NVIDIA', 'Jane Street', 'HRT', 'D.E. Shaw', 'USC ISI', 'FIRST Robotics'],
     links: [
       { label: 'LinkedIn', url: 'https://www.linkedin.com/in/bryanrg22' },
     ],
     experienceEntries: [
-      { company: 'NVIDIA', role: 'Incoming Software Engineering Intern', date: 'May 2026 – Aug 2026', description: 'Building Agentic AI systems — Incoming Summer 2026', logo: '/images/experience/Nvidia_logo.svg.png' },
-      { company: 'Amazon x USC', role: 'Research Intern', date: 'Jul 2024 – Present', label: 'Research', logo: '/images/experience/amazonLogo.png', subRoles: [
+      { company: 'NVIDIA', role: 'Incoming Software Engineering Intern', date: 'May 2026 – Aug 2026', description: 'Building Agentic AI systems — Incoming Summer 2026', logo: '/images/experience/Nvidia_logo.svg.png', category: 'Tech' },
+      { company: 'Hudson River Trading', role: 'Undergraduate Fellow', date: 'May 2026', logo: '/images/experience/hrt_logo.png', category: 'Quant', subRoles: [
+        { role: 'Inside HRT', date: 'May 2026', description: 'Algorithm Development (Quantitative Research) Track' },
+      ] },
+      { company: 'Amazon x USC', role: 'Research Intern', date: 'Jul 2024 – Present', label: 'Research', logo: '/images/experience/amazonLogo.png', category: 'Research', subRoles: [
         { role: 'LLM Safety', date: 'Jan 2026 – Present' },
         { company: 'USC Viterbi School of Engineering', role: 'Image–Text Misinformation Detection', date: 'Jul 2024 – Aug 2024', description: 'Improved out-of-context image–text detection to 68% accuracy', logo: '/images/experience/uscviterbiLogo.jpg', label: 'Research' },
       ] },
-      { company: 'Jane Street', role: 'Undergraduate Fellow', date: '2024–2025', logo: '/images/experience/janestreetLogo.png', subRoles: [
+      { company: 'Jane Street', role: 'Undergraduate Fellow', date: '2024–2025', logo: '/images/experience/janestreetLogo.png', category: 'Quant', subRoles: [
         { role: "FOCUS '25", date: 'May 2025', description: 'Selected as 1 of 14' },
         { role: "UNBOXED '24", date: 'Jul 2024', description: 'Selected as 1 of 37' },
       ] },
-      { company: 'USC Information Sciences Institute', role: 'Undergraduate Research Intern', date: 'Aug 2024 – Present', logo: '/images/experience/uscisiLogo.jpg', label: 'Research', subRoles: [
+      { company: 'USC Information Sciences Institute', role: 'Undergraduate Research Intern', date: 'Aug 2024 – Present', logo: '/images/experience/uscisiLogo.jpg', label: 'Research', category: 'Research', subRoles: [
         { role: 'Image-Based User Coordination Detection', date: 'May 2025 – Present', description: 'Image-based coordination detection research pipeline' },
         { role: 'LLM-assisted AI for TikTok Eating-Disorder Dataset (EDTok)', date: 'Aug 2024 – May 2025', description: 'Published EDTok, multimodal eating disorder TikTok dataset — Accepted to ICWSM 2025', links: [{ label: 'Research Paper', url: 'https://arxiv.org/abs/2505.02250' }] },
       ] },
-      { company: 'The D. E. Shaw Group', role: 'Undergraduate Fellow', date: 'Sep 2025', description: '3 Day program at D. E. Shaw\'s NYC office (Connect Fellowship)', logo: '/images/experience/deshaw.avif' },
-      { company: 'Two Sigma', role: '2025 New Seekers Summit', date: 'Feb 2025', logo: '/images/orgs/twosigmaLogo.png' },
-      { company: 'Susquehanna International Group', role: 'Discovery Day for First Year Students', date: 'Feb 2025', logo: '/images/experience/sig_logo.jpeg' },
-      { company: 'LavaLab', role: 'Software Developer', date: 'Jul 2024 – Present', description: "USC's Premier Startup Incubator — LavaLab's Best Traction F25", logo: '/images/awards/logos/lavalabLogo.jpg' },
-      { company: 'Quant SC', role: 'Software Developer', date: 'Jul 2024 – Present', description: "Software Developer for USC's Premier Quant Club", logo: '/images/orgs/quantscLogo.ico' },
-      { company: 'TroyLabs', role: 'Software Developer', date: 'Jul 2024 – Present', description: "USC's Premier Startup Accelerator — Building the tech side of the next generation of startups", logo: '/images/experience/troy_labs.png' },
-      { company: 'FIRST Robotics', role: 'Lead Developer', date: '2023–2024', description: 'Regional Semifinalist — Top 5 out of 32 Teams', logo: '/images/experience/firstLogo.jpeg' },
-      { company: 'SkillsUSA', role: 'Team Leader', date: '2023–2024', description: 'State Bronze Medalist — 3rd Best Engineering Project in California', logo: '/images/experience/skillsusaLogo.png' },
+      { company: 'The D. E. Shaw Group', role: 'Undergraduate Fellow', date: 'Sep 2025', description: '3 Day program at D. E. Shaw\'s NYC office (Connect Fellowship)', logo: '/images/experience/deshaw.avif', category: 'Quant' },
+      { company: 'Two Sigma', role: 'New Seekers Summit', date: 'Feb 2025', logo: '/images/orgs/twosigmaLogo.png', category: 'Quant' },
+      { company: 'Susquehanna International Group', role: 'Discovery Day for First Year Students', date: 'Feb 2025', logo: '/images/experience/sig_logo.jpeg', category: 'Quant' },
+      { company: 'LavaLab', role: 'Software Developer', date: 'Jul 2024 – Present', description: "USC's Premier Startup Incubator — LavaLab's Best Traction F25", logo: '/images/awards/logos/lavalabLogo.jpg', category: 'Leadership' },
+      { company: 'Quant SC', role: 'Software Developer', date: 'Jul 2024 – Present', description: "Software Developer for USC's Premier Quant Club", logo: '/images/orgs/quantscLogo.ico', category: 'Leadership' },
+      { company: 'TroyLabs', role: 'Software Developer', date: 'Jul 2024 – Present', description: "USC's Premier Startup Accelerator — Building the tech side of the next generation of startups", logo: '/images/experience/troy_labs.png', category: 'Leadership' },
+      { company: 'FIRST Robotics', role: 'Lead Developer', date: '2023–2024', description: 'Regional Semifinalist — Top 5 out of 32 Teams', logo: '/images/experience/firstLogo.jpeg', category: 'Leadership' },
+      { company: 'SkillsUSA', role: 'Team Leader', date: '2023–2024', description: 'State Bronze Medalist — 3rd Best Engineering Project in California', logo: '/images/experience/skillsusaLogo.png', category: 'Leadership' },
     ],
     position: [-3.05, 1.38, -0.9],
     color: '#CC4444',
