@@ -193,6 +193,7 @@ export const portfolioItems: PortfolioItem[] = [
     ],
     hackathonEntries: [
       { name: 'Claude Builder Hackathon', institution: 'UCLA', startDate: '2026-04-18', endDate: '2026-04-19', location: 'Los Angeles, California', status: 'COMPLETED', highlight: 'Hackathon Winner', logo: '/images/hackathons/claudeLogo.webp' },
+      { name: 'YHack Spring 2026', institution: 'Yale', startDate: '2026-03-28', endDate: '2026-03-29', location: 'New Haven, Connecticut', status: 'COMPLETED', logo: '/images/hackathons/yaleLogo.png' },
       { name: 'MITHacks', institution: 'MIT', startDate: '2025-09-14', endDate: '2025-09-15', location: 'Boston, Massachusetts', status: 'COMPLETED', logo: '/images/hackathons/mitLogo.png' },
       { name: '2025 HackTech', institution: 'California Institute of Technology', startDate: '2025-04-26', endDate: '2025-04-28', location: 'Pasadena, California', status: 'COMPLETED', highlight: 'Hackathon Winner', logo: '/images/hackathons/caltechLogo.png' },
       { name: 'TreeHacks', institution: 'Stanford University', startDate: '2025-02-15', endDate: '2025-02-17', location: 'Stanford, California', status: 'COMPLETED', logo: '/images/hackathons/stanfordLogo.png' },
