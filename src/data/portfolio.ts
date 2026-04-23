@@ -107,8 +107,8 @@ export const portfolioItems: PortfolioItem[] = [
     projectEntries: [
       {
         name: 'Agentic Automation on iOS',
-        description: 'Voice-controlled Claude Sonnet 4.6 agent that drives a real iPhone — hackathon winner and open research platform targeting UIST 2027. Hold the Action Button, speak a task, and Claude takes over with vision + tool calling over ~22 tools (tap, type, scroll, swipe, openApp, …). AVSpeechSynthesizer narrates every step so blind and low-vision users can operate any iOS app, not just Apple-native ones. Six composed optimizations — prompt caching, rolling summaries, direct XCTest HTTP, 50× JPEG screenshot compression, stuck detection, and CoALA-style memory — cut a representative task from 83s failed → 23.9s success. Node.js agent drives the phone over USB; a Swift companion app paints Dynamic Island progress.',
-        achievement: '3rd Place — Claude Builder Hackathon @ UCLA · Research platform targeting UIST 2027',
+        description: 'Voice-controlled Claude Sonnet 4.6 agent that drives a real iPhone. Hold the Action Button, speak a task, and Claude takes over with vision + tool calling over ~22 tools (tap, type, scroll, swipe, openApp, …). AVSpeechSynthesizer narrates every step so blind and low-vision users can operate any iOS app, not just Apple-native ones. Six composed optimizations — prompt caching, rolling summaries, direct XCTest HTTP, 50× JPEG screenshot compression, stuck detection, and CoALA-style memory — cut a representative task from 83s failed → 23.9s success. Node.js agent drives the phone over USB; a Swift companion app paints Dynamic Island progress.',
+        achievement: '3rd Place — Claude Builder Hackathon @ UCLA',
         techStack: ['Claude Sonnet 4.6', 'Node.js', 'Swift', 'XCTest', 'Maestro', 'AVSpeechSynthesizer', 'Dynamic Island', 'iOS Shortcuts', 'Prompt Caching', 'CoALA Memory'],
         links: [{ label: 'GitHub', url: 'https://github.com/bryanrg22/ios-agent_automation' }],
         logo: '/images/hackathons/claudeLogo.webp',
