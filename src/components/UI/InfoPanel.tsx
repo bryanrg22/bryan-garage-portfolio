@@ -86,6 +86,16 @@ function ExperienceContent({ entries }: { entries: ExperienceEntry[] }) {
                   {sub.description && (
                     <p className="mt-2 text-sm text-cream/70">{sub.description}</p>
                   )}
+                  {sub.bullets && sub.bullets.length > 0 && (
+                    <ul className="mt-2 flex flex-col gap-1.5 text-sm text-cream/70">
+                      {sub.bullets.map((b, i) => (
+                        <li key={i} className="flex gap-2">
+                          <span className="mt-[0.35rem] h-1 w-1 shrink-0 rounded-full bg-golden/70" aria-hidden="true" />
+                          <span>{b}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                   {sub.links && sub.links.length > 0 && (
                     <div className="mt-1.5 flex flex-wrap gap-3">
                       {sub.links.map((link) => (

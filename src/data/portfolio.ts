@@ -3,6 +3,7 @@ export interface ExperienceSubRole {
   role: string
   date: string
   description?: string
+  bullets?: string[]
   links?: { label: string; url: string }[]
   logo?: string
   label?: string
@@ -270,7 +271,10 @@ export const portfolioItems: PortfolioItem[] = [
         { role: 'Inside HRT', date: 'May 2026', description: 'Algorithm Development (Quantitative Research) Track' },
       ] },
       { company: 'USC Information Sciences Institute', role: 'Undergraduate Research Intern', date: 'Aug 2024 – Present', logo: '/images/experience/uscisiLogo.jpg', label: 'Research', category: 'Research', subRoles: [
-        { role: 'iOS-Agent: Open Research Platform for Physical Mobile GUI Agents', date: 'Jan 2026 – Present', description: 'First open research platform for autonomous AI agents on physical iOS. Built a novel continuous-trajectory drag primitive and the first autonomous multi-step drag on iPhone (tasks where Mobile-Agent, AppAgent, and Mobile-Agent-v2 score near-zero) via 22+ tool primitives. Compressed 15-step agent tasks from 88s → 24s (3.5× speedup) via rolling-summary context compression (3.40×, 30% fewer tokens), direct HTTP to Maestro\'s XCTest runner (10–100× action-latency), and prompt caching (~90% per-step cost reduction).' },
+        { role: 'iOS-Agent: Open Research Platform for Physical Mobile GUI Agents', date: 'Jan 2026 – Present', bullets: [
+          'First open research platform for autonomous AI agents on physical iOS. Built a novel continuous-trajectory drag primitive and the first autonomous multi-step drag on iPhone (tasks where Mobile-Agent, AppAgent, and Mobile-Agent-v2 score near-zero) via 22+ tool primitives.',
+          'Compressed 15-step agent tasks from 88s → 24s (3.5× speedup) via rolling-summary context compression (3.40×, 30% fewer tokens), direct HTTP to Maestro\'s XCTest runner (10–100× action-latency), and prompt caching (~90% per-step cost reduction).',
+        ] },
         { role: 'LLM-assisted AI for TikTok Eating-Disorder Dataset (EDTok)', date: 'Aug 2024 – May 2025', description: 'Published EDTok, multimodal eating disorder TikTok dataset — Accepted to ICWSM 2025', links: [{ label: 'Research Paper', url: 'https://arxiv.org/abs/2505.02250' }] },
       ] },
       { company: 'Amazon x USC', role: 'Research Intern', date: 'Jul 2024 – Present', label: 'Research', logo: '/images/experience/amazonLogo.png', category: 'Research', subRoles: [
