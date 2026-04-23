@@ -269,6 +269,10 @@ export const portfolioItems: PortfolioItem[] = [
       { company: 'Hudson River Trading', role: 'Undergraduate Fellow', date: 'May 2026', logo: '/images/experience/hrt_logo.png', category: 'Quant', subRoles: [
         { role: 'Inside HRT', date: 'May 2026', description: 'Algorithm Development (Quantitative Research) Track' },
       ] },
+      { company: 'USC Information Sciences Institute', role: 'Undergraduate Research Intern', date: 'Aug 2024 – Present', logo: '/images/experience/uscisiLogo.jpg', label: 'Research', category: 'Research', subRoles: [
+        { role: 'iOS-Agent: Open Research Platform for Physical Mobile GUI Agents', date: 'Jan 2026 – Present', description: 'First open research platform for autonomous AI agents on physical iOS. Built a novel continuous-trajectory drag primitive and the first autonomous multi-step drag on iPhone (tasks where Mobile-Agent, AppAgent, and Mobile-Agent-v2 score near-zero) via 22+ tool primitives. Compressed 15-step agent tasks from 88s → 24s (3.5× speedup) via rolling-summary context compression (3.40×, 30% fewer tokens), direct HTTP to Maestro\'s XCTest runner (10–100× action-latency), and prompt caching (~90% per-step cost reduction).' },
+        { role: 'LLM-assisted AI for TikTok Eating-Disorder Dataset (EDTok)', date: 'Aug 2024 – May 2025', description: 'Published EDTok, multimodal eating disorder TikTok dataset — Accepted to ICWSM 2025', links: [{ label: 'Research Paper', url: 'https://arxiv.org/abs/2505.02250' }] },
+      ] },
       { company: 'Amazon x USC', role: 'Research Intern', date: 'Jul 2024 – Present', label: 'Research', logo: '/images/experience/amazonLogo.png', category: 'Research', subRoles: [
         { role: 'LLM Safety', date: 'Jan 2026 – Present' },
         { company: 'USC Viterbi School of Engineering', role: 'Image–Text Misinformation Detection', date: 'Jul 2024 – Aug 2024', description: 'Improved out-of-context image–text detection to 68% accuracy', logo: '/images/experience/uscviterbiLogo.jpg', label: 'Research' },
@@ -276,10 +280,6 @@ export const portfolioItems: PortfolioItem[] = [
       { company: 'Jane Street', role: 'Undergraduate Fellow', date: '2024–2025', logo: '/images/experience/janestreetLogo.png', category: 'Quant', subRoles: [
         { role: "FOCUS '25", date: 'May 2025', description: 'Selected as 1 of 14' },
         { role: "UNBOXED '24", date: 'Jul 2024', description: 'Selected as 1 of 37' },
-      ] },
-      { company: 'USC Information Sciences Institute', role: 'Undergraduate Research Intern', date: 'Aug 2024 – Present', logo: '/images/experience/uscisiLogo.jpg', label: 'Research', category: 'Research', subRoles: [
-        { role: 'Image-Based User Coordination Detection', date: 'May 2025 – Present', description: 'Image-based coordination detection research pipeline' },
-        { role: 'LLM-assisted AI for TikTok Eating-Disorder Dataset (EDTok)', date: 'Aug 2024 – May 2025', description: 'Published EDTok, multimodal eating disorder TikTok dataset — Accepted to ICWSM 2025', links: [{ label: 'Research Paper', url: 'https://arxiv.org/abs/2505.02250' }] },
       ] },
       { company: 'The D. E. Shaw Group', role: 'Undergraduate Fellow', date: 'Sep 2025', description: '3 Day program at D. E. Shaw\'s NYC office (Connect Fellowship)', logo: '/images/experience/deshaw.avif', category: 'Quant' },
       { company: 'Two Sigma', role: 'New Seekers Summit', date: 'Feb 2025', logo: '/images/orgs/twosigmaLogo.png', category: 'Quant' },
