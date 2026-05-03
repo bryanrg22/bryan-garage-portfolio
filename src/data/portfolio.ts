@@ -9,7 +9,7 @@ export interface ExperienceSubRole {
   label?: string
 }
 
-export type ExperienceCategory = 'Tech' | 'Quant' | 'Research' | 'Leadership'
+export type ExperienceCategory = 'Tech' | 'Quant' | 'Research' | 'Entrepreneurship' | 'Leadership'
 
 export interface ExperienceEntry {
   company: string
@@ -289,9 +289,10 @@ export const portfolioItems: PortfolioItem[] = [
       { company: 'The D. E. Shaw Group', role: 'Undergraduate Fellow', date: 'Sep 2025', description: '3 Day program at D. E. Shaw\'s NYC office (Connect Fellowship)', logo: '/images/experience/deshaw.avif', category: 'Quant' },
       { company: 'Two Sigma', role: 'New Seekers Summit', date: 'Feb 2025', logo: '/images/orgs/twosigmaLogo.png', category: 'Quant' },
       { company: 'Susquehanna International Group', role: 'Discovery Day for First Year Students', date: 'Feb 2025', logo: '/images/experience/sig_logo.jpeg', category: 'Quant' },
-      { company: 'LavaLab', role: 'Software Developer', date: 'Jul 2024 – Present', description: "USC's Premier Startup Incubator — LavaLab's Best Traction F25", logo: '/images/awards/logos/lavalabLogo.jpg', category: 'Leadership' },
+      { company: 'Y Combinator', role: 'Startup School 2026', date: 'Jul 25–26, 2026', description: "Two-day in-person gathering of the most ambitious technical builders in the world — San Francisco, CA", logo: '/images/experience/ycombinator_logo.svg', category: 'Entrepreneurship' },
+      { company: 'LavaLab', role: 'Software Developer', date: 'Jul 2024 – Present', description: "USC's Premier Startup Incubator — LavaLab's Best Traction F25", logo: '/images/awards/logos/lavalabLogo.jpg', category: 'Entrepreneurship' },
+      { company: 'TroyLabs', role: 'Software Developer', date: 'Jul 2024 – Present', description: "USC's Premier Startup Accelerator — Building the tech side of the next generation of startups", logo: '/images/experience/troy_labs.png', category: 'Entrepreneurship' },
       { company: 'Quant SC', role: 'Software Developer', date: 'Jul 2024 – Present', description: "Software Developer for USC's Premier Quant Club", logo: '/images/orgs/quantscLogo.ico', category: 'Leadership' },
-      { company: 'TroyLabs', role: 'Software Developer', date: 'Jul 2024 – Present', description: "USC's Premier Startup Accelerator — Building the tech side of the next generation of startups", logo: '/images/experience/troy_labs.png', category: 'Leadership' },
       { company: 'FIRST Robotics', role: 'Lead Developer', date: '2023–2024', description: 'Regional Semifinalist — Top 5 out of 32 Teams', logo: '/images/experience/firstLogo.jpeg', category: 'Leadership' },
       { company: 'SkillsUSA', role: 'Team Leader', date: '2023–2024', description: 'State Bronze Medalist — 3rd Best Engineering Project in California', logo: '/images/experience/skillsusaLogo.png', category: 'Leadership' },
     ],

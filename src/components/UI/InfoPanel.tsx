@@ -7,7 +7,7 @@ import type { ExperienceEntry, ExperienceCategory, SkillCategory, ProjectEntry, 
 
 const fadeUp = { hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0 } }
 
-const EXPERIENCE_FILTERS: ('All' | ExperienceCategory)[] = ['All', 'Tech', 'Quant', 'Research', 'Leadership']
+const EXPERIENCE_FILTERS: ('All' | ExperienceCategory)[] = ['All', 'Tech', 'Quant', 'Research', 'Entrepreneurship', 'Leadership']
 
 function ExperienceContent({ entries }: { entries: ExperienceEntry[] }) {
   const [filter, setFilter] = useState<'All' | ExperienceCategory>('All')
