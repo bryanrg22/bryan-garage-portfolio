@@ -10,6 +10,7 @@ import HintText from './components/UI/HintText'
 import BackButton from './components/UI/BackButton'
 import LoadingScreen from './components/UI/LoadingScreen'
 import MobileTabBar from './components/UI/MobileTabBar'
+import ResetRoomButton from './components/UI/ResetRoomButton'
 
 function SceneFallback() {
   return (
@@ -36,6 +37,7 @@ export default function App() {
         <SpotifyPlayer />
         <HintText />
         <MobileTabBar />
+        <ResetRoomButton />
       </div>
 
       <LoadingScreen />

@@ -7,6 +7,7 @@ import { DEFAULT_CAMERA_POSITION, DEFAULT_CAMERA_TARGET } from '../../data/portf
 import { useIsMobile } from '../../hooks/useIsMobile'
 import { useIsPortrait } from '../../hooks/useIsPortrait'
 import { useIsTouchDevice } from '../../hooks/useIsTouchDevice'
+import { ballDrag } from '../../lib/ballDrag'
 
 type CameraMode = 'idle' | 'animating' | 'focused'
 
@@ -33,7 +34,7 @@ export default function CameraController() {
   const camera = useThree((s) => s.camera)
   const invalidate = useThree((s) => s.invalidate)
   const invalidateRef = useRef(invalidate)
-  invalidateRef.current = invalidate
+  useEffect(() => { invalidateRef.current = invalidate }, [invalidate])
   const mode = useRef<CameraMode>('idle')
   const mouse = useRef({ x: 0, y: 0 })
   const smoothMouse = useRef({ x: 0, y: 0 })
@@ -69,6 +70,8 @@ export default function CameraController() {
 
       const onTouchStart = (e: TouchEvent) => {
         if (e.touches.length !== 1) return
+        // A drag that started on the soccer ball owns this gesture
+        if (ballDrag.active) return
         // Ignore touches that start on UI overlays (tab bar, panels, buttons)
         const target = e.target as HTMLElement
         if (target.closest('nav, button, [class*="InfoPanel"], [class*="TopBar"]')) return
@@ -86,6 +89,7 @@ export default function CameraController() {
 
       const onTouchMove = (e: TouchEvent) => {
         if (!tracking || e.touches.length !== 1) return
+        if (ballDrag.active) { tracking = false; return }
         const touch = e.touches[0]
         const dx = (touch.clientX - lastTouch.current.x) / window.innerWidth
         const dy = (touch.clientY - lastTouch.current.y) / window.innerHeight
@@ -242,7 +246,6 @@ export default function CameraController() {
 
       tweenRef.current = tl
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- invalidate accessed via ref to avoid effect re-runs
   }, [activeItem, camera, defaultPos, isMobilePortrait])
 
   // Desktop parallax multipliers
@@ -253,7 +256,10 @@ export default function CameraController() {
   const mLandscapeX = 1.2
   const mLandscapeY = 0.6
 
-  useFrame((_, rawDelta) => {
+  useFrame((frame, rawDelta) => {
+    // Mutate via the frame-state camera (same object as the hook value) —
+    // the react-hooks compiler rules disallow mutating hook returns directly.
+    const cam = frame.camera
     // Cap delta to prevent overshoot after long idle gaps (e.g. tab switch)
     const delta = Math.min(rawDelta, 0.1)
     // Normalize per-frame factors to behave consistently at any framerate
@@ -286,7 +292,7 @@ export default function CameraController() {
         const lookZ = defaultPos[2] + Math.cos(yaw) * Math.cos(pitch) * LOOK_DISTANCE
 
         lookAtTarget.current.set(lookX, lookY, lookZ)
-        camera.position.set(...defaultPos)
+        cam.position.set(...defaultPos)
       } else if (isTouchDevice) {
         // Touch landscape: position-based parallax (existing behavior)
         const friction = Math.pow(0.92, dt60)
@@ -299,8 +305,8 @@ export default function CameraController() {
         smoothMouse.current.x += (mouse.current.x - smoothMouse.current.x) * landscapeLerp
         smoothMouse.current.y += (mouse.current.y - smoothMouse.current.y) * landscapeLerp
 
-        camera.position.x = defaultPos[0] + smoothMouse.current.x * mLandscapeX
-        camera.position.y = defaultPos[1] - smoothMouse.current.y * mLandscapeY
+        cam.position.x = defaultPos[0] + smoothMouse.current.x * mLandscapeX
+        cam.position.y = defaultPos[1] - smoothMouse.current.y * mLandscapeY
       } else if (isMobile) {
         // Narrow desktop: rotation-based look driven by mouse position
         // Mouse at left edge → look left, mouse at right edge → look right
@@ -316,7 +322,7 @@ export default function CameraController() {
         const lookZ = defaultPos[2] + Math.cos(yaw) * Math.cos(pitch) * LOOK_DISTANCE
 
         lookAtTarget.current.set(lookX, lookY, lookZ)
-        camera.position.set(...defaultPos)
+        cam.position.set(...defaultPos)
 
         // Keep rendering while lerp hasn't settled
         const dx = Math.abs(smoothMouse.current.x - mouse.current.x)
@@ -330,8 +336,8 @@ export default function CameraController() {
         smoothMouse.current.x += (mouse.current.x - smoothMouse.current.x) * desktopLerp
         smoothMouse.current.y += (mouse.current.y - smoothMouse.current.y) * desktopLerp
 
-        camera.position.x = defaultPos[0] + smoothMouse.current.x * parallaxX
-        camera.position.y = defaultPos[1] - smoothMouse.current.y * parallaxY
+        cam.position.x = defaultPos[0] + smoothMouse.current.x * parallaxX
+        cam.position.y = defaultPos[1] - smoothMouse.current.y * parallaxY
 
         // Keep rendering while parallax lerp hasn't settled
         const dx = Math.abs(smoothMouse.current.x - mouse.current.x)
@@ -343,7 +349,7 @@ export default function CameraController() {
     }
 
     // Always look at the target (during idle + animating + focused)
-    camera.lookAt(lookAtTarget.current)
+    cam.lookAt(lookAtTarget.current)
   })
 
   return null

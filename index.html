@@ -5,6 +5,23 @@
     <link rel="icon" type="image/png" href="/images/websiteLogo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Bryan's Garage — Portfolio</title>
+    <meta name="description" content="Bryan Ramirez-Gonzalez's interactive 3D portfolio — an auto body garage you can explore. USC CS, NVIDIA SWE intern, hackathon winner. Kick the soccer ball around while you're there." />
+    <meta name="theme-color" content="#1a1612" />
+
+    <!-- Open Graph — the card shown when the link is shared -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://bryanram.com/" />
+    <meta property="og:title" content="Bryan's Garage — an explorable 3D portfolio" />
+    <meta property="og:description" content="Step inside the auto body shop where it all started. Projects, hackathon wins, and a kickable soccer ball — built with React Three Fiber." />
+    <meta property="og:image" content="https://bryanram.com/og_image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter / X card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Bryan's Garage — an explorable 3D portfolio" />
+    <meta name="twitter:description" content="Step inside the auto body shop where it all started. Projects, hackathon wins, and a kickable soccer ball." />
+    <meta name="twitter:image" content="https://bryanram.com/og_image.jpg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -13,6 +30,33 @@
     />
   </head>
   <body style="background:#1a1612; margin:0;">
+    <script>
+      // Testing aid (inert unless ?forceRaf is in the URL): drives
+      // requestAnimationFrame via MessageChannel while the tab is hidden so
+      // automated/headless verification can exercise animations. Hidden tabs
+      // never fire rAF, and setTimeout is throttled — MessageChannel is not.
+      if (new URLSearchParams(location.search).has('forceRaf')) {
+        (function () {
+          var nativeRaf = window.requestAnimationFrame.bind(window)
+          var queue = []
+          var mc = new MessageChannel()
+          var scheduled = false
+          mc.port1.onmessage = function () {
+            scheduled = false
+            var cbs = queue
+            queue = []
+            var t = performance.now()
+            for (var i = 0; i < cbs.length; i++) { try { cbs[i](t) } catch (e) { console.error(e) } }
+          }
+          window.requestAnimationFrame = function (cb) {
+            if (document.visibilityState !== 'hidden') return nativeRaf(cb)
+            queue.push(cb)
+            if (!scheduled) { scheduled = true; mc.port2.postMessage(0) }
+            return queue.length
+          }
+        })()
+      }
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

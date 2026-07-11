@@ -12,6 +12,8 @@ interface GarageStore {
   isMobileNavOpen: boolean
   isBottomSheetExpanded: boolean
   qualityConfig: QualityConfig
+  isRoomDirty: boolean
+  setRoomDirty: (dirty: boolean) => void
   setActiveItem: (item: PortfolioItem | null, source?: 'mobile_tab' | '3d_click') => void
   setHasInteracted: () => void
   setIsLoaded: () => void
@@ -28,6 +30,8 @@ export const useStore = create<GarageStore>((set, get) => ({
   isMobileNavOpen: false,
   isBottomSheetExpanded: false,
   qualityConfig: defaultQuality,
+  isRoomDirty: false,
+  setRoomDirty: (dirty) => set({ isRoomDirty: dirty }),
   setActiveItem: (item, source) => {
     const prev = get().activeItem
     if (item) {
@@ -55,3 +59,11 @@ detectionPromise.then((config) => {
   useStore.setState({ qualityConfig: config })
   setUserProps({ gpu_tier: config.tier })
 })
+
+// Dev-only: expose the store for debugging/manual testing in the console
+if (import.meta.env.DEV) {
+  ;(window as Window & { __store?: typeof useStore }).__store = useStore
+  import('@react-three/drei').then((m) => {
+    ;(window as Window & { __progress?: unknown }).__progress = m.useProgress
+  })
+}

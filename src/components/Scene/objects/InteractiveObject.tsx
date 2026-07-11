@@ -176,7 +176,7 @@ function ObjectGeometry({ id, color, hovered }: { id: string; color: string; hov
       )
 
     case 'experience':
-      // Invisible hitbox over NVIDIA/Amazon logos
+      // Invisible hitbox over the NVIDIA logo
       return (
         <mesh visible={false}>
           <boxGeometry args={[1.0, 0.5, 0.8]} />
@@ -336,9 +336,11 @@ export default function InteractiveObject({ item, children }: InteractiveObjectP
         {children ? (
           <group>
             {children}
-            {/* Invisible hitbox so GLB models reliably capture pointer events */}
-            <mesh visible={false}>
-              <boxGeometry args={[0.75, 1.5, 0.75]} />
+            {/* Invisible hitbox so GLB models reliably capture pointer events.
+                Sized per object — the boombox is wide and low, so a tall box
+                would trigger hover from far above it. */}
+            <mesh visible={false} position={item.id === 'boombox' ? [0, 0.05, 0] : [0, 0, 0]}>
+              <boxGeometry args={item.id === 'boombox' ? [1.15, 0.55, 0.55] : [0.75, 1.5, 0.75]} />
               <meshBasicMaterial transparent opacity={0} />
             </mesh>
           </group>

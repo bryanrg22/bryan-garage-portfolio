@@ -27,6 +27,13 @@ export interface SkillCategory {
   skills: string[]
 }
 
+export interface ProjectMedia {
+  type: 'video' | 'image'
+  src: string
+  poster?: string
+  caption: string
+}
+
 export interface ProjectEntry {
   name: string
   description: string
@@ -34,6 +41,8 @@ export interface ProjectEntry {
   techStack: string[]
   links?: { label: string; url: string }[]
   logo?: string
+  /** Demo videos/screenshots shown in the desktop showcase + mobile media strip */
+  media?: ProjectMedia[]
 }
 
 export interface AwardEntry {
@@ -112,6 +121,12 @@ export const portfolioItems: PortfolioItem[] = [
         techStack: ['Claude Sonnet 4.6', 'Node.js', 'Swift', 'XCTest', 'Maestro', 'AVSpeechSynthesizer', 'Dynamic Island', 'iOS Shortcuts', 'Prompt Caching', 'CoALA Memory'],
         links: [{ label: 'GitHub', url: 'https://github.com/bryanrg22/ios-agent_automation' }],
         logo: '/images/hackathons/claudeLogo.webp',
+        media: [
+          { type: 'video', src: '/videos/agentic_ios_demo.mp4', poster: '/images/projects/agentic/demo_poster.webp', caption: '"Message my recruiter…" — Claude drives the iPhone end-to-end' },
+          { type: 'video', src: '/videos/agentic_ios_drag.mp4', caption: 'First autonomous multi-step drag on a physical iPhone' },
+          { type: 'image', src: '/images/projects/agentic/architecture.webp', caption: 'System architecture — Node.js agent ↔ XCTest bridge ↔ Swift companion app' },
+          { type: 'image', src: '/images/projects/agentic/team_stage.webp', caption: '3rd place — Claude Builder Hackathon @ UCLA' },
+        ],
       },
       {
         name: 'Basis',
@@ -120,6 +135,10 @@ export const portfolioItems: PortfolioItem[] = [
         techStack: ['LangGraph', 'Python', 'GPT-5.2', 'Grounding DINO', 'SAM2', 'FAISS', 'BM25', 'MCP', 'React', 'TypeScript'],
         links: [{ label: 'GitHub', url: 'https://github.com/bryanrg22/Basis_Info' }],
         logo: '/images/projects/basis_logo.png',
+        media: [
+          { type: 'image', src: '/images/projects/basis/langsmith_trace.webp', caption: 'Agentic RAG trace — every retrieval and citation is observable in LangSmith' },
+          { type: 'image', src: '/images/projects/basis/team_check.webp', caption: "Best Traction — LavaLab Demo Night F'25" },
+        ],
       },
       {
         name: 'Lambda Rim',
@@ -130,6 +149,12 @@ export const portfolioItems: PortfolioItem[] = [
           { label: 'GitHub', url: 'https://github.com/bryanrg22/lambda-rim' },
         ],
         logo: '/images/projects/lambdarimLogo.png',
+        media: [
+          { type: 'image', src: '/images/projects/lambdarim/prizepicks_proof.webp', caption: 'The receipts — $10 → $3,000 at a 78% win rate' },
+          { type: 'image', src: '/images/projects/lambdarim/dashboard.webp', caption: 'Player-prop dashboard with Monte Carlo confidence bands' },
+          { type: 'image', src: '/images/projects/lambdarim/ocr_pipeline.svg', caption: 'Automated OCR → prediction pipeline' },
+          { type: 'image', src: '/images/projects/lambdarim/ui.webp', caption: 'Live odds aggregation across sportsbooks' },
+        ],
       },
       {
         name: 'Swerve',
@@ -141,6 +166,12 @@ export const portfolioItems: PortfolioItem[] = [
           { label: 'DevPost', url: 'https://devpost.com/software/swerve-gqmenk' },
         ],
         logo: '/images/projects/swerveLogo.png',
+        media: [
+          { type: 'image', src: '/images/projects/swerve/ui_1.webp', caption: "Hugo — the event-driven procurement agent's live dashboard" },
+          { type: 'image', src: '/images/projects/swerve/ui_2.webp', caption: 'Inventory intelligence with reorder recommendations' },
+          { type: 'image', src: '/images/projects/swerve/ui_3.webp', caption: 'Audit-traceable agent reasoning per alert' },
+          { type: 'image', src: '/images/projects/swerve/ui_4.webp', caption: 'Real-time Slack alerts from the CSV/CAD ingestion pipeline' },
+        ],
       },
       {
         name: 'CleanSweep',
@@ -152,6 +183,9 @@ export const portfolioItems: PortfolioItem[] = [
           { label: 'DevPost', url: 'https://devpost.com/software/cleansweep-tjq36w' },
         ],
         logo: '/images/projects/cleansweeplogo.png',
+        media: [
+          { type: 'video', src: '/videos/cleansweep_demo.mp4', poster: '/images/projects/cleansweep/demo_poster.webp', caption: 'Application demo — computer-vision waste classification in action' },
+        ],
       },
       {
         name: 'Nosu',
@@ -162,6 +196,11 @@ export const portfolioItems: PortfolioItem[] = [
           { label: 'GitHub', url: 'https://github.com/bryanrg22/Mit_Hacks' },
         ],
         logo: '/images/projects/NosuLogo.png',
+        media: [
+          { type: 'video', src: '/videos/nosu_demo.mp4', poster: '/images/projects/nosu/demo_poster.webp', caption: 'Output sample — unmute to hear the AI-generated soundtrack 🔊' },
+          { type: 'image', src: '/images/projects/nosu/pipeline.webp', caption: 'How it works — YOLO + BLIP + VideoMAE fused into a Suno music prompt' },
+          { type: 'image', src: '/images/projects/nosu/tech_stack.webp', caption: 'The multi-model stack' },
+        ],
       },
       {
         name: "Bryan's Portfolio",
@@ -170,6 +209,9 @@ export const portfolioItems: PortfolioItem[] = [
         techStack: ['React', 'TypeScript', 'Three.js', 'React Three Fiber', 'Vite', 'Tailwind CSS', 'GSAP', 'Zustand', 'Framer Motion'],
         links: [{ label: 'GitHub', url: 'https://github.com/bryanrg22/bryan-garage-portfolio' }],
         logo: '/images/websiteLogo.png',
+        media: [
+          { type: 'image', src: '/images/projects/portfolio/garage_view.webp', caption: "The garage itself — 22MB of Draco+WebP-optimized GLBs, custom physics, and a demand-driven render loop that idles at 0fps" },
+        ],
       },
     ],
     position: [-2.0, 1.08, -0.8],
@@ -199,11 +241,11 @@ export const portfolioItems: PortfolioItem[] = [
       { name: 'TreeHacks', institution: 'Stanford University', startDate: '2025-02-15', endDate: '2025-02-17', location: 'Stanford, California', status: 'COMPLETED', logo: '/images/hackathons/stanfordLogo.png' },
       { name: 'MIT iQuHACK', institution: 'MIT', startDate: '2025-01-31', endDate: '2025-02-02', location: 'Boston, Massachusetts', status: 'COMPLETED', logo: '/images/hackathons/mitLogo.png' },
       { name: 'HackPrinceton', institution: 'Princeton', startDate: '2024-11-09', endDate: '2024-11-11', location: 'Princeton, New Jersey', status: 'COMPLETED', logo: '/images/hackathons/princetonLogo.png' },
-      { name: '2024 HackHarvard', institution: 'Harvard', startDate: '2024-10-11', endDate: '2024-10-13', location: 'Cambridge, Massachusetts', status: 'COMPLETED', highlight: 'Hackathon Winner', logo: '/images/hackathons/harvardLogo.png' },
+      { name: '2024 HackHarvard', institution: 'Harvard', startDate: '2024-10-11', endDate: '2024-10-13', location: 'Cambridge, Massachusetts', status: 'COMPLETED', highlight: 'Hackathon Winner', logo: '/images/hackathons/harvardLogo.webp' },
       { name: 'YHacks', institution: 'Yale', startDate: '2024-10-04', endDate: '2024-10-06', location: 'New Haven, Connecticut', status: 'COMPLETED', logo: '/images/hackathons/yaleLogo.png' },
       { name: 'HackGT', institution: 'Georgia Tech', startDate: '2024-09-27', endDate: '2024-09-29', location: 'Atlanta, Georgia', status: 'Flight Canceled Due to Hurricane Helene', logo: '/images/hackathons/georgiatechLogo.png' },
       { name: 'PennApps XXV', institution: 'UPenn', startDate: '2024-09-20', endDate: '2024-09-22', location: 'Philadelphia, Pennsylvania', status: 'COMPLETED', logo: '/images/hackathons/upennLogo.png' },
-      { name: 'UC Berkeley AI Hackathon', institution: 'UC Berkeley', startDate: '2024-06-22', endDate: '2024-06-23', location: 'Berkeley, California', status: 'COMPLETED', logo: '/images/hackathons/berkeleyLogo.png' },
+      { name: 'UC Berkeley AI Hackathon', institution: 'UC Berkeley', startDate: '2024-06-22', endDate: '2024-06-23', location: 'Berkeley, California', status: 'COMPLETED', logo: '/images/hackathons/berkeleyLogo.webp' },
       { name: 'AstroHacks', institution: 'High School Hackathon', startDate: '2024-04-13', endDate: '2024-04-13', location: 'Irvine, California', status: 'COMPLETED', highlight: 'Hackathon Winner', logo: '/images/hackathons/astrohacksLogo.jpeg' },
     ],
     position: [4.5, 3.2, -0.7],
@@ -224,10 +266,10 @@ export const portfolioItems: PortfolioItem[] = [
     cameraPosition: [0.5, 0.5, 1.3],
     cameraTarget: [0.5, 0.25, -0.7],
     gallery: [
-      '/images/soccer/baby_me.png',
-      '/images/soccer/azusa_soccer.png',
-      '/images/soccer/gladstone.png',
-      '/images/soccer/in_the_air.png',
+      '/images/soccer/baby_me.webp',
+      '/images/soccer/azusa_soccer.webp',
+      '/images/soccer/gladstone.webp',
+      '/images/soccer/in_the_air.webp',
     ],
   },
   {
@@ -257,17 +299,18 @@ export const portfolioItems: PortfolioItem[] = [
   },
   {
     id: 'experience',
-    objectName: 'nvidia-amazon',
+    objectName: 'nvidia-logo',
     title: 'Experience',
     subtitle: "Where I've Worked",
     description:
-      "NVIDIA — Incoming SWE Intern (Summer 2026), building agentic AI. Jane Street — FOCUS '25 (1 of 14) and UNBOXED '24 (1 of 37). Hudson River Trading — Algorithm Development (Quantitative Research) Track. D.E. Shaw — Connect Fellowship. USC ISI HUMANS Lab — Research Assistant across two labs. FIRST Robotics — Lead Developer, Regional Semifinalist. SkillsUSA — Team Leader, State Bronze Medalist.",
-    tags: ['NVIDIA', 'Jane Street', 'HRT', 'D.E. Shaw', 'USC ISI', 'FIRST Robotics'],
+      "NVIDIA — Software Engineering Intern (Summer 2026), building agentic AI. Datadog — DataPUPS 2026 (Emerging Talent, NYC). Jane Street — FOCUS '25 (1 of 14) and UNBOXED '24 (1 of 37). Hudson River Trading — Algorithm Development (Quantitative Research) Track. D.E. Shaw — Connect Fellowship. USC ISI HUMANS Lab — Research Assistant across two labs. FIRST Robotics — Lead Developer, Regional Semifinalist. SkillsUSA — Team Leader, State Bronze Medalist.",
+    tags: ['NVIDIA', 'Datadog', 'Jane Street', 'HRT', 'D.E. Shaw', 'USC ISI', 'FIRST Robotics'],
     links: [
       { label: 'LinkedIn', url: 'https://www.linkedin.com/in/bryanrg22' },
     ],
     experienceEntries: [
-      { company: 'NVIDIA', role: 'Incoming Software Engineering Intern', date: 'May 2026 – Aug 2026', description: 'Building Agentic AI systems — Incoming Summer 2026', logo: '/images/experience/Nvidia_logo.svg.png', category: 'Tech' },
+      { company: 'NVIDIA', role: 'Software Engineering Intern', date: 'May 2026 – Aug 2026', description: 'Building Agentic AI systems — Summer 2026', logo: '/images/experience/Nvidia_logo.svg.png', category: 'Tech' },
+      { company: 'Datadog', role: 'DataPUPS 2026', date: 'Jun 23–24, 2026', description: "Selected for Datadog's invite-only Emerging Talent summit — two days of engineering sessions and networking at Datadog HQ in NYC", logo: '/images/experience/datadog_logo.png', category: 'Tech' },
       { company: 'Hudson River Trading', role: 'Undergraduate Fellow', date: 'May 2026', logo: '/images/experience/hrt_logo.png', category: 'Quant', subRoles: [
         { role: 'Inside HRT', date: 'May 2026', description: 'Algorithm Development (Quantitative Research) Track' },
       ] },
@@ -278,10 +321,7 @@ export const portfolioItems: PortfolioItem[] = [
         ] },
         { role: 'LLM-assisted AI for TikTok Eating-Disorder Dataset (EDTok)', date: 'Aug 2024 – May 2025', description: 'Published EDTok, multimodal eating disorder TikTok dataset — Accepted to ICWSM 2025', links: [{ label: 'Research Paper', url: 'https://arxiv.org/abs/2505.02250' }] },
       ] },
-      { company: 'Amazon x USC', role: 'Research Intern', date: 'Jul 2024 – Present', label: 'Research', logo: '/images/experience/amazonLogo.png', category: 'Research', subRoles: [
-        { role: 'LLM Safety', date: 'Jan 2026 – Present' },
-        { company: 'USC Viterbi School of Engineering', role: 'Image–Text Misinformation Detection', date: 'Jul 2024 – Aug 2024', description: 'Improved out-of-context image–text detection to 68% accuracy', logo: '/images/experience/uscviterbiLogo.jpg', label: 'Research' },
-      ] },
+      { company: 'USC Viterbi School of Engineering', role: 'Research Intern', date: 'Jul 2024 – Aug 2024', description: 'Image–Text Misinformation Detection — improved out-of-context image–text detection to 68% accuracy', logo: '/images/experience/uscviterbiLogo.jpg', label: 'Research', category: 'Research' },
       { company: 'Jane Street', role: 'Undergraduate Fellow', date: '2024–2025', logo: '/images/experience/janestreetLogo.png', category: 'Quant', subRoles: [
         { role: "FOCUS '25", date: 'May 2025', description: 'Selected as 1 of 14' },
         { role: "UNBOXED '24", date: 'Jul 2024', description: 'Selected as 1 of 37' },
@@ -315,12 +355,12 @@ export const portfolioItems: PortfolioItem[] = [
     ],
     awardEntries: [
       { name: 'Claude Builder Hackathon', description: '(3rd Place) Agentic Automation on iOS — voice-controlled Claude agent driving a real iPhone', location: 'UCLA — Los Angeles, CA', year: 2026, iconType: 'medal', photo: '/images/awards/photos/claudeAward.jpeg', logo: '/images/hackathons/claudeLogo.webp' },
-      { name: "CalTech's HackTech Hackathon", description: '(Winner) Dryft Challenge Winner', location: 'Pasadena, CA', year: 2025, iconType: 'trophy', photo: '/images/awards/photos/hacktechteam.jpeg', logo: '/images/awards/logos/awards_caltechLogo.png' },
-      { name: "Harvard's HackHarvard Hackathon", description: '(Winner) Best Use of Terraform', location: 'Cambridge, MA', year: 2024, iconType: 'trophy', photo: '/images/awards/photos/hackharvardteam.jpeg', logo: '/images/awards/logos/awards_harvardLogo.png' },
+      { name: "CalTech's HackTech Hackathon", description: '(Winner) Dryft Challenge Winner', location: 'Pasadena, CA', year: 2025, iconType: 'trophy', photo: '/images/awards/photos/hacktechteam.webp', logo: '/images/awards/logos/awards_caltechLogo.png' },
+      { name: "Harvard's HackHarvard Hackathon", description: '(Winner) Best Use of Terraform', location: 'Cambridge, MA', year: 2024, iconType: 'trophy', photo: '/images/awards/photos/hackharvardteam.webp', logo: '/images/awards/logos/awards_harvardLogo.webp' },
       { name: "LavaLab Demo Night F'25", description: '(Best Traction) Demo Night Winner', location: 'Los Angeles, CA', year: 2025, iconType: 'trophy', photo: '/images/awards/photos/lava_award.jpg', logo: '/images/awards/logos/lavalabLogo.jpg' },
       { name: 'AstroHacks Hackathon', description: '(Winner) Gold Medalist, Best Execution', location: 'Irvine, CA', year: 2024, iconType: 'trophy', photo: '/images/awards/photos/astroMedals.jpg', logo: '/images/awards/logos/awards_astrohacksLogo.jpeg' },
-      { name: 'SkillsUSA CA Engineering Technology/Design', description: 'REGIONAL Finalist && STATE Bronze — 3rd Best Engineering Project in the State of California', location: 'Ontario, CA', year: 2024, iconType: 'medal', photo: '/images/awards/photos/skillsMedals.jpeg', logo: '/images/awards/logos/awards_skillsusaLogo.png' },
-      { name: 'FIRST Tech Challenge CENTERSTAGE Robotics', description: 'REGIONAL Semifinalist — Top 5 out of 32 Teams', location: 'Pasadena, CA', year: 2024, iconType: 'award', photo: '/images/awards/photos/firstMedals.jpeg', logo: '/images/awards/logos/awards_firstLogo.jpeg' },
+      { name: 'SkillsUSA CA Engineering Technology/Design', description: 'REGIONAL Finalist && STATE Bronze — 3rd Best Engineering Project in the State of California', location: 'Ontario, CA', year: 2024, iconType: 'medal', photo: '/images/awards/photos/skillsMedals.webp', logo: '/images/awards/logos/awards_skillsusaLogo.png' },
+      { name: 'FIRST Tech Challenge CENTERSTAGE Robotics', description: 'REGIONAL Semifinalist — Top 5 out of 32 Teams', location: 'Pasadena, CA', year: 2024, iconType: 'award', photo: '/images/awards/photos/firstMedals.webp', logo: '/images/awards/logos/awards_firstLogo.jpeg' },
     ],
     position: [2.5, 1.8, -2.7],
     color: '#F4C963',
@@ -374,7 +414,7 @@ export const portfolioItems: PortfolioItem[] = [
       "Born and raised in Azusa, California. Lived here my whole life. I've always been an LA boy — the hustle, the culture, the energy. California shaped who I am, and no matter where I go, LA is always home.",
     gallery: [
       '/images/home/azusa_greetings_sign.jpg',
-      '/images/home/azusa_ave.jpeg',
+      '/images/home/azusa_ave.webp',
       '/images/home/azusa_canyons.webp',
     ],
     position: [-4.9, 2.4, 0.8],
@@ -390,7 +430,7 @@ export const portfolioItems: PortfolioItem[] = [
     description:
       "First-generation Latino. Son of Mexican parents. My parents came to California with nothing and built a life from scratch. Their work ethic, sacrifice, and culture shaped everything I am. Being Mexican-American isn't just part of my identity — it's the foundation of it.",
     tags: ['Mexican-American', 'First-Generation', 'Azusa', 'California'],
-    gallery: ['/images/parents.png'],
+    gallery: ['/images/parents.webp'],
     position: [-3.5, 3.5, -2.85],
     color: '#006847',
     cameraPosition: [-3.5, 3.5, 0],
@@ -408,8 +448,8 @@ export const portfolioItems: PortfolioItem[] = [
       { label: 'LinkedIn', url: 'https://www.linkedin.com/in/bryanrg22' },
     ],
     gallery: [
-      '/images/breaAutoBody/me_working.png',
-      '/images/breaAutoBody/bodyshop_picture.png',
+      '/images/breaAutoBody/me_working.webp',
+      '/images/breaAutoBody/bodyshop_picture.webp',
     ],
     position: [0, 3.8, -2.92],
     color: '#8B7355',

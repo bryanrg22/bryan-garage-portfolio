@@ -7,8 +7,8 @@ import { trackEvent } from '../../lib/analytics'
 
 const boomboxItem = portfolioItems.find((item) => item.id === 'boombox')!
 
-// Wait for camera fly-in before revealing the Spotify embed in the panel
-const REVEAL_DELAY = 1000
+// Wait for camera fly-in + panel slide-in before revealing the Spotify embed
+const REVEAL_DELAY = 1700
 
 export default function SpotifyPlayer() {
   const activeItem = useStore((s) => s.activeItem)
@@ -24,12 +24,14 @@ export default function SpotifyPlayer() {
   // Delay visible positioning until after the camera animation finishes
   const [panelReady, setPanelReady] = useState(false)
 
+  // Adjust-during-render (sanctioned derived-state pattern): reset immediately
+  // when the boombox panel closes, without a synchronous setState in an effect.
+  if (!isBoomboxActive && panelReady) setPanelReady(false)
+
   useEffect(() => {
-    if (isBoomboxActive) {
-      const timer = setTimeout(() => setPanelReady(true), REVEAL_DELAY)
-      return () => clearTimeout(timer)
-    }
-    setPanelReady(false)
+    if (!isBoomboxActive) return
+    const timer = setTimeout(() => setPanelReady(true), REVEAL_DELAY)
+    return () => clearTimeout(timer)
   }, [isBoomboxActive])
 
   // Detect actual Spotify playback via postMessage from the embed

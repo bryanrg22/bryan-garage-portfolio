@@ -1,9 +1,11 @@
 import { useState, useEffect, useCallback } from 'react'
+import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'motion/react'
 import { useStore } from '../../stores/useStore'
 import { useIsMobile } from '../../hooks/useIsMobile'
 import { useBottomSheetDrag } from '../../hooks/useBottomSheetDrag'
-import type { ExperienceEntry, ExperienceCategory, SkillCategory, ProjectEntry, AwardEntry, HackathonEntry, EducationEntry } from '../../data/portfolio'
+import type { ExperienceEntry, ExperienceCategory, SkillCategory, ProjectEntry, ProjectMedia, AwardEntry, HackathonEntry, EducationEntry } from '../../data/portfolio'
+import { trackEvent } from '../../lib/analytics'
 
 const fadeUp = { hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0 } }
 
@@ -46,7 +48,7 @@ function ExperienceContent({ entries }: { entries: ExperienceEntry[] }) {
               <img
                 src={entry.logo}
                 alt=""
-                className="h-8 w-8 shrink-0 rounded object-contain"
+                className="h-8 w-8 shrink-0 rounded object-contain" loading="lazy" decoding="async"
                 onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
               />
             )}
@@ -67,7 +69,7 @@ function ExperienceContent({ entries }: { entries: ExperienceEntry[] }) {
                         <img
                           src={sub.logo}
                           alt=""
-                          className="h-8 w-8 shrink-0 rounded object-contain"
+                          className="h-8 w-8 shrink-0 rounded object-contain" loading="lazy" decoding="async"
                           onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
                         />
                       )}
@@ -154,30 +156,229 @@ function SkillsContent({ categories }: { categories: SkillCategory[] }) {
   )
 }
 
+/** Single media item — video (muted autoplay) or image */
+function MediaItem({ item, className }: { item: ProjectMedia; className?: string }) {
+  if (item.type === 'video') {
+    return (
+      <video
+        key={item.src}
+        src={item.src}
+        poster={item.poster}
+        className={className}
+        autoPlay
+        muted
+        loop
+        playsInline
+        controls
+        preload="metadata"
+      />
+    )
+  }
+  return <img key={item.src} src={item.src} alt={item.caption} className={className} loading="lazy" decoding="async" />
+}
+
+/**
+ * Desktop-only showcase: while the Projects panel is open, the selected
+ * project's demo videos/screenshots fill the otherwise-empty left side of
+ * the screen as a floating overlay. Rendered through a portal so it can
+ * live outside the right-hand panel.
+ */
+function ProjectShowcase({ project, jobIndex }: { project: ProjectEntry; jobIndex: number }) {
+  const [mediaIndex, setMediaIndex] = useState(0)
+  const [expanded, setExpanded] = useState(false)
+  const media = project.media!
+  const current = media[Math.min(mediaIndex, media.length - 1)]
+  const prev = () => setMediaIndex((i) => (i - 1 + media.length) % media.length)
+  const next = () => setMediaIndex((i) => (i + 1) % media.length)
+
+  // Which demos do visitors actually look at? Fires per project + per slide.
+  useEffect(() => {
+    trackEvent('project_media_viewed', {
+      project: project.name,
+      media_index: mediaIndex,
+      media_type: media[Math.min(mediaIndex, media.length - 1)].type,
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- media derives from project
+  }, [project.name, mediaIndex])
+
+  // Close the lightbox with Escape (before the panel's own Escape handler
+  // closes the whole section — stopImmediatePropagation-style via capture)
+  useEffect(() => {
+    if (!expanded) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.stopPropagation()
+        setExpanded(false)
+      }
+    }
+    window.addEventListener('keydown', onKey, { capture: true })
+    return () => window.removeEventListener('keydown', onKey, { capture: true })
+  }, [expanded])
+
+  return (
+    // Wrapper centers the card in the free space left of the 420px panel,
+    // clear of the Back button / logo. Card itself is frosted-glass.
+    <div className="pointer-events-none fixed inset-y-0 left-0 right-0 z-40 flex items-center justify-center p-6 md:right-[420px]">
+      <motion.div
+        initial={{ opacity: 0, x: -40, scale: 0.97 }}
+        // Delay only the ENTRANCE (so it follows the sidebar in)…
+        animate={{ opacity: 1, x: 0, scale: 1, transition: { type: 'spring', damping: 26, stiffness: 240, delay: 0.45 } }}
+        // …but exit immediately, in lockstep with the sidebar
+        exit={{ opacity: 0, x: -40, scale: 0.97, transition: { type: 'spring', damping: 30, stiffness: 320 } }}
+        className="pointer-events-auto flex w-[min(56vw,680px)] flex-col rounded-2xl border border-white/10 bg-[rgba(20,18,15,0.55)] p-4 shadow-2xl backdrop-blur-2xl"
+      >
+        <div className="mb-3 flex items-baseline justify-between gap-3">
+          <p className="font-serif text-lg text-golden">{project.name}</p>
+          <span className="shrink-0 font-mono text-[10px] tracking-widest text-stone/70">JOB #{String(jobIndex + 1).padStart(3, '0')}</span>
+        </div>
+
+        <div className="relative flex max-h-[58vh] min-h-[240px] items-center justify-center overflow-hidden rounded-lg bg-black/30">
+          <MediaItem item={current} className="max-h-[58vh] w-auto max-w-full rounded-lg object-contain" />
+          {/* Expand to lightbox — native video fullscreen is blocked in some
+              embedded browsers, so we roll our own overlay */}
+          <button
+            onClick={() => {
+              trackEvent('project_media_expanded', { project: project.name, media_index: mediaIndex })
+              setExpanded(true)
+            }}
+            aria-label="Expand media"
+            className="absolute right-2 top-2 flex h-9 w-9 items-center justify-center rounded-full bg-garage-dark/70 text-cream/90 backdrop-blur-sm transition-colors hover:bg-golden/20 hover:text-golden"
+          >
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M8.5 1.5h4v4m0-4L7.8 6.2M5.5 12.5h-4v-4m0 4l4.7-4.7" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          </button>
+          {media.length > 1 && (
+            <>
+              <button
+                onClick={prev}
+                aria-label="Previous media"
+                className="absolute left-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-garage-dark/70 text-cream/90 backdrop-blur-sm transition-colors hover:bg-golden/20 hover:text-golden"
+              >
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              </button>
+              <button
+                onClick={next}
+                aria-label="Next media"
+                className="absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-garage-dark/70 text-cream/90 backdrop-blur-sm transition-colors hover:bg-golden/20 hover:text-golden"
+              >
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              </button>
+            </>
+          )}
+        </div>
+
+        <p className="mt-3 text-sm text-cream/80">{current.caption}</p>
+
+        {media.length > 1 && (
+          <div className="mt-3 flex items-center justify-center gap-2">
+            {media.map((m, i) => (
+              <button
+                key={m.src}
+                onClick={() => setMediaIndex(i)}
+                aria-label={`Show media ${i + 1}`}
+                className={`h-2 rounded-full transition-all ${i === mediaIndex ? 'w-6 bg-golden' : 'w-2 bg-stone/40 hover:bg-stone/70'}`}
+              />
+            ))}
+          </div>
+        )}
+      </motion.div>
+
+      {/* Lightbox — our own "fullscreen" that works in every browser */}
+      <AnimatePresence>
+        {expanded && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onClick={() => setExpanded(false)}
+            className="pointer-events-auto fixed inset-0 z-[80] flex flex-col items-center justify-center bg-black/90 p-6 backdrop-blur-sm"
+          >
+            <button
+              onClick={() => setExpanded(false)}
+              aria-label="Close expanded media"
+              className="absolute top-5 right-6 flex h-10 w-10 items-center justify-center rounded-full bg-garage-mid/80 text-stone transition-colors hover:bg-cream/10 hover:text-cream"
+            >
+              <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
+                <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+            </button>
+            <div onClick={(e) => e.stopPropagation()} className="flex max-h-[86vh] max-w-[92vw] items-center justify-center">
+              <MediaItem item={current} className="max-h-[82vh] max-w-full rounded-lg object-contain" />
+            </div>
+            <p className="mt-4 max-w-[80vw] text-center text-sm text-cream/85">{current.caption}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
+
+/** Mobile: swipeable media strip inside the project card */
+function MediaStrip({ media }: { media: ProjectMedia[] }) {
+  return (
+    <div className="mt-3 flex snap-x snap-mandatory gap-2 overflow-x-auto pb-1">
+      {media.map((m) => (
+        <div key={m.src} className="w-56 shrink-0 snap-start overflow-hidden rounded-lg bg-black/40">
+          <MediaItem item={m} className="h-40 w-full object-cover" />
+          <p className="px-2 py-1.5 text-[11px] leading-tight text-cream/70">{m.caption}</p>
+        </div>
+      ))}
+    </div>
+  )
+}
+
 function ProjectsContent({ projects }: { projects: ProjectEntry[] }) {
+  const isMobile = useIsMobile()
+  // The showcase follows the LIVE store state (not this component's lifetime):
+  // when the panel starts its exit animation this flips false immediately,
+  // so the showcase leaves together with the sidebar instead of lingering.
+  const projectsActive = useStore((s) => s.activeItem?.id === 'projects')
+  // Desktop: the selected project's media shows in the left-side showcase.
+  // Defaults to the first project that has media so the space is never empty.
+  const [selectedName, setSelectedName] = useState<string | null>(
+    () => projects.find((p) => p.media?.length)?.name ?? null,
+  )
+  const selectedIndex = projects.findIndex((p) => p.name === selectedName)
+  const selected = selectedIndex >= 0 ? projects[selectedIndex] : null
+
   return (
     <motion.div
       variants={fadeUp}
       className="mt-6 flex flex-col gap-3"
     >
-      {projects.map((project) => (
+      {projects.map((project, i) => (
         <div
           key={project.name}
-          className="rounded-lg border border-golden/10 bg-[#1a1a1a] p-4"
+          onClick={project.media?.length && !isMobile ? () => setSelectedName(project.name) : undefined}
+          className={`rounded-lg border bg-[#1a1a1a] p-4 transition-colors ${
+            !isMobile && selectedName === project.name && project.media?.length
+              ? 'border-golden/60'
+              : 'border-golden/10'
+          } ${project.media?.length && !isMobile ? 'cursor-pointer hover:border-golden/40' : ''}`}
         >
           <div className="flex items-start gap-3">
             {project.logo && (
               <img
                 src={project.logo}
                 alt=""
-                className="h-8 w-8 shrink-0 rounded object-contain"
+                className="h-8 w-8 shrink-0 rounded object-contain" loading="lazy" decoding="async"
                 onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
               />
             )}
             <p className="text-base font-bold text-golden">{project.name}</p>
+            {/* Auto-shop work-order tag */}
+            <span className="ml-auto shrink-0 pt-0.5 font-mono text-[10px] tracking-widest text-stone/70">
+              JOB #{String(i + 1).padStart(3, '0')}
+            </span>
           </div>
           <p className="mt-1 text-sm text-cream/80">{project.description}</p>
           <p className="mt-2 text-xs text-golden-deep">{project.achievement}</p>
+          {/* Mobile: media inline in the card */}
+          {isMobile && project.media && project.media.length > 0 && <MediaStrip media={project.media} />}
+          {/* Desktop: hint that this card drives the left showcase */}
+          {!isMobile && project.media && project.media.length > 0 && selectedName !== project.name && (
+            <p className="mt-2 text-[11px] text-blue-accent/80">▶ Click to preview demo</p>
+          )}
           <div className="mt-3 flex flex-wrap gap-1.5">
             {project.techStack.map((tech) => (
               <span
@@ -205,6 +406,17 @@ function ProjectsContent({ projects }: { projects: ProjectEntry[] }) {
           )}
         </div>
       ))}
+
+      {/* Desktop: floating media showcase on the (otherwise empty) left side */}
+      {!isMobile &&
+        createPortal(
+          <AnimatePresence>
+            {projectsActive && selected?.media && selected.media.length > 0 && (
+              <ProjectShowcase key={selected.name} project={selected} jobIndex={selectedIndex} />
+            )}
+          </AnimatePresence>,
+          document.body,
+        )}
     </motion.div>
   )
 }
@@ -227,7 +439,7 @@ function AwardsContent({ awards }: { awards: AwardEntry[] }) {
               <img
                 src={award.logo}
                 alt=""
-                className="h-8 w-8 shrink-0 rounded object-contain"
+                className="h-8 w-8 shrink-0 rounded object-contain" loading="lazy" decoding="async"
                 onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
               />
             )}
@@ -243,7 +455,7 @@ function AwardsContent({ awards }: { awards: AwardEntry[] }) {
             <img
               src={award.photo}
               alt={award.name}
-              className="mt-3 w-full rounded-md object-cover"
+              className="mt-3 w-full rounded-md object-cover" loading="lazy" decoding="async"
               style={{ maxHeight: 160 }}
               onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
             />
@@ -278,7 +490,7 @@ function HackathonsContent({ hackathons }: { hackathons: HackathonEntry[] }) {
               <img
                 src={h.logo}
                 alt=""
-                className="h-8 w-8 shrink-0 rounded object-contain"
+                className="h-8 w-8 shrink-0 rounded object-contain" loading="lazy" decoding="async"
                 onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
               />
             )}
@@ -318,7 +530,7 @@ function EducationContent({ entries }: { entries: EducationEntry[] }) {
               <img
                 src={entry.logo}
                 alt=""
-                className="h-8 w-8 shrink-0 rounded object-contain"
+                className="h-8 w-8 shrink-0 rounded object-contain" loading="lazy" decoding="async"
                 onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
               />
             )}
@@ -406,7 +618,7 @@ function PanelContent({ activeItem }: { activeItem: NonNullable<ReturnType<typeo
               key={src}
               src={src}
               alt=""
-              className="w-full rounded-lg"
+              className="w-full rounded-lg" loading="lazy" decoding="async"
               style={{ maxHeight: src.includes('me_working') ? 450 : 320, objectFit: src.includes('me_working') ? 'contain' : 'cover' }}
               onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
             />
@@ -466,33 +678,27 @@ const CAMERA_FLY_DURATION = 1250 // ms — matches the 1.2s GSAP camera animatio
 function MobileBottomSheet() {
   const activeItem = useStore((s) => s.activeItem)
   const setActiveItem = useStore((s) => s.setActiveItem)
-  const [showSheet, setShowSheet] = useState(false)
-  const [sheetItem, setSheetItem] = useState(activeItem)
+  const [sheet, setSheet] = useState<{ item: typeof activeItem; visible: boolean }>({ item: null, visible: false })
+  const showSheet = sheet.visible
+  const sheetItem = sheet.item
 
-  // Delay the sheet appearance so the user can watch the camera fly-in first.
-  // On dismiss (activeItem → null): hide immediately.
-  // On switch (itemA → itemB while sheet is open): update content immediately.
+  // Adjust-during-render (sanctioned derived-state pattern):
+  // dismiss (activeItem → null) hides immediately; switching sections while
+  // the sheet is open swaps content immediately.
+  if (activeItem === null) {
+    if (sheet.item !== null || sheet.visible) setSheet({ item: null, visible: false })
+  } else if (sheet.visible && sheet.item && sheet.item.id !== activeItem.id) {
+    setSheet({ item: activeItem, visible: true })
+  }
+
+  // Opening from a closed state waits for the camera fly-in (async setState only)
   useEffect(() => {
-    if (activeItem === null) {
-      // Dismissing — hide immediately
-      setShowSheet(false)
-      setSheetItem(null)
-      return
-    }
-
-    if (showSheet && sheetItem) {
-      // Sheet already open, switching sections — update content immediately
-      setSheetItem(activeItem)
-      return
-    }
-
-    // New item from closed state — wait for camera animation
+    if (!activeItem || showSheet) return
     const timer = setTimeout(() => {
-      setSheetItem(activeItem)
-      setShowSheet(true)
+      setSheet({ item: activeItem, visible: true })
     }, CAMERA_FLY_DURATION)
     return () => clearTimeout(timer)
-  }, [activeItem]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [activeItem, showSheet])
 
   const dismiss = useCallback(() => {
     setActiveItem(null)
@@ -570,7 +776,7 @@ function MobileBottomSheet() {
               </div>
 
               {/* Scrollable content */}
-              <div className={`flex-1 px-6 pb-24 ${sheetItem.id === 'boombox' ? 'flex flex-col overflow-hidden' : 'overflow-y-auto'}`}>
+              <div className={`flex-1 px-6 pb-36 ${sheetItem.id === 'boombox' ? 'flex flex-col overflow-hidden' : 'overflow-y-auto'}`}>
                 <PanelContent activeItem={sheetItem} />
               </div>
             </div>
@@ -584,6 +790,25 @@ function MobileBottomSheet() {
 function DesktopPanel() {
   const activeItem = useStore((s) => s.activeItem)
   const setActiveItem = useStore((s) => s.setActiveItem)
+  const [panel, setPanel] = useState<{ item: typeof activeItem; visible: boolean }>({ item: null, visible: false })
+
+  // Adjust-during-render (same pattern as the mobile sheet): dismissing hides
+  // immediately; switching sections while open swaps content immediately.
+  if (activeItem === null) {
+    if (panel.item !== null || panel.visible) setPanel({ item: null, visible: false })
+  } else if (panel.visible && panel.item && panel.item.id !== activeItem.id) {
+    setPanel({ item: activeItem, visible: true })
+  }
+
+  // Opening from a closed state waits for the camera fly-in, so the visitor
+  // watches the zoom before the sidebar slides over it.
+  useEffect(() => {
+    if (!activeItem || panel.visible) return
+    const timer = setTimeout(() => {
+      setPanel({ item: activeItem, visible: true })
+    }, CAMERA_FLY_DURATION)
+    return () => clearTimeout(timer)
+  }, [activeItem, panel.visible])
 
   // Close on Escape
   useEffect(() => {
@@ -596,14 +821,14 @@ function DesktopPanel() {
 
   return (
     <AnimatePresence>
-      {activeItem && (
+      {panel.visible && panel.item && (
         <motion.aside
-          key={activeItem.id}
+          key={panel.item.id}
           initial={{ x: '100%', opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: '100%', opacity: 0 }}
           transition={{ type: 'spring', damping: 28, stiffness: 260 }}
-          className={`pointer-events-auto fixed top-0 right-0 z-40 flex h-full w-full flex-col border-l border-golden/10 bg-[rgba(20,18,15,0.92)] p-8 pt-20 backdrop-blur-xl md:w-[420px] ${activeItem.id === 'boombox' ? 'overflow-hidden' : 'overflow-y-auto'}`}
+          className={`pointer-events-auto fixed top-0 right-0 z-40 flex h-full w-full flex-col border-l border-golden/10 bg-[rgba(20,18,15,0.92)] p-8 pt-20 pb-28 backdrop-blur-xl md:w-[420px] ${panel.item.id === 'boombox' ? 'overflow-hidden' : 'overflow-y-auto'}`}
         >
           {/* Close button */}
           <button
@@ -615,7 +840,7 @@ function DesktopPanel() {
             </svg>
           </button>
 
-          <PanelContent activeItem={activeItem} />
+          <PanelContent activeItem={panel.item} />
         </motion.aside>
       )}
     </AnimatePresence>

@@ -4,14 +4,16 @@ import { AnimatePresence, motion } from 'motion/react'
 const STORAGE_KEY = 'rotatePromptDismissed'
 
 function useShowRotatePrompt() {
-  const [show, setShow] = useState(false)
+  // Lazy initializer — the media query is checked once at mount, so the
+  // effect never needs a synchronous setState.
+  const [show, setShow] = useState(
+    () =>
+      !sessionStorage.getItem(STORAGE_KEY) &&
+      window.matchMedia('(orientation: portrait) and (max-width: 767px)').matches,
+  )
 
   useEffect(() => {
-    if (sessionStorage.getItem(STORAGE_KEY)) return
-
     const mql = window.matchMedia('(orientation: portrait) and (max-width: 767px)')
-    if (mql.matches) setShow(true)
-
     const onChange = (e: MediaQueryListEvent) => {
       if (!e.matches) setShow(false)
     }

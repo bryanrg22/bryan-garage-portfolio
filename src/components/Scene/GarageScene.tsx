@@ -7,7 +7,10 @@ import CameraController from './CameraController'
 import RenderController from './RenderController'
 import Particles from './Particles'
 import InteractiveObject from './objects/InteractiveObject'
-import SoccerBall from './objects/SoccerBall'
+import KickableSoccerBall from './objects/KickableSoccerBall'
+import KnockableProp from './objects/KnockableProp'
+import ShopDog from './objects/ShopDog'
+import GarageDoor from './GarageDoor'
 import Macbook from './objects/Macbook'
 import JBLBoombox from './objects/JBLBoombox'
 import CarLift from './objects/CarLift'
@@ -17,8 +20,10 @@ import { portfolioItems } from '../../data/portfolio'
 import { useStore } from '../../stores/useStore'
 import type { QualityConfig } from '../../lib/gpuTier'
 
-// Draco decoder for compressed GLB models
-useGLTF.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/')
+// Draco decoder for compressed GLB models — self-hosted (copied from
+// three/examples/jsm/libs/draco/gltf) so first model load skips a DNS+TLS
+// round-trip to gstatic.com and works offline
+useGLTF.setDecoderPath('/draco/')
 
 // Load priority tiers — lightest first, heaviest last.
 // Each tier waits for the previous to mount before loading.
@@ -59,8 +64,6 @@ function useProgressiveLoad(showHeavyModels: boolean) {
 /** Map item id → lazy-loaded GLB component */
 function GLBChild({ id }: { id: string }) {
   switch (id) {
-    case 'soccer':
-      return <SoccerBall />
     case 'skills':
       return <ToolBox />
     case 'boombox':
@@ -80,6 +83,31 @@ function SceneContent({ quality }: { quality: QualityConfig }) {
       {portfolioItems.map((item) => {
         const hasGLB = ['soccer', 'skills', 'boombox', 'projects'].includes(item.id)
         const isAllowed = allowedIds.has(item.id)
+        // Soccer ball is special: click opens the story, drag-and-release kicks it
+        if (item.id === 'soccer' && isAllowed) {
+          return (
+            <Suspense key={item.id} fallback={null}>
+              <KickableSoccerBall item={item} />
+            </Suspense>
+          )
+        }
+        // Boombox gets shoved around by the ball; the heavy toolbox only
+        // slides a little. Both stay fully clickable (KnockableProp wraps,
+        // it doesn't intercept pointer events).
+        if ((item.id === 'boombox' || item.id === 'skills') && isAllowed) {
+          const knock = item.id === 'boombox'
+            ? { id: 'boombox', radius: 0.55, height: 0.5, massFactor: 0.35, resetDelay: 0.1 }
+            : { id: 'toolbox', radius: 0.6, height: 1.0, massFactor: 0.15, resetDelay: 0.15 }
+          return (
+            <KnockableProp key={item.id} {...knock} position={item.position} tippable={false}>
+              <InteractiveObject item={{ ...item, position: [0, 0, 0] }}>
+                <Suspense fallback={null}>
+                  <GLBChild id={item.id} />
+                </Suspense>
+              </InteractiveObject>
+            </KnockableProp>
+          )
+        }
         return (
           <InteractiveObject key={item.id} item={item}>
             {hasGLB && isAllowed ? (
@@ -170,12 +198,18 @@ export default function GarageScene() {
         <fog attach="fog" args={['#1a1408', 6, 22]} />
         {quality.showEnvironment && (
           <Suspense fallback={null}>
-            <Environment preset="warehouse" environmentIntensity={quality.environmentIntensity} />
+            {/* Self-hosted copy of drei's "warehouse" preset (empty_warehouse_01_1k.hdr) —
+                avoids a runtime fetch from raw.githack.com */}
+            <Environment files="/hdri/empty_warehouse_01_1k.hdr" environmentIntensity={quality.environmentIntensity} />
           </Suspense>
         )}
         <RenderController />
         <CameraController />
         <Garage />
+        <GarageDoor />
+        <Suspense fallback={null}>
+          <ShopDog />
+        </Suspense>
         {quality.showParticles && <Particles />}
         <SceneContent quality={quality} />
       </Canvas>

@@ -1,8 +1,10 @@
-import { useRef, useEffect, useState, Suspense } from 'react'
+import { useRef, useEffect, useState, useMemo, Suspense } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
+import type { ThreeEvent } from '@react-three/fiber'
 import { useGLTF, useTexture, Html } from '@react-three/drei'
 import * as THREE from 'three'
 import { useStore } from '../../stores/useStore'
+import KnockableProp from './objects/KnockableProp'
 
 /** Brea Auto Body sign — image texture on a plane */
 function BreaBoardSign() {
@@ -97,7 +99,7 @@ useTexture.preload('/images/experience/hrt_logo.png')
 
 /** Harvard logo — image texture on back wall above trophies */
 function HarvardSign() {
-  const texture = useTexture('/images/harvardLogo.png')
+  const texture = useTexture('/images/harvardLogo.webp')
   return (
     <mesh position={[2.1, 2.4, -2.92]} castShadow>
       <planeGeometry args={[0.7, 0.7]} />
@@ -106,7 +108,7 @@ function HarvardSign() {
   )
 }
 
-useTexture.preload('/images/harvardLogo.png')
+useTexture.preload('/images/harvardLogo.webp')
 
 /** Claude logo — image texture on back wall above trophies (Claude Builder Hackathon award) */
 function ClaudeSign() {
@@ -134,13 +136,13 @@ function CaltechSign() {
 
 useTexture.preload('/images/caltechLogo.png')
 
-useTexture.preload('/concrete_floor/Concrete035_1K-JPG_Color.jpg')
-useTexture.preload('/concrete_floor/Concrete035_1K-JPG_NormalGL.jpg')
-useTexture.preload('/concrete_floor/Concrete035_1K-JPG_Roughness.jpg')
+useTexture.preload('/concrete_floor/Concrete035_1K-JPG_Color.webp')
+useTexture.preload('/concrete_floor/Concrete035_1K-JPG_NormalGL.webp')
+useTexture.preload('/concrete_floor/Concrete035_1K-JPG_Roughness.webp')
 
-useTexture.preload('/chipboard_wall/Chipboard002_1K-JPG_Color.jpg')
-useTexture.preload('/chipboard_wall/Chipboard002_1K-JPG_NormalGL.jpg')
-useTexture.preload('/chipboard_wall/Chipboard002_1K-JPG_Roughness.jpg')
+useTexture.preload('/chipboard_wall/Chipboard002_1K-JPG_Color.webp')
+useTexture.preload('/chipboard_wall/Chipboard002_1K-JPG_NormalGL.webp')
+useTexture.preload('/chipboard_wall/Chipboard002_1K-JPG_Roughness.webp')
 
 // Reusable Vector3s for scale lerps — avoids per-frame GC allocation
 const _linkedInScale = new THREE.Vector3()
@@ -165,9 +167,9 @@ function getRepeatedTexture(tex: THREE.Texture, rx: number, ry: number): THREE.T
 
 /** Concrete floor with PBR textures */
 function ConcreteFloor() {
-  const colorMap = useTexture('/concrete_floor/Concrete035_1K-JPG_Color.jpg')
-  const normalMap = useTexture('/concrete_floor/Concrete035_1K-JPG_NormalGL.jpg')
-  const roughnessMap = useTexture('/concrete_floor/Concrete035_1K-JPG_Roughness.jpg')
+  const colorMap = useTexture('/concrete_floor/Concrete035_1K-JPG_Color.webp')
+  const normalMap = useTexture('/concrete_floor/Concrete035_1K-JPG_NormalGL.webp')
+  const roughnessMap = useTexture('/concrete_floor/Concrete035_1K-JPG_Roughness.webp')
 
   for (const tex of [colorMap, normalMap, roughnessMap]) {
     tex.wrapS = tex.wrapT = THREE.RepeatWrapping
@@ -192,12 +194,6 @@ function ConcreteFloor() {
 function NvidiaLogo({ position }: { position: [number, number, number] }) {
   const { scene } = useGLTF('/models/nvidia_3d_logo.glb')
   return <primitive object={scene} position={position} scale={0.07} rotation={[Math.PI / 2, 0, 0.3]} castShadow />
-}
-
-/** Amazon logo — decorative, on workbench behind nvidia */
-function AmazonLogo({ position }: { position: [number, number, number] }) {
-  const { scene } = useGLTF('/models/amazon_logo.glb')
-  return <primitive object={scene} position={position} scale={0.0008} rotation={[0, -0.2, 0]} castShadow />
 }
 
 /** Red Bull can — decorative GLB on workbench */
@@ -350,9 +346,9 @@ function LinkedInLogo({ position }: { position: [number, number, number] }) {
   return (
     <group ref={groupRef} position={position}>
       <group
-        onPointerOver={(e: any) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer'; invalidate() }}
+        onPointerOver={(e: ThreeEvent<PointerEvent>) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer'; invalidate() }}
         onPointerOut={() => { setHovered(false); document.body.style.cursor = 'default'; invalidate() }}
-        onClick={(e: any) => { e.stopPropagation(); window.open('https://www.linkedin.com/in/bryanrg22', '_blank') }}
+        onClick={(e: ThreeEvent<MouseEvent>) => { e.stopPropagation(); window.open('https://www.linkedin.com/in/bryanrg22', '_blank') }}
       >
         <primitive
           object={scene}
@@ -415,9 +411,9 @@ function GitHubLogo({ position }: { position: [number, number, number] }) {
         scale={0.005}
         rotation={[-Math.PI / 2 + 0.3, -Math.PI / 2 + 0.8, 0.2]}
         castShadow
-        onPointerOver={(e: any) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer'; invalidate() }}
+        onPointerOver={(e: ThreeEvent<PointerEvent>) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer'; invalidate() }}
         onPointerOut={() => { setHovered(false); document.body.style.cursor = 'default'; invalidate() }}
-        onClick={(e: any) => { e.stopPropagation(); window.open('https://github.com/bryanrg22', '_blank') }}
+        onClick={(e: ThreeEvent<MouseEvent>) => { e.stopPropagation(); window.open('https://github.com/bryanrg22', '_blank') }}
       />
       {hovered && (
         <Html position={[0, 0.5, 0]} center style={{ pointerEvents: 'none' }}>
@@ -432,7 +428,7 @@ function GitHubLogo({ position }: { position: [number, number, number] }) {
 
 /** Resume paper — clickable, opens resume PDF */
 function ResumePaper({ position }: { position: [number, number, number] }) {
-  const texture = useTexture('/images/resume_image.png')
+  const texture = useTexture('/images/resume_image.webp')
   const groupRef = useRef<THREE.Group>(null)
   const meshRef = useRef<THREE.Mesh>(null)
   const [hovered, setHovered] = useState(false)
@@ -460,9 +456,9 @@ function ResumePaper({ position }: { position: [number, number, number] }) {
         rotation={[-Math.PI / 2, 0, 0]}
         castShadow
         receiveShadow
-        onPointerOver={(e: any) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer'; invalidate() }}
+        onPointerOver={(e: ThreeEvent<PointerEvent>) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer'; invalidate() }}
         onPointerOut={() => { setHovered(false); document.body.style.cursor = 'default'; invalidate() }}
-        onClick={(e: any) => { e.stopPropagation(); window.open('/resume.pdf', '_blank') }}
+        onClick={(e: ThreeEvent<MouseEvent>) => { e.stopPropagation(); window.open('/resume.pdf', '_blank') }}
       >
         <planeGeometry args={[0.7, 0.9]} />
         <meshStandardMaterial
@@ -481,6 +477,56 @@ function ResumePaper({ position }: { position: [number, number, number] }) {
         </Html>
       )}
     </group>
+  )
+}
+
+/**
+ * California license plate — "BRG 2028" (initials + grad year). Drawn on a
+ * canvas at runtime: zero download cost, crisp at any DPR.
+ */
+function LicensePlate({ position, rotation }: { position: [number, number, number]; rotation?: [number, number, number] }) {
+  const texture = useMemo(() => {
+    const canvas = document.createElement('canvas')
+    canvas.width = 512
+    canvas.height = 256
+    const ctx = canvas.getContext('2d')!
+    // Plate base
+    ctx.fillStyle = '#f2efe4'
+    ctx.beginPath()
+    ctx.roundRect(6, 6, 500, 244, 28)
+    ctx.fill()
+    // Border
+    ctx.strokeStyle = '#b9b4a2'
+    ctx.lineWidth = 6
+    ctx.beginPath()
+    ctx.roundRect(12, 12, 488, 232, 24)
+    ctx.stroke()
+    // "California" script
+    ctx.fillStyle = '#c0392b'
+    ctx.font = 'italic bold 52px Georgia, serif'
+    ctx.textAlign = 'center'
+    ctx.fillText('California', 256, 70)
+    // Plate number
+    ctx.fillStyle = '#1d3f94'
+    ctx.font = 'bold 108px "Arial Narrow", Arial, sans-serif'
+    ctx.fillText('BRG 2028', 256, 185)
+    // Mounting bolts
+    ctx.fillStyle = '#8a8574'
+    for (const [bx, by] of [[40, 34], [472, 34], [40, 222], [472, 222]]) {
+      ctx.beginPath()
+      ctx.arc(bx, by, 7, 0, Math.PI * 2)
+      ctx.fill()
+    }
+    const tex = new THREE.CanvasTexture(canvas)
+    tex.anisotropy = 4
+    return tex
+  }, [])
+
+  return (
+    <mesh position={position} rotation={rotation} castShadow>
+      <planeGeometry args={[0.76, 0.38]} />
+      <meshStandardMaterial map={texture} roughness={0.45} metalness={0.35} />
+    </mesh>
   )
 }
 
@@ -503,9 +549,9 @@ function CorrugatedWall({
   const meshRef = useRef<THREE.InstancedMesh>(null)
   const ridgeCount = Math.floor(width / 0.25)
 
-  const colorTex = useTexture('/chipboard_wall/Chipboard002_1K-JPG_Color.jpg')
-  const normalTex = useTexture('/chipboard_wall/Chipboard002_1K-JPG_NormalGL.jpg')
-  const roughnessTex = useTexture('/chipboard_wall/Chipboard002_1K-JPG_Roughness.jpg')
+  const colorTex = useTexture('/chipboard_wall/Chipboard002_1K-JPG_Color.webp')
+  const normalTex = useTexture('/chipboard_wall/Chipboard002_1K-JPG_NormalGL.webp')
+  const roughnessTex = useTexture('/chipboard_wall/Chipboard002_1K-JPG_Roughness.webp')
 
   const [rx, ry] = textureRepeat
   const colorMap = getRepeatedTexture(colorTex, rx, ry)
@@ -769,6 +815,9 @@ export default function Garage() {
       {/* Brea Auto Body sign — centered */}
       <BreaBoardSign />
 
+      {/* License plate — BRG 2028 (May 2028 grad), above the Caltech logo */}
+      <LicensePlate position={[2.9, 3.3, -2.92]} />
+
       {/* Wall clock — far right */}
       <group position={[4.2, 3.8, -2.95]}>
         <mesh castShadow rotation={[Math.PI / 2, 0, 0]}>
@@ -848,12 +897,7 @@ export default function Garage() {
 
       {/* ====== NVIDIA LOGO — on workbench, near macbook ====== */}
       <Suspense fallback={null}>
-        <NvidiaLogo position={[-3.25, 1.4, -0.7]} />
-      </Suspense>
-
-      {/* ====== AMAZON LOGO — on workbench, behind nvidia ====== */}
-      <Suspense fallback={null}>
-        <AmazonLogo position={[-2.85, 1.36, -1.1]} />
+        <NvidiaLogo position={[-3.1, 1.4, -0.7]} />
       </Suspense>
 
       {/* ====== PURE DECORATIVE — only on high tier ====== */}
@@ -864,14 +908,18 @@ export default function Garage() {
             <RedBullCan position={[-1.45, 1.21, -1.1]} />
           </Suspense>
 
-          {/* RETRO OIL — under workbench */}
+          {/* RETRO OIL — under workbench, knockable */}
           <Suspense fallback={null}>
-            <RetroOil position={[-3, 0.0, 0.5]} />
+            <KnockableProp id="retro-oil" position={[-3, 0.0, 0.5]} radius={0.15} height={0.5} resetDelay={0.1}>
+              <RetroOil position={[0, 0, 0]} />
+            </KnockableProp>
           </Suspense>
 
-          {/* WD-40 — near retro oil */}
+          {/* WD-40 — near retro oil, knockable */}
           <Suspense fallback={null}>
-            <WD40 position={[-2.5, 0, 0.5]} />
+            <KnockableProp id="wd40" position={[-2.5, 0, 0.5]} radius={0.13} height={0.45}>
+              <WD40 position={[0, 0, 0]} />
+            </KnockableProp>
           </Suspense>
 
           {/* DIRTY RAG — near retro oil */}
@@ -885,9 +933,13 @@ export default function Garage() {
       <TireStack position={[4.3, 0.1, 3.5]} count={3} />
       <TireStack position={[4.3, 0.1, 2.5]} count={2} />
 
-      {/* ====== OIL DRUMS — left wall near workbench ====== */}
-      <OilDrum position={[-4.5, 0.4, 0]} color="#3d5a3d" />
-      <OilDrum position={[-4.5, 0.4, 1]} color="#6e3610" />
+      {/* ====== OIL DRUMS — left wall near workbench, knockable ====== */}
+      <KnockableProp id="drum-green" position={[-4.5, 0.4, 0]} radius={0.32} height={0.5} massFactor={0.5} resetDelay={0.3}>
+        <OilDrum position={[0, 0, 0]} color="#3d5a3d" />
+      </KnockableProp>
+      <KnockableProp id="drum-rust" position={[-4.5, 0.4, 1]} radius={0.32} height={0.5} massFactor={0.5} resetDelay={0.4}>
+        <OilDrum position={[0, 0, 0]} color="#6e3610" />
+      </KnockableProp>
 
       {/* ====== DRIP PAN — near car lift ====== */}
       <mesh position={[2.5, 0.01, 1.2]} receiveShadow>
@@ -910,14 +962,18 @@ export default function Garage() {
 
       {quality.showPureDecorative && (
         <>
-          {/* TRASH CAN — in front of oil drums */}
+          {/* TRASH CAN — in front of oil drums, knockable (tips like a real can) */}
           <Suspense fallback={null}>
-            <TrashCan position={[-2.8, 0.25, 1.85]} />
+            <KnockableProp id="trash-can" position={[-2.8, 0.25, 1.85]} radius={0.32} height={0.75} massFactor={0.55} resetDelay={0.05}>
+              <TrashCan position={[0, 0, 0]} />
+            </KnockableProp>
           </Suspense>
 
-          {/* BUCKET — next to tires */}
+          {/* BUCKET — next to tires, knockable */}
           <Suspense fallback={null}>
-            <Bucket position={[3.5, 0, 3.5]} />
+            <KnockableProp id="bucket" position={[3.5, 0, 3.5]} radius={0.2} height={0.35} resetDelay={0.2}>
+              <Bucket position={[0, 0, 0]} />
+            </KnockableProp>
           </Suspense>
         </>
       )}
@@ -925,15 +981,21 @@ export default function Garage() {
       {/* ====== SEMI-DECORATIVE — on mid + high tiers ====== */}
       {quality.showSemiDecorative && (
         <>
-          {/* PROGRAMMING LOGOS — floor, in front of toolbox */}
+          {/* PROGRAMMING LOGOS — floor, in front of toolbox, knockable */}
           <Suspense fallback={null}>
-            <PythonLogo position={[1.3, 0.05, 1.16]} />
+            <KnockableProp id="python-logo" position={[1.3, 0.05, 1.16]} radius={0.22} height={0.15} resetDelay={0.15}>
+              <PythonLogo position={[0, 0, 0]} />
+            </KnockableProp>
           </Suspense>
           <Suspense fallback={null}>
-            <JavaLogo position={[2.2, 0.18, 1.6]} />
+            <KnockableProp id="java-logo" position={[2.2, 0.18, 1.6]} radius={0.18} height={0.3} resetDelay={0.25}>
+              <JavaLogo position={[0, 0, 0]} />
+            </KnockableProp>
           </Suspense>
           <Suspense fallback={null}>
-            <ReactLogo position={[2.7, 0.05, 1.1]} />
+            <KnockableProp id="react-logo" position={[2.7, 0.05, 1.1]} radius={0.22} height={0.15} resetDelay={0.35}>
+              <ReactLogo position={[0, 0, 0]} />
+            </KnockableProp>
           </Suspense>
         </>
       )}
@@ -949,10 +1011,12 @@ export default function Garage() {
         <ResumePaper position={[0.7, 0.01, 3.1]} />
       </Suspense>
 
-      {/* ====== SEMI-DECORATIVE — garage tools ====== */}
+      {/* ====== SEMI-DECORATIVE — garage tools (drills), knockable ====== */}
       {quality.showSemiDecorative && (
         <Suspense fallback={null}>
-          <GarageTools position={[1.9, 0, 1.5]} />
+          <KnockableProp id="garage-tools" position={[1.9, 0, 1.5]} radius={0.35} height={0.25} massFactor={0.5} tippable={false} resetDelay={0.2}>
+            <GarageTools position={[0, 0, 0]} />
+          </KnockableProp>
         </Suspense>
       )}
 
