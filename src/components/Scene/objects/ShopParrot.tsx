@@ -155,7 +155,13 @@ export default function ShopParrot({ position }: { position: [number, number, nu
   })
 
   return (
-    <group ref={rootRef} position={position}>
+    <group
+      ref={rootRef}
+      position={position}
+      onPointerDown={onPointerDown}
+      onPointerOver={(e) => { e.stopPropagation(); document.body.style.cursor = 'pointer' }}
+      onPointerOut={() => { document.body.style.cursor = 'default' }}
+    >
       {/* Body — green, slightly upright like a perched Amazon */}
       <mesh position={[0, 0.14, 0]} scale={[0.85, 1.25, 0.95]} castShadow>
         <sphereGeometry args={[0.085, 16, 12]} />
@@ -207,14 +213,8 @@ export default function ShopParrot({ position }: { position: [number, number, nu
         <boxGeometry args={[0.05, 0.016, 0.15]} />
         <meshStandardMaterial color="#3d8434" roughness={0.85} />
       </mesh>
-      {/* Invisible hitbox for reliable clicks */}
-      <mesh
-        visible={false}
-        position={[0, 0.17, 0]}
-        onPointerDown={onPointerDown}
-        onPointerOver={(e) => { e.stopPropagation(); document.body.style.cursor = 'pointer' }}
-        onPointerOut={() => { document.body.style.cursor = 'default' }}
-      >
+      {/* Invisible hitbox for reliable clicks (handlers live on the group) */}
+      <mesh visible={false} position={[0, 0.17, 0]}>
         <sphereGeometry args={[0.28, 8, 8]} />
         <meshBasicMaterial transparent opacity={0} />
       </mesh>

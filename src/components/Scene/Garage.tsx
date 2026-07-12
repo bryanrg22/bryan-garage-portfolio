@@ -848,7 +848,9 @@ export default function Garage() {
       </Suspense>
 
       {/* ====== SHOP PARROT — perched on the back workbench ====== */}
-      <ShopParrot position={[0.35, 1.0, -2.5]} />
+      {/* Front edge of the bench top (measured: surface y≈1.03 at z≈-2.0; the
+          bench's back half rises to y=2.0, which would swallow the bird) */}
+      <ShopParrot position={[0.35, 1.03, -2.05]} />
 
       {/* ====== SHOP LIGHTS (reduced from 3 to 2) ====== */}
       <ShopLight position={[-2.5, 4.8, 0]} showPointLight={quality.showShopLightPoints} />
