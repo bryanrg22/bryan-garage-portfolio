@@ -136,6 +136,7 @@ export const portfolioItems: PortfolioItem[] = [
         links: [{ label: 'GitHub', url: 'https://github.com/bryanrg22/Basis_Info' }],
         logo: '/images/projects/basis_logo.png',
         media: [
+          { type: 'image', src: '/images/projects/basis/architecture.svg', caption: 'System architecture — LangGraph engine, DINO→SAM2 vision, and a citation-backed IRS evidence layer' },
           { type: 'image', src: '/images/projects/basis/langsmith_trace.webp', caption: 'Agentic RAG trace — every retrieval and citation is observable in LangSmith' },
           { type: 'image', src: '/images/projects/basis/team_check.webp', caption: "Best Traction — LavaLab Demo Night F'25" },
         ],
@@ -151,6 +152,7 @@ export const portfolioItems: PortfolioItem[] = [
         logo: '/images/projects/lambdarimLogo.png',
         media: [
           { type: 'image', src: '/images/projects/lambdarim/prizepicks_proof.webp', caption: 'The receipts — $10 → $3,000 at a 78% win rate' },
+          { type: 'image', src: '/images/projects/lambdarim/architecture.svg', caption: 'System architecture — OCaml Monte Carlo over FFI, GCP pipelines, and a home-IP cron the sportsbooks can\'t block' },
           { type: 'image', src: '/images/projects/lambdarim/dashboard.webp', caption: 'Player-prop dashboard with Monte Carlo confidence bands' },
           { type: 'image', src: '/images/projects/lambdarim/ocr_pipeline.svg', caption: 'Automated OCR → prediction pipeline' },
           { type: 'image', src: '/images/projects/lambdarim/ui.webp', caption: 'Live odds aggregation across sportsbooks' },
@@ -167,6 +169,7 @@ export const portfolioItems: PortfolioItem[] = [
         ],
         logo: '/images/projects/swerveLogo.png',
         media: [
+          { type: 'image', src: '/images/projects/swerve/architecture.svg', caption: 'System architecture — Hugo the LangChain agent, NetworkX BOM graph, and Slack alerting' },
           { type: 'image', src: '/images/projects/swerve/ui_1.webp', caption: "Hugo — the event-driven procurement agent's live dashboard" },
           { type: 'image', src: '/images/projects/swerve/ui_2.webp', caption: 'Inventory intelligence with reorder recommendations' },
           { type: 'image', src: '/images/projects/swerve/ui_3.webp', caption: 'Audit-traceable agent reasoning per alert' },
@@ -185,6 +188,7 @@ export const portfolioItems: PortfolioItem[] = [
         logo: '/images/projects/cleansweeplogo.png',
         media: [
           { type: 'video', src: '/videos/cleansweep_demo.mp4', poster: '/images/projects/cleansweep/demo_poster.webp', caption: 'Application demo — computer-vision waste classification in action' },
+          { type: 'image', src: '/images/projects/cleansweep/architecture.svg', caption: 'System architecture — OpenCV fill detection on a Pi rig, Terraform-provisioned AWS, and a Databricks route engine' },
         ],
       },
       {
@@ -198,8 +202,7 @@ export const portfolioItems: PortfolioItem[] = [
         logo: '/images/projects/NosuLogo.png',
         media: [
           { type: 'video', src: '/videos/nosu_demo.mp4', poster: '/images/projects/nosu/demo_poster.webp', caption: 'Output sample — unmute to hear the AI-generated soundtrack 🔊' },
-          { type: 'image', src: '/images/projects/nosu/pipeline.webp', caption: 'How it works — YOLO + BLIP + VideoMAE fused into a Suno music prompt' },
-          { type: 'image', src: '/images/projects/nosu/tech_stack.webp', caption: 'The multi-model stack' },
+          { type: 'image', src: '/images/projects/nosu/architecture.svg', caption: 'System architecture — YOLO + BLIP + VideoMAE fused into a GPT-composed Suno music prompt' },
         ],
       },
       {
@@ -211,6 +214,7 @@ export const portfolioItems: PortfolioItem[] = [
         logo: '/images/websiteLogo.png',
         media: [
           { type: 'image', src: '/images/projects/portfolio/garage_view.webp', caption: "The garage itself — 22MB of Draco+WebP-optimized GLBs, custom physics, and a demand-driven render loop that idles at 0fps" },
+          { type: 'image', src: '/images/projects/portfolio/architecture.svg', caption: 'System architecture — demand-driven R3F rendering, GPU-tier scaling, and a custom physics engine in ~300 lines' },
         ],
       },
     ],

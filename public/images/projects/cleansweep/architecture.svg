@@ -1,0 +1,161 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 950" font-family="'DM Sans', -apple-system, 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <marker id="arrowGold" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#E8A838"/>
+    </marker>
+    <marker id="arrowGray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#9a948a"/>
+    </marker>
+    <marker id="arrowInt" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#b0aaa0"/>
+    </marker>
+  </defs>
+
+  <!-- background panel -->
+  <rect x="8" y="8" width="1384" height="934" rx="26" fill="#242220"/>
+
+  <!-- ============ GROUP CONTAINERS ============ -->
+  <!-- Bin Sensor Rig -->
+  <rect x="40" y="40" width="770" height="200" rx="20" fill="#2e2b28" stroke="#4a463f" stroke-width="2"/>
+  <text x="64" y="76" font-size="24" font-weight="bold" fill="#c9c3b8">Bin Sensor Rig</text>
+
+  <!-- Raspberry Pi -->
+  <rect x="950" y="40" width="410" height="200" rx="20" fill="#2e2b28" stroke="#4a463f" stroke-width="2"/>
+  <text x="974" y="76" font-size="24" font-weight="bold" fill="#c9c3b8">Raspberry Pi</text>
+
+  <!-- External APIs -->
+  <rect x="40" y="310" width="324" height="250" rx="20" fill="#2e2b28" stroke="#4a463f" stroke-width="2"/>
+  <text x="64" y="346" font-size="24" font-weight="bold" fill="#c9c3b8">External APIs</text>
+
+  <!-- Backend Host -->
+  <rect x="420" y="310" width="940" height="250" rx="20" fill="#2e2b28" stroke="#4a463f" stroke-width="2"/>
+  <text x="444" y="346" font-size="24" font-weight="bold" fill="#c9c3b8">Backend (192.168.124.69)</text>
+
+  <!-- Browser -->
+  <rect x="40" y="630" width="400" height="250" rx="20" fill="#2e2b28" stroke="#4a463f" stroke-width="2"/>
+  <text x="64" y="666" font-size="24" font-weight="bold" fill="#c9c3b8">Browser</text>
+
+  <!-- AWS us-west-2 -->
+  <rect x="490" y="630" width="360" height="250" rx="20" fill="#2e2b28" stroke="#4a463f" stroke-width="2"/>
+  <text x="514" y="666" font-size="24" font-weight="bold" fill="#c9c3b8">AWS us-west-2</text>
+
+  <!-- Databricks -->
+  <rect x="940" y="630" width="420" height="250" rx="20" fill="#2e2b28" stroke="#4a463f" stroke-width="2"/>
+  <text x="964" y="666" font-size="24" font-weight="bold" fill="#c9c3b8">Databricks</text>
+
+  <!-- ============ ARROWS (under boxes' labels, above groups) ============ -->
+  <!-- iPhone -> OpenCV (internal) -->
+  <line x1="364" y1="146" x2="440" y2="146" stroke="#b0aaa0" stroke-width="2.5" marker-end="url(#arrowInt)"/>
+  <text x="404" y="180" font-size="17" fill="#cfc9bf" text-anchor="middle">webcam</text>
+
+  <!-- OpenCV -> Pi (primary) -->
+  <line x1="786" y1="150" x2="970" y2="150" stroke="#E8A838" stroke-width="3" marker-end="url(#arrowGold)"/>
+  <text x="880" y="132" font-size="17" fill="#cfc9bf" text-anchor="middle">GET /set/1/{level}</text>
+  <text x="880" y="178" font-size="17" fill="#cfc9bf" text-anchor="middle">avg of 3 photos</text>
+
+  <!-- Pi -> Data/API (primary diagonal) -->
+  <path d="M1050,222 L753,372" fill="none" stroke="#E8A838" stroke-width="3" marker-end="url(#arrowGold)"/>
+  <text x="820" y="280" font-size="17" fill="#cfc9bf" text-anchor="middle">GET /start/{id}/{level}</text>
+
+  <!-- Data/API -> Google Maps (primary) -->
+  <line x1="444" y1="430" x2="328" y2="430" stroke="#E8A838" stroke-width="3" marker-end="url(#arrowGold)"/>
+  <text x="384" y="470" font-size="17" fill="#cfc9bf" text-anchor="middle">100&#215; Distance</text>
+  <text x="384" y="492" font-size="17" fill="#cfc9bf" text-anchor="middle">Matrix GETs</text>
+
+  <!-- DBFS Relay -> Data/API (async dashed) -->
+  <line x1="1000" y1="420" x2="768" y2="420" stroke="#9a948a" stroke-width="2.5" stroke-dasharray="7 7" marker-end="url(#arrowGray)"/>
+  <text x="882" y="404" font-size="17" fill="#cfc9bf" text-anchor="middle">polls /trashData 10s</text>
+  <text x="882" y="448" font-size="17" fill="#cfc9bf" text-anchor="middle">writes /routeData</text>
+
+  <!-- Relay -> Route Engine (dbfs/put, async) -->
+  <line x1="1120" y1="502" x2="1120" y2="690" stroke="#9a948a" stroke-width="2.5" stroke-dasharray="7 7" marker-end="url(#arrowGray)"/>
+  <text x="1132" y="580" font-size="17" fill="#cfc9bf">dbfs/put 10s</text>
+
+  <!-- Route Engine -> Relay (dbfs/read, async) -->
+  <line x1="1240" y1="694" x2="1240" y2="506" stroke="#9a948a" stroke-width="2.5" stroke-dasharray="7 7" marker-end="url(#arrowGray)"/>
+  <text x="1252" y="615" font-size="17" fill="#cfc9bf">dbfs/read 10s</text>
+
+  <!-- Portal -> Data/API (primary diagonal) -->
+  <path d="M240,694 L537,504" fill="none" stroke="#E8A838" stroke-width="3" marker-end="url(#arrowGold)"/>
+  <text x="290" y="600" font-size="17" fill="#cfc9bf" text-anchor="middle">GET :1123/routeData</text>
+
+  <!-- Portal -> Google Maps (primary vertical) -->
+  <line x1="180" y1="694" x2="180" y2="492" stroke="#E8A838" stroke-width="3" marker-end="url(#arrowGold)"/>
+  <text x="192" y="580" font-size="17" fill="#cfc9bf">Maps JS + Directions</text>
+
+  <!-- Terraform -> Portal (internal) -->
+  <line x1="514" y1="758" x2="420" y2="758" stroke="#b0aaa0" stroke-width="2.5" marker-end="url(#arrowInt)"/>
+  <text x="465" y="852" font-size="17" fill="#cfc9bf" text-anchor="middle">terraform apply &#8594; EC2 :80/:443</text>
+
+  <!-- ============ COMPONENT BOXES ============ -->
+  <!-- iPhone Camera (infra, purple) -->
+  <rect x="64" y="94" width="300" height="104" rx="14" fill="#6D5BD8"/>
+  <text x="80" y="130" font-size="25" font-weight="bold" fill="#ffffff">iPhone (Camo app)</text>
+  <text x="80" y="162" font-size="18" fill="#e6e0d6">streams as webcam</text>
+  <text x="80" y="186" font-size="18" fill="#e6e0d6">cv2.VideoCapture(1)</text>
+
+  <!-- OpenCV Fill Detector (green) -->
+  <rect x="444" y="94" width="342" height="128" rx="14" fill="#0E9F7A"/>
+  <text x="460" y="130" font-size="25" font-weight="bold" fill="#ffffff">OpenCV Fill Detector</text>
+  <text x="460" y="162" font-size="18" fill="#e6e0d6">HSV black mask + contour</text>
+  <text x="460" y="186" font-size="18" fill="#e6e0d6">avg 3 shots &#8594; level 0&#8211;5</text>
+  <text x="460" y="210" font-size="18" fill="#e6e0d6">WasteCapacity.py</text>
+
+  <!-- Pi LED Server (green) -->
+  <rect x="974" y="94" width="342" height="128" rx="14" fill="#0E9F7A"/>
+  <text x="990" y="130" font-size="25" font-weight="bold" fill="#ffffff">Pi LED Server</text>
+  <text x="990" y="162" font-size="18" fill="#e6e0d6">Express :1123 + WS :2000</text>
+  <text x="990" y="186" font-size="18" fill="#e6e0d6">2&#215; 5-LED bars via pinctrl</text>
+  <text x="990" y="210" font-size="18" fill="#e6e0d6">Docker node:lts-alpine</text>
+
+  <!-- Google Maps APIs (external, red) -->
+  <rect x="64" y="384" width="260" height="104" rx="14" fill="#B34A3E"/>
+  <text x="80" y="420" font-size="25" font-weight="bold" fill="#ffffff">Google Maps</text>
+  <text x="80" y="452" font-size="18" fill="#e6e0d6">Distance Matrix API</text>
+  <text x="80" y="476" font-size="18" fill="#e6e0d6">Maps JS + Directions</text>
+
+  <!-- Data/API Server (green) -->
+  <rect x="444" y="374" width="320" height="128" rx="14" fill="#0E9F7A"/>
+  <text x="460" y="410" font-size="25" font-weight="bold" fill="#ffffff">Data/API Server</text>
+  <text x="460" y="442" font-size="18" fill="#e6e0d6">dataFormat.js &#183; :1123</text>
+  <text x="460" y="466" font-size="18" fill="#e6e0d6">10 Harvard bins, lvl 0&#8211;5</text>
+  <text x="460" y="490" font-size="18" fill="#e6e0d6">/trashData, /routeData</text>
+
+  <!-- DBFS Relay (green) -->
+  <rect x="1000" y="374" width="320" height="128" rx="14" fill="#0E9F7A"/>
+  <text x="1016" y="410" font-size="25" font-weight="bold" fill="#ffffff">DBFS Relay (Python)</text>
+  <text x="1016" y="442" font-size="18" fill="#e6e0d6">brick_send.py &#8594; dbfs/put</text>
+  <text x="1016" y="466" font-size="18" fill="#e6e0d6">get_ordered_data.py &#8592; read</text>
+  <text x="1016" y="490" font-size="18" fill="#e6e0d6">10s polling loops</text>
+
+  <!-- Driver Portal (entry, amber) -->
+  <rect x="64" y="694" width="352" height="128" rx="14" fill="#B8842C"/>
+  <text x="80" y="730" font-size="25" font-weight="bold" fill="#ffffff">Driver Portal</text>
+  <text x="80" y="762" font-size="18" fill="#e6e0d6">React 18 + Vite 5 + Tailwind</text>
+  <text x="80" y="786" font-size="18" fill="#e6e0d6">SignIn &#8594; Map &#8594; Completion</text>
+  <text x="80" y="810" font-size="18" fill="#e6e0d6">DirectionsRenderer + pins</text>
+
+  <!-- Terraform AWS Stack (infra, purple) -->
+  <rect x="514" y="694" width="312" height="128" rx="14" fill="#6D5BD8"/>
+  <text x="530" y="730" font-size="25" font-weight="bold" fill="#ffffff">Terraform Stack</text>
+  <text x="530" y="762" font-size="18" fill="#e6e0d6">VPC 10.0.0.0/16 + NAT</text>
+  <text x="530" y="786" font-size="18" fill="#e6e0d6">2&#215; EC2 t3.micro web</text>
+  <text x="530" y="810" font-size="18" fill="#e6e0d6">RDS PostgreSQL 13 :5432</text>
+
+  <!-- Route Engine (green) -->
+  <rect x="964" y="694" width="356" height="128" rx="14" fill="#0E9F7A"/>
+  <text x="980" y="730" font-size="25" font-weight="bold" fill="#ffffff">Route Engine (temp.py)</text>
+  <text x="980" y="762" font-size="18" fill="#e6e0d6">RandomForestClassifier</text>
+  <text x="980" y="786" font-size="18" fill="#e6e0d6">fill&#8805;3 or days&#8805;5 &#8594; priority</text>
+  <text x="980" y="810" font-size="18" fill="#e6e0d6">nearest-neighbor TSP</text>
+
+  <!-- ============ LEGEND ============ -->
+  <line x1="60" y1="914" x2="110" y2="914" stroke="#E8A838" stroke-width="3" marker-end="url(#arrowGold)"/>
+  <text x="122" y="920" font-size="17" fill="#cfc9bf">primary flow</text>
+
+  <line x1="300" y1="914" x2="350" y2="914" stroke="#9a948a" stroke-width="2.5" stroke-dasharray="7 7" marker-end="url(#arrowGray)"/>
+  <text x="362" y="920" font-size="17" fill="#cfc9bf">async / polling (10s loops)</text>
+
+  <line x1="640" y1="914" x2="690" y2="914" stroke="#b0aaa0" stroke-width="2.5" marker-end="url(#arrowInt)"/>
+  <text x="702" y="920" font-size="17" fill="#cfc9bf">internal data</text>
+</svg>

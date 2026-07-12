@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 950" font-family="'DM Sans', -apple-system, 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <marker id="mGold" markerWidth="15" markerHeight="12" refX="13" refY="6" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L14,6 L0,12 z" fill="#E8A838"/></marker>
+    <marker id="mInt" markerWidth="13" markerHeight="10" refX="11" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L12,5 L0,10 z" fill="#b0aaa0"/></marker>
+    <marker id="mAsync" markerWidth="13" markerHeight="10" refX="11" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L12,5 L0,10 z" fill="#9a948a"/></marker>
+  </defs>
+
+  <!-- background panel -->
+  <rect x="8" y="8" width="1384" height="934" rx="26" fill="#242220"/>
+
+  <!-- ===== group containers ===== -->
+  <rect x="30" y="34" width="750" height="716" rx="20" fill="#2e2b28" stroke="#4a463f" stroke-width="2"/>
+  <text x="56" y="72" font-size="24" font-weight="bold" fill="#c9c3b8">Browser</text>
+
+  <rect x="960" y="34" width="410" height="212" rx="20" fill="#2e2b28" stroke="#4a463f" stroke-width="2"/>
+  <text x="982" y="72" font-size="24" font-weight="bold" fill="#c9c3b8">Dev machine (build step)</text>
+
+  <rect x="960" y="286" width="410" height="212" rx="20" fill="#2e2b28" stroke="#4a463f" stroke-width="2"/>
+  <text x="982" y="324" font-size="24" font-weight="bold" fill="#c9c3b8">Cloud (Vercel)</text>
+
+  <rect x="960" y="538" width="410" height="372" rx="20" fill="#2e2b28" stroke="#4a463f" stroke-width="2"/>
+  <text x="982" y="576" font-size="24" font-weight="bold" fill="#c9c3b8">External SaaS</text>
+
+  <!-- ===== arrows (drawn under labels, over groups) ===== -->
+  <!-- Vercel -> R3F : primary -->
+  <path d="M980,390 H915 V190 H773" fill="none" stroke="#E8A838" stroke-width="3" marker-end="url(#mGold)"/>
+  <!-- R3F -> Zustand : primary -->
+  <path d="M597,234 V342" fill="none" stroke="#E8A838" stroke-width="3" marker-end="url(#mGold)"/>
+  <!-- GPU -> Zustand : internal -->
+  <path d="M330,234 L485,341" fill="none" stroke="#b0aaa0" stroke-width="2.5" marker-end="url(#mInt)"/>
+  <!-- Zustand -> Camera : internal elbow -->
+  <path d="M500,479 V545 H330 V483" fill="none" stroke="#b0aaa0" stroke-width="2.5" marker-end="url(#mInt)"/>
+  <!-- Zustand -> UI : internal -->
+  <path d="M680,479 V587" fill="none" stroke="#b0aaa0" stroke-width="2.5" marker-end="url(#mInt)"/>
+  <!-- Physics -> Camera : internal -->
+  <path d="M140,590 V483" fill="none" stroke="#b0aaa0" stroke-width="2.5" marker-end="url(#mInt)"/>
+  <!-- UI -> PostHog : async -->
+  <path d="M770,700 L977,799" fill="none" stroke="#9a948a" stroke-width="2.5" stroke-dasharray="7 7" marker-end="url(#mAsync)"/>
+  <!-- Spotify -> UI : async -->
+  <path d="M980,640 L774,650" fill="none" stroke="#9a948a" stroke-width="2.5" stroke-dasharray="7 7" marker-end="url(#mAsync)"/>
+  <!-- Pipeline -> Vercel : async -->
+  <path d="M1165,222 V337" fill="none" stroke="#9a948a" stroke-width="2.5" stroke-dasharray="7 7" marker-end="url(#mAsync)"/>
+
+  <!-- ===== arrow labels ===== -->
+  <text x="850" y="282" font-size="17" fill="#cfc9bf" text-anchor="middle">GET /models/*</text>
+  <text x="850" y="304" font-size="17" fill="#cfc9bf" text-anchor="middle">Draco + WebP</text>
+  <text x="850" y="326" font-size="17" fill="#cfc9bf" text-anchor="middle">3 load tiers</text>
+
+  <text x="585" y="265" font-size="17" fill="#cfc9bf" text-anchor="end">click 3D object</text>
+  <text x="585" y="287" font-size="17" fill="#cfc9bf" text-anchor="end">setActiveItem(item)</text>
+
+  <text x="140" y="285" font-size="17" fill="#cfc9bf">setQualityConfig(tier)</text>
+  <text x="140" y="307" font-size="17" fill="#cfc9bf">2.5s race → LOW fallback</text>
+
+  <text x="510" y="505" font-size="17" fill="#cfc9bf">activeItem →</text>
+  <text x="510" y="525" font-size="17" fill="#cfc9bf">GSAP 1.2s fly-in</text>
+
+  <text x="668" y="560" font-size="17" fill="#cfc9bf" text-anchor="end">selector subs</text>
+  <text x="668" y="580" font-size="17" fill="#cfc9bf" text-anchor="end">panel slide-in</text>
+
+  <text x="152" y="512" font-size="17" fill="#cfc9bf">self-invalidate()</text>
+  <text x="152" y="532" font-size="17" fill="#cfc9bf">only while moving</text>
+
+  <text x="830" y="800" font-size="17" fill="#cfc9bf" text-anchor="middle">trackEvent() → POST /e/</text>
+
+  <text x="872" y="610" font-size="17" fill="#cfc9bf" text-anchor="middle">postMessage</text>
+  <text x="872" y="630" font-size="17" fill="#cfc9bf" text-anchor="middle">playback_update</text>
+
+  <text x="1180" y="280" font-size="17" fill="#cfc9bf">git push → deploy</text>
+
+  <!-- ===== Browser boxes : row 1 ===== -->
+  <rect x="52" y="100" width="345" height="134" rx="14" fill="#6D5BD8"/>
+  <text x="70" y="136" font-size="25" font-weight="bold" fill="#ffffff">GPU Tier Detection</text>
+  <text x="70" y="166" font-size="18" fill="#e6e0d6">detect-gpu, 2.5s race → LOW</text>
+  <text x="70" y="191" font-size="18" fill="#e6e0d6">tier → DPR/shadows/GLBs</text>
+  <text x="70" y="216" font-size="18" fill="#e6e0d6">perf-caveat → ErrorBoundary</text>
+
+  <rect x="425" y="100" width="345" height="134" rx="14" fill="#0E9F7A"/>
+  <text x="443" y="136" font-size="25" font-weight="bold" fill="#ffffff">R3F Scene Graph</text>
+  <text x="443" y="166" font-size="18" fill="#e6e0d6">&lt;Canvas frameloop="demand"&gt;</text>
+  <text x="443" y="191" font-size="18" fill="#e6e0d6">26 GLBs ~15MB · 3 load tiers</text>
+  <text x="443" y="216" font-size="18" fill="#e6e0d6">self-hosted Draco + HDRI</text>
+
+  <!-- ===== Browser boxes : row 2 ===== -->
+  <rect x="52" y="345" width="345" height="134" rx="14" fill="#0E9F7A"/>
+  <text x="70" y="381" font-size="25" font-weight="bold" fill="#ffffff">Camera &amp; Render Loop</text>
+  <text x="70" y="411" font-size="18" fill="#e6e0d6">GSAP power3.inOut, 1.2s</text>
+  <text x="70" y="436" font-size="18" fill="#e6e0d6">epsilon idle → 0fps desktop</text>
+  <text x="70" y="461" font-size="18" fill="#e6e0d6">30fps rAF loop on mobile</text>
+
+  <rect x="425" y="345" width="345" height="134" rx="14" fill="#0E9F7A"/>
+  <text x="443" y="381" font-size="25" font-weight="bold" fill="#ffffff">Zustand Store</text>
+  <text x="443" y="411" font-size="18" fill="#e6e0d6">activeItem · qualityConfig</text>
+  <text x="443" y="436" font-size="18" fill="#e6e0d6">isMusicPlaying · isLoaded</text>
+  <text x="443" y="461" font-size="18" fill="#e6e0d6">no router — state, not URLs</text>
+
+  <!-- ===== Browser boxes : row 3 ===== -->
+  <rect x="52" y="590" width="345" height="134" rx="14" fill="#0E9F7A"/>
+  <text x="70" y="626" font-size="25" font-weight="bold" fill="#ffffff">Custom Physics Engine</text>
+  <text x="70" y="656" font-size="18" fill="#e6e0d6">ballWorld.ts · ~300 LOC</text>
+  <text x="70" y="681" font-size="18" fill="#e6e0d6">flick vel: 110ms window</text>
+  <text x="70" y="706" font-size="18" fill="#e6e0d6">massFactor 0.15–0.65</text>
+
+  <rect x="425" y="590" width="345" height="134" rx="14" fill="#B8842C"/>
+  <text x="443" y="626" font-size="25" font-weight="bold" fill="#ffffff">UI Overlay</text>
+  <text x="443" y="656" font-size="18" fill="#e6e0d6">InfoPanel 420px / sheet</text>
+  <text x="443" y="681" font-size="18" fill="#e6e0d6">70–85vh velocity snaps</text>
+  <text x="443" y="706" font-size="18" fill="#e6e0d6">Spotify iframe @ -9999px</text>
+
+  <!-- ===== Dev machine ===== -->
+  <rect x="980" y="88" width="370" height="134" rx="14" fill="#6D5BD8"/>
+  <text x="998" y="124" font-size="25" font-weight="bold" fill="#ffffff">GLB Asset Pipeline</text>
+  <text x="998" y="154" font-size="18" fill="#e6e0d6">resize 1024 → webp → draco</text>
+  <text x="998" y="179" font-size="18" fill="#e6e0d6">models: 36MB → 15MB</text>
+  <text x="998" y="204" font-size="18" fill="#e6e0d6">ffmpeg -crf 27 720p video</text>
+
+  <!-- ===== Cloud (Vercel) ===== -->
+  <rect x="980" y="340" width="370" height="134" rx="14" fill="#6D5BD8"/>
+  <text x="998" y="376" font-size="25" font-weight="bold" fill="#ffffff">Vercel Static Hosting</text>
+  <text x="998" y="406" font-size="18" fill="#e6e0d6">dist/ → bryanram.com HTTPS</text>
+  <text x="998" y="431" font-size="18" fill="#e6e0d6">rewrite /resume → /resume.pdf</text>
+  <text x="998" y="456" font-size="18" fill="#e6e0d6">+ Vercel Analytics / Speed</text>
+
+  <!-- ===== External SaaS ===== -->
+  <rect x="980" y="592" width="370" height="134" rx="14" fill="#B34A3E"/>
+  <text x="998" y="628" font-size="25" font-weight="bold" fill="#ffffff">Spotify Embed</text>
+  <text x="998" y="658" font-size="18" fill="#e6e0d6">open.spotify.com iframe</text>
+  <text x="998" y="683" font-size="18" fill="#e6e0d6">playback_update postMessage</text>
+  <text x="998" y="708" font-size="18" fill="#e6e0d6">isPaused → Now Playing pill</text>
+
+  <rect x="980" y="752" width="370" height="134" rx="14" fill="#B34A3E"/>
+  <text x="998" y="788" font-size="25" font-weight="bold" fill="#ffffff">PostHog US Cloud</text>
+  <text x="998" y="818" font-size="18" fill="#e6e0d6">POST us.i.posthog.com/e/</text>
+  <text x="998" y="843" font-size="18" fill="#e6e0d6">portfolio_item_viewed etc.</text>
+  <text x="998" y="868" font-size="18" fill="#e6e0d6">gpu_tier person property</text>
+
+  <!-- ===== legend ===== -->
+  <line x1="60" y1="872" x2="125" y2="872" stroke="#E8A838" stroke-width="3" marker-end="url(#mGold)"/>
+  <text x="142" y="878" font-size="18" fill="#cfc9bf">primary user flow</text>
+  <line x1="340" y1="872" x2="405" y2="872" stroke="#b0aaa0" stroke-width="2.5" marker-end="url(#mInt)"/>
+  <text x="422" y="878" font-size="18" fill="#cfc9bf">internal data flow</text>
+  <line x1="630" y1="872" x2="695" y2="872" stroke="#9a948a" stroke-width="2.5" stroke-dasharray="7 7" marker-end="url(#mAsync)"/>
+  <text x="712" y="878" font-size="18" fill="#cfc9bf">async / background</text>
+</svg>
