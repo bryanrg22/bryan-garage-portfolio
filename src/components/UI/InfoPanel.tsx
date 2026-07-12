@@ -284,45 +284,65 @@ function ProjectShowcase({ project, jobIndex }: { project: ProjectEntry; jobInde
 
       {/* Lightbox — our own "fullscreen" that works in every browser */}
       <AnimatePresence>
-        {expanded && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            onClick={() => setExpanded(false)}
-            className="pointer-events-auto fixed inset-0 z-[80] flex flex-col items-center justify-center bg-black/90 p-6 backdrop-blur-sm"
-          >
-            <button
-              onClick={() => setExpanded(false)}
-              aria-label="Close expanded media"
-              className="absolute top-5 right-6 flex h-10 w-10 items-center justify-center rounded-full bg-garage-mid/80 text-stone transition-colors hover:bg-cream/10 hover:text-cream"
-            >
-              <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
-                <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-              </svg>
-            </button>
-            <div onClick={(e) => e.stopPropagation()} className="flex max-h-[86vh] max-w-[92vw] items-center justify-center">
-              <MediaItem item={current} className="max-h-[82vh] max-w-full rounded-lg object-contain" />
-            </div>
-            <p className="mt-4 max-w-[80vw] text-center text-sm text-cream/85">{current.caption}</p>
-          </motion.div>
-        )}
+        {expanded && <MediaLightbox item={current} onClose={() => setExpanded(false)} />}
       </AnimatePresence>
     </div>
   )
 }
 
-/** Mobile: swipeable media strip inside the project card */
+/** Full-viewport media overlay — works where native fullscreen is blocked */
+function MediaLightbox({ item, onClose }: { item: ProjectMedia; onClose: () => void }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
+      onClick={onClose}
+      className="pointer-events-auto fixed inset-0 z-[80] flex flex-col items-center justify-center bg-black/90 p-6 backdrop-blur-sm"
+    >
+      <button
+        onClick={onClose}
+        aria-label="Close expanded media"
+        className="absolute top-5 right-6 flex h-10 w-10 items-center justify-center rounded-full bg-garage-mid/80 text-stone transition-colors hover:bg-cream/10 hover:text-cream"
+      >
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
+          <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        </svg>
+      </button>
+      <div onClick={(e) => e.stopPropagation()} className="flex max-h-[86vh] max-w-[92vw] items-center justify-center">
+        <MediaItem item={item} className="max-h-[82vh] max-w-full rounded-lg object-contain" />
+      </div>
+      <p className="mt-4 max-w-[80vw] text-center text-sm text-cream/85">{item.caption}</p>
+    </motion.div>
+  )
+}
+
+/** Mobile: swipeable media strip inside the project card. Videos get native
+ * controls; tapping an image opens it full-screen in the lightbox. */
 function MediaStrip({ media }: { media: ProjectMedia[] }) {
+  const [expanded, setExpanded] = useState<ProjectMedia | null>(null)
   return (
     <div className="mt-3 flex snap-x snap-mandatory gap-2 overflow-x-auto pb-1">
       {media.map((m) => (
-        <div key={m.src} className="w-56 shrink-0 snap-start overflow-hidden rounded-lg bg-black/40">
+        <div
+          key={m.src}
+          onClick={m.type === 'image' ? () => setExpanded(m) : undefined}
+          className="w-56 shrink-0 snap-start overflow-hidden rounded-lg bg-black/40"
+        >
           <MediaItem item={m} className="h-40 w-full object-cover" />
-          <p className="px-2 py-1.5 text-[11px] leading-tight text-cream/70">{m.caption}</p>
+          <p className="px-2 py-1.5 text-[11px] leading-tight text-cream/70">
+            {m.caption}
+            {m.type === 'image' && <span className="text-stone/60"> · tap to enlarge</span>}
+          </p>
         </div>
       ))}
+      {createPortal(
+        <AnimatePresence>
+          {expanded && <MediaLightbox item={expanded} onClose={() => setExpanded(null)} />}
+        </AnimatePresence>,
+        document.body,
+      )}
     </div>
   )
 }

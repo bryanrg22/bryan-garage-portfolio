@@ -929,9 +929,13 @@ export default function Garage() {
         </>
       )}
 
-      {/* ====== TIRE STACKS — right front corner ====== */}
-      <TireStack position={[4.3, 0.1, 3.5]} count={3} />
-      <TireStack position={[4.3, 0.1, 2.5]} count={2} />
+      {/* ====== TIRE STACKS — right front corner, knockable ====== */}
+      <KnockableProp id="tires-front" position={[4.3, 0.1, 3.5]} radius={0.36} height={0.7} massFactor={0.45} resetDelay={0.25}>
+        <TireStack position={[0, 0, 0]} count={3} />
+      </KnockableProp>
+      <KnockableProp id="tires-back" position={[4.3, 0.1, 2.5]} radius={0.36} height={0.5} massFactor={0.45} resetDelay={0.35}>
+        <TireStack position={[0, 0, 0]} count={2} />
+      </KnockableProp>
 
       {/* ====== OIL DRUMS — left wall near workbench, knockable ====== */}
       <KnockableProp id="drum-green" position={[-4.5, 0.4, 0]} radius={0.32} height={0.5} massFactor={0.5} resetDelay={0.3}>
@@ -1026,8 +1030,11 @@ export default function Garage() {
           <Suspense fallback={null}>
             <CarJack position={[3.75, 0, 1]} />
           </Suspense>
+          {/* Air compressor has wheels — it rolls when hit, like the toolbox */}
           <Suspense fallback={null}>
-            <AirCompressor position={[3.8, 0, -1]} />
+            <KnockableProp id="air-compressor" position={[3.8, 0, -1]} radius={0.45} height={0.85} massFactor={0.3} tippable={false} resetDelay={0.3}>
+              <AirCompressor position={[0, 0, 0]} />
+            </KnockableProp>
           </Suspense>
           <Suspense fallback={null}>
             <ExtensionCord position={[-2, 0, 1.5]} />

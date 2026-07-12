@@ -109,7 +109,10 @@ const MOBILE_HIGH: QualityConfig = {
   environmentIntensity: 0.18,
   showEnvironment: true,
   showParticles: true,
-  showHeavyModels: false,
+  // Heavy models became mobile-safe once the GTR is runtime-batched
+  // (1388 draw calls -> ~22 in NissanGTR.tsx) and its transmission pass
+  // is stripped. Retina iPhones/high-end Android handle this easily.
+  showHeavyModels: true,
   showPureDecorative: true,
   showSemiDecorative: true,
   showShopLightPoints: true,

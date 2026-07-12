@@ -36,11 +36,8 @@ const BASE_BOXES: BoxCollider[] = [
   { minX: -0.3, maxX: 2.5, minZ: -3.0, maxZ: -2.2, top: 1.0 },      // back workbench
 ]
 
-// Always-present static round objects
-const BASE_CIRCLES: CircleCollider[] = [
-  { x: 4.3, z: 3.5, r: 0.36, top: 0.76 }, // tire stack (3)
-  { x: 4.3, z: 2.5, r: 0.36, top: 0.54 }, // tire stack (2)
-]
+// Always-present static round objects (tires/compressor moved to KnockableProp)
+const BASE_CIRCLES: CircleCollider[] = []
 
 const goldenColor = new THREE.Color('#F4C963')
 const _up = new THREE.Vector3(0, 1, 0)
@@ -98,9 +95,6 @@ export default function KickableSoccerBall({ item }: { item: PortfolioItem }) {
     if (quality.showHeavyModels) {
       boxes.push({ minX: 3.2, maxX: 4.9, minZ: 0.6, maxZ: 3.8, top: 0.95 })   // car lift
       boxes.push({ minX: -4.95, maxX: -3.25, minZ: -1.75, maxZ: 0.15, top: 1.25 }) // GTR
-    }
-    if (quality.showPureDecorative) {
-      circles.push({ x: 3.8, z: -1, r: 0.45, top: 0.9 }) // air compressor
     }
     return { boxes, circles }
   }, [quality])
