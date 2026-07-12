@@ -31,8 +31,12 @@ My dad works at Brea Auto Body, a collision repair shop in Southern California. 
 ## Features
 
 - **Interactive 3D garage** — click on objects to explore portfolio sections (experience, projects, skills, education, awards, hackathons, cultura, soccer, and more)
-- **Cinematic camera system** — smooth GSAP-powered fly-in animations with parallax idle movement
-- **GPU-adaptive rendering** — automatically detects hardware capability and scales quality (low/mid/high) for shadows, model count, particle effects, and pixel ratio
+- **Kickable soccer ball with real physics** — click it for the soccer story, or drag-and-flick to kick it around the shop. Custom lightweight physics (gravity, bounces, colliders measured from the actual GLB geometry) with no physics engine
+- **Knockable props** — cans, buckets, tires, trophies, the car jack, even the boombox get shoved, tipped, and chain-reacted by the ball (and by each other). A "🧹 Tidy up the shop" button floats everything back home
+- **A living shop** — an animated shiba inu wanders between waypoints and naps (scheduling zero frames while resting), and a procedurally-built parrot perches on the workbench, taking flight for two laps when the shop descends into chaos
+- **Project media showcases** — videos and screenshots per project: a frosted-glass showcase card on desktop, snap-scroll strips with tap-to-enlarge on mobile
+- **Cinematic camera system** — smooth GSAP-powered fly-in animations with parallax idle movement, plus a garage-door roll-up intro
+- **GPU-adaptive rendering** — detects hardware capability and scales quality (low/mid/high) for shadows, model count, particle effects, and pixel ratio; mobile picks its tier synchronously so the canvas never remounts
 - **Mobile-first touch controls** — swipe-to-look rotation in portrait mode with momentum and inertia
 - **Spotify integration** — persistent boombox music player that survives panel navigation
 - **Progressive model loading** — GLBs load in priority tiers to minimize initial load time
@@ -43,7 +47,7 @@ My dad works at Brea Auto Body, a collision repair shop in Southern California. 
 
 ## GPU-Adaptive Rendering
 
-The garage scene ships ~40 MB of Draco-compressed GLB models, PBR textures, shadow maps, and particle effects. To make it run smoothly on everything from integrated-GPU laptops to dedicated graphics cards, the site uses `detect-gpu` at startup to classify hardware into three quality tiers and automatically scales rendering accordingly:
+The garage scene ships ~15 MB of optimized GLB models plus PBR textures, shadow maps, and particle effects. To make it run smoothly on everything from integrated-GPU laptops to dedicated graphics cards, the site classifies hardware into three quality tiers and scales rendering accordingly. Desktop runs `detect-gpu`'s WebGL benchmark (time-boxed to 2.5s); mobile picks its tier synchronously from UA + devicePixelRatio signals, because iOS caps `hardwareConcurrency` for fingerprinting resistance and the benchmark competes for the same scarce GPU context the scene needs:
 
 | Setting | Low | Mid | High |
 |---------|-----|-----|------|
@@ -58,14 +62,14 @@ The garage scene ships ~40 MB of Draco-compressed GLB models, PBR textures, shad
 
 ## Performance Engineering
 
-Shipping a 3D scene with ~40 MB of assets to a browser demands careful optimization at every layer — assets, rendering, React, network, and delivery. Here's how the garage stays smooth and battery-friendly.
+Shipping a 3D scene to a browser demands careful optimization at every layer — assets, rendering, React, network, and delivery. Here's how the garage stays smooth and battery-friendly.
 
 ### Asset Optimization
 
-- **Draco compression** on all GLB models (80–90% mesh size reduction)
-- Draco decoder served from **Google CDN** — likely already cached from other Three.js sites
+- **Full GLB pipeline via `gltf-transform`** — embedded textures resized to ≤1024px and converted to **WebP** (`EXT_texture_webp`, natively decoded by three's GLTFLoader), then **Draco** geometry compression. This cut `public/models/` from **36 MB → 14 MB**. The key insight: Draco only compresses geometry — on most game-rip models the embedded PNG textures are the real payload
+- **Self-hosted Draco decoder** (`public/draco/`) and **self-hosted HDR environment map** (`public/hdri/`) — no DNS + TLS round-trips to gstatic.com or githack on first load
 - **1K PBR textures** for good fidelity at low VRAM footprint (~4 MB each uncompressed in GPU memory)
-- **WebP format** for applicable textures
+- **Content images ≤1600px WebP** (`cwebp -q 80`) and **project videos ffmpeg-compressed** (`-crf 27`, 720p, `+faststart` so playback starts before download completes)
 - **Texture tiling** — a single 1K texture repeated 8x8 across the floor instead of a massive bespoke texture
 
 ### Progressive Model Loading
@@ -90,6 +94,17 @@ Shipping a 3D scene with ~40 MB of assets to a browser demands careful optimizat
 - **InstancedMesh** for corrugated wall ridges — ~280 individual boxes consolidated into 5 draw calls
 - Invisible hitbox meshes use `meshBasicMaterial` (no lighting shader) instead of `meshStandardMaterial`
 - Low polygon counts on non-focal background props (8–16 segments vs default 32)
+- **Transmission stripping** — the GTR's glass used `KHR_materials_transmission`, which forces three.js to render the entire scene to an offscreen texture first (a hidden second render pass). Swapping it for plain alpha-blended glass halves the cost of having the car on screen
+- The GTR itself is **1,388 mesh primitives / 22 materials** (a full-detail game rip) — it stays desktop-high-tier only until it can be batched offline
+
+### Custom Physics (no engine)
+
+The soccer ball, knockable props, and chain reactions run on ~300 lines of purpose-built physics instead of a physics engine (Rapier/Cannon would add ~1 MB+ of WASM/JS for features this scene doesn't need):
+
+- Ball: gravity, wall/floor restitution, rolling friction, and static colliders **measured from the actual GLB geometry** (a script slices each model's vertices to find its true footprint — the car lift turned out to be two posts and a low track, not a solid block)
+- Props: mass-scaled momentum transfer, tip-over rotation, prop-to-prop collision so a shoved toolbox plows the floor logos along
+- Everything self-invalidates only while moving — the demand-frameloop still idles at 0 fps
+- The wandering shop dog schedules zero frames while resting; the parrot only animates mid-flight
 
 ### React Performance
 
@@ -166,7 +181,7 @@ After reports of hard freezes and blank screens on integrated-GPU desktops, the 
 
 Product analytics are integrated via **PostHog** to understand how visitors navigate the 3D experience.
 
-- **Custom event tracking** — `portfolio_item_viewed`, `portfolio_item_closed`, `music_started`, `music_stopped` fire on user interactions
+- **Custom event tracking** — `portfolio_item_viewed`, `portfolio_item_closed`, `music_started`, `music_stopped`, `soccer_ball_kicked`, `project_media_viewed`, `project_media_expanded`, and `parrot_flight` fire on user interactions
 - **Source attribution** — every item view is tagged with `source: '3d_click' | 'mobile_tab'` to distinguish how users navigate (clicking 3D objects vs. mobile tab bar)
 - **Device intelligence** — GPU tier (`low`/`mid`/`high`) is set as a PostHog person property after hardware detection, enabling analysis of performance vs. engagement
 - **Auto-capture** — page views, clicks, device type, browser, OS, country, and referrer are tracked out of the box

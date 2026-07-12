@@ -61,6 +61,11 @@ export function clearDisplaced(id: string) {
   syncDirty()
 }
 
+/** How many objects are currently knocked out of place (ball included). */
+export function displacedCount() {
+  return displaced.size
+}
+
 function syncDirty() {
   useStore.getState().setRoomDirty(displaced.size > 0)
 }

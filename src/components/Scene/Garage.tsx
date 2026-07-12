@@ -5,6 +5,7 @@ import { useGLTF, useTexture, Html } from '@react-three/drei'
 import * as THREE from 'three'
 import { useStore } from '../../stores/useStore'
 import KnockableProp from './objects/KnockableProp'
+import ShopParrot from './objects/ShopParrot'
 
 /** Brea Auto Body sign — image texture on a plane */
 function BreaBoardSign() {
@@ -846,6 +847,9 @@ export default function Garage() {
         <WorkbenchModel position={[0.9, -0.1, -2.7]} />
       </Suspense>
 
+      {/* ====== SHOP PARROT — perched on the back workbench ====== */}
+      <ShopParrot position={[0.35, 1.0, -2.5]} />
+
       {/* ====== SHOP LIGHTS (reduced from 3 to 2) ====== */}
       <ShopLight position={[-2.5, 4.8, 0]} showPointLight={quality.showShopLightPoints} />
       <ShopLight position={[2.5, 4.8, 0]} showPointLight={quality.showShopLightPoints} />
@@ -1027,8 +1031,11 @@ export default function Garage() {
       {/* ====== PURE DECORATIVE — car jack, air compressor, extension cord ====== */}
       {quality.showPureDecorative && (
         <>
+          {/* Car jack — flat steel, slides along the floor when hit */}
           <Suspense fallback={null}>
-            <CarJack position={[3.75, 0, 1]} />
+            <KnockableProp id="car-jack" position={[3.75, 0, 1]} radius={0.24} height={0.22} massFactor={0.5} tippable={false} resetDelay={0.15}>
+              <CarJack position={[0, 0, 0]} />
+            </KnockableProp>
           </Suspense>
           {/* Air compressor has wheels — it rolls when hit, like the toolbox */}
           <Suspense fallback={null}>

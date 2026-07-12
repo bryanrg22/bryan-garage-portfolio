@@ -31,9 +31,12 @@ interface CircleCollider { x: number; z: number; r: number; top: number }
 // Always-present STATIC furniture (XZ boxes; solid below `top`).
 // Movable objects (trash can, drums, boombox, toolbox, tools…) are handled
 // by KnockableProp — they shove the ball back themselves.
+// CONVENTION: any box face sitting at/beyond a room bound is extended well
+// past it — otherwise the nearest-face ejection can point into the wall and
+// the ball ping-pongs forever between the wall clamp and the box push-out.
 const BASE_BOXES: BoxCollider[] = [
-  { minX: -4.45, maxX: -1.35, minZ: -1.7, maxZ: -0.3, top: 1.05 },  // left workbench
-  { minX: -0.3, maxX: 2.5, minZ: -3.0, maxZ: -2.2, top: 1.0 },      // back workbench
+  { minX: -6, maxX: -1.35, minZ: -1.7, maxZ: -0.3, top: 1.05 },  // left workbench (left wall)
+  { minX: -0.3, maxX: 2.5, minZ: -4.5, maxZ: -2.2, top: 1.0 },   // back workbench (back wall)
 ]
 
 // Always-present static round objects (tires/compressor moved to KnockableProp)
@@ -93,8 +96,15 @@ export default function KickableSoccerBall({ item }: { item: PortfolioItem }) {
     const boxes = [...BASE_BOXES]
     const circles = [...BASE_CIRCLES]
     if (quality.showHeavyModels) {
-      boxes.push({ minX: 3.2, maxX: 4.9, minZ: 0.6, maxZ: 3.8, top: 0.95 })   // car lift
-      boxes.push({ minX: -4.95, maxX: -3.25, minZ: -1.75, maxZ: 0.15, top: 1.25 }) // GTR
+      // Car lift — measured from the GLB geometry (see slice notes): two tall
+      // posts against the right wall with a low drive-on track between them.
+      // A previous single mega-box (x 3.2–4.9, z 0.6–3.8) walled off the whole
+      // corner and made the tires/bucket unreachable at ground level.
+      boxes.push({ minX: 4.05, maxX: 6, minZ: -4, maxZ: -1.9, top: 3.0 })  // back post (right + back wall)
+      boxes.push({ minX: 4.05, maxX: 6, minZ: 1.3, maxZ: 2.25, top: 3.0 })   // front post (right wall)
+      boxes.push({ minX: 4.05, maxX: 6, minZ: -1.9, maxZ: 1.3, top: 0.35 })  // low track (right wall)
+      // GTR display model on the left workbench (actual footprint + margin)
+      boxes.push({ minX: -6, maxX: -3.75, minZ: -1.45, maxZ: -0.2, top: 1.35 })
     }
     return { boxes, circles }
   }, [quality])
