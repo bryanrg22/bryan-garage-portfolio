@@ -1,8 +1,10 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useMemo } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import gsap from 'gsap'
 import { ballWorld, propBodies, registerResettable, registerPropBody, markDisplaced, clearDisplaced } from '../../../lib/ballWorld'
+import { getStaticBoxes, resolveCircleBox, ROOM } from '../../../lib/staticColliders'
+import { useStore } from '../../../stores/useStore'
 
 const BALL_RADIUS = 0.25
 const GRAVITY = 9.8
@@ -51,6 +53,10 @@ export default function KnockableProp({
 }) {
   const groupRef = useRef<THREE.Group>(null)
   const invalidate = useThree((s) => s.invalidate)
+  const quality = useStore((s) => s.qualityConfig)
+  // Same measured furniture boxes the ball bounces off — a shoved drum
+  // must not clip into the workbench either.
+  const staticBoxes = useMemo(() => getStaticBoxes(quality.showHeavyModels), [quality])
 
   const stateRef = useRef<PropState | null>(null)
   if (stateRef.current === null) {
@@ -177,9 +183,18 @@ export default function KnockableProp({
         s.pos.y = baseY
         s.vel.y = 0
       }
-      // Keep inside the room
-      s.pos.x = THREE.MathUtils.clamp(s.pos.x, -4.6, 4.6)
-      s.pos.z = THREE.MathUtils.clamp(s.pos.z, -2.6, 6.4)
+      // Keep inside the room — by this prop's own radius, so fat drums
+      // don't end up half-embedded in a wall
+      s.pos.x = THREE.MathUtils.clamp(s.pos.x, -(ROOM.wallX - radius), ROOM.wallX - radius)
+      s.pos.z = THREE.MathUtils.clamp(s.pos.z, ROOM.backZ + radius, ROOM.frontZ - radius)
+      // Static furniture — slide along benches/lift instead of clipping inside
+      for (const box of staticBoxes) {
+        if (s.pos.y >= box.top) continue
+        const hit = resolveCircleBox(s.pos, radius, box)
+        if (!hit) continue
+        if (hit.axis === 'x') s.vel.x = hit.dir * Math.abs(s.vel.x) * 0.4
+        else s.vel.z = hit.dir * Math.abs(s.vel.z) * 0.4
+      }
       // Sliding friction
       const f = Math.pow(0.12, dt)
       s.vel.x *= f

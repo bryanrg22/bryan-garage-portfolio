@@ -8,6 +8,7 @@ import { useStore } from '../../../stores/useStore'
 import { useIsTouchDevice } from '../../../hooks/useIsTouchDevice'
 import { ballDrag } from '../../../lib/ballDrag'
 import { ballWorld, registerResettable, markDisplaced, clearDisplaced } from '../../../lib/ballWorld'
+import { getStaticBoxes, resolveCircleBox, ROOM } from '../../../lib/staticColliders'
 import { trackEvent } from '../../../lib/analytics'
 
 const BALL_RADIUS = 0.25
@@ -19,25 +20,15 @@ const MIN_KICK_SPEED = 2.2
 const FLICK_WINDOW_MS = 110 // velocity is measured over this trailing window
 const RETURN_DELAY_MS = 4000 // rest time away from home before rolling back
 
-// Room bounds (ball-center limits, radius already subtracted)
-const BOUND_X = 4.6
-const BOUND_Z_BACK = -2.6
-const BOUND_Z_FRONT = 6.6
+// Room bounds (ball-center limits, radius subtracted from the wall position)
+const BOUND_X = ROOM.wallX - BALL_RADIUS
+const BOUND_Z_BACK = ROOM.backZ + BALL_RADIUS
+const BOUND_Z_FRONT = ROOM.frontZ - BALL_RADIUS
 const BOUND_Y_CEIL = 4.6
 
-interface BoxCollider { minX: number; maxX: number; minZ: number; maxZ: number; top: number }
+// Static furniture boxes live in lib/staticColliders.ts, shared with
+// KnockableProp so shoved props can't clip into the benches/lift either.
 interface CircleCollider { x: number; z: number; r: number; top: number }
-
-// Always-present STATIC furniture (XZ boxes; solid below `top`).
-// Movable objects (trash can, drums, boombox, toolbox, tools…) are handled
-// by KnockableProp — they shove the ball back themselves.
-// CONVENTION: any box face sitting at/beyond a room bound is extended well
-// past it — otherwise the nearest-face ejection can point into the wall and
-// the ball ping-pongs forever between the wall clamp and the box push-out.
-const BASE_BOXES: BoxCollider[] = [
-  { minX: -6, maxX: -1.35, minZ: -1.7, maxZ: -0.3, top: 1.05 },  // left workbench (left wall)
-  { minX: -0.3, maxX: 2.5, minZ: -4.5, maxZ: -2.2, top: 1.0 },   // back workbench (back wall)
-]
 
 // Always-present static round objects (tires/compressor moved to KnockableProp)
 const BASE_CIRCLES: CircleCollider[] = []
@@ -92,22 +83,10 @@ export default function KickableSoccerBall({ item }: { item: PortfolioItem }) {
   }, [])
 
   // Tier-dependent static colliders (heavy models only exist on some tiers)
-  const colliders = useMemo(() => {
-    const boxes = [...BASE_BOXES]
-    const circles = [...BASE_CIRCLES]
-    if (quality.showHeavyModels) {
-      // Car lift — measured from the GLB geometry (see slice notes): two tall
-      // posts against the right wall with a low drive-on track between them.
-      // A previous single mega-box (x 3.2–4.9, z 0.6–3.8) walled off the whole
-      // corner and made the tires/bucket unreachable at ground level.
-      boxes.push({ minX: 4.05, maxX: 6, minZ: -4, maxZ: -1.9, top: 3.0 })  // back post (right + back wall)
-      boxes.push({ minX: 4.05, maxX: 6, minZ: 1.3, maxZ: 2.25, top: 3.0 })   // front post (right wall)
-      boxes.push({ minX: 4.05, maxX: 6, minZ: -1.9, maxZ: 1.3, top: 0.35 })  // low track (right wall)
-      // GTR display model on the left workbench (actual footprint + margin)
-      boxes.push({ minX: -6, maxX: -3.75, minZ: -1.45, maxZ: -0.2, top: 1.35 })
-    }
-    return { boxes, circles }
-  }, [quality])
+  const colliders = useMemo(() => ({
+    boxes: getStaticBoxes(quality.showHeavyModels),
+    circles: [...BASE_CIRCLES],
+  }), [quality])
 
   // Pointer-gesture state (screen space) — samples form a trailing window so
   // flick velocity reflects the whole gesture, not just the last two events
@@ -224,18 +203,10 @@ export default function KickableSoccerBall({ item }: { item: PortfolioItem }) {
       // Box colliders (only when ball is below the surface top)
       for (const c of colliders.boxes) {
         if (pos.y - BALL_RADIUS >= c.top) continue
-        const inX = pos.x > c.minX - BALL_RADIUS && pos.x < c.maxX + BALL_RADIUS
-        const inZ = pos.z > c.minZ - BALL_RADIUS && pos.z < c.maxZ + BALL_RADIUS
-        if (!inX || !inZ) continue
-        const pushLeft = pos.x - (c.minX - BALL_RADIUS)
-        const pushRight = (c.maxX + BALL_RADIUS) - pos.x
-        const pushBack = pos.z - (c.minZ - BALL_RADIUS)
-        const pushFront = (c.maxZ + BALL_RADIUS) - pos.z
-        const min = Math.min(pushLeft, pushRight, pushBack, pushFront)
-        if (min === pushLeft) { pos.x = c.minX - BALL_RADIUS; vel.x = -Math.abs(vel.x) * 0.5 }
-        else if (min === pushRight) { pos.x = c.maxX + BALL_RADIUS; vel.x = Math.abs(vel.x) * 0.5 }
-        else if (min === pushBack) { pos.z = c.minZ - BALL_RADIUS; vel.z = -Math.abs(vel.z) * 0.5 }
-        else { pos.z = c.maxZ + BALL_RADIUS; vel.z = Math.abs(vel.z) * 0.5 }
+        const hit = resolveCircleBox(pos, BALL_RADIUS, c)
+        if (!hit) continue
+        if (hit.axis === 'x') vel.x = hit.dir * Math.abs(vel.x) * 0.5
+        else vel.z = hit.dir * Math.abs(vel.z) * 0.5
       }
 
       // Cylinder colliders (drums, tires, compressor)
