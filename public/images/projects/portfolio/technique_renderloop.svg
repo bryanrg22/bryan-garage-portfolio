@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 950" font-family="'DM Sans', -apple-system, 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <marker id="arrAmber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#E8A838"/></marker>
+    <marker id="arrGrey" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b0aaa0"/></marker>
+  </defs>
+
+  <rect x="8" y="8" width="1384" height="934" rx="26" fill="#242220"/>
+
+  <!-- left group: invalidate() callers -->
+  <rect x="32" y="40" width="540" height="880" rx="20" fill="#2e2b28" stroke="#4a463f" stroke-width="2"/>
+  <text x="60" y="80" font-size="24" font-weight="bold" fill="#c9c3b8">invalidate() callers</text>
+
+  <rect x="60" y="100" width="470" height="140" rx="14" fill="#0E9F7A"/>
+  <text x="84" y="140" font-size="25" font-weight="bold" fill="#ffffff">Pointer events</text>
+  <text x="84" y="172" font-size="18" fill="#e6e0d6">mouse / touch handlers invalidate()</text>
+  <text x="84" y="196" font-size="18" fill="#e6e0d6">only while mode.current === 'idle'</text>
+  <text x="84" y="220" font-size="18" fill="#e6e0d6">CameraController.tsx</text>
+
+  <rect x="60" y="266" width="470" height="140" rx="14" fill="#0E9F7A"/>
+  <text x="84" y="306" font-size="25" font-weight="bold" fill="#ffffff">GSAP camera fly-ins</text>
+  <text x="84" y="338" font-size="18" fill="#e6e0d6">1.2s power3.inOut timelines;</text>
+  <text x="84" y="362" font-size="18" fill="#e6e0d6">onUpdate → invalidateRef.current()</text>
+  <text x="84" y="386" font-size="18" fill="#e6e0d6">one frame per tween tick</text>
+
+  <rect x="60" y="432" width="470" height="140" rx="14" fill="#0E9F7A"/>
+  <text x="84" y="472" font-size="25" font-weight="bold" fill="#ffffff">Epsilon-converging lerps</text>
+  <text x="84" y="504" font-size="18" fill="#e6e0d6">hover scale re-invalidates until</text>
+  <text x="84" y="528" font-size="18" fill="#e6e0d6">Δ ≤ 0.001; parallax until ≤ 0.0001</text>
+  <text x="84" y="552" font-size="18" fill="#e6e0d6">the chain stops itself when settled</text>
+
+  <rect x="60" y="598" width="470" height="140" rx="14" fill="#0E9F7A"/>
+  <text x="84" y="638" font-size="25" font-weight="bold" fill="#ffffff">Self-invalidating physics</text>
+  <text x="84" y="670" font-size="18" fill="#e6e0d6">soccer ball, knockable props, shop</text>
+  <text x="84" y="694" font-size="18" fill="#e6e0d6">dog schedule frames only while</text>
+  <text x="84" y="718" font-size="18" fill="#e6e0d6">moving — resting dog: zero frames</text>
+
+  <rect x="60" y="764" width="470" height="140" rx="14" fill="#6D5BD8"/>
+  <text x="84" y="804" font-size="25" font-weight="bold" fill="#ffffff">RenderController</text>
+  <text x="84" y="836" font-size="18" fill="#e6e0d6">visibilitychange → invalidate() once</text>
+  <text x="84" y="860" font-size="18" fill="#e6e0d6">mobile: rAF loop throttled to 30fps,</text>
+  <text x="84" y="884" font-size="18" fill="#e6e0d6">skipped while document.hidden</text>
+
+  <!-- center annotation -->
+  <text x="800" y="180" font-size="18" fill="#e6e0d6" text-anchor="middle">Demand-driven rendering:</text>
+  <text x="800" y="206" font-size="18" fill="#e6e0d6" text-anchor="middle">nothing renders unless</text>
+  <text x="800" y="232" font-size="18" fill="#e6e0d6" text-anchor="middle">something asks for a frame</text>
+
+  <!-- hub -->
+  <rect x="630" y="380" width="340" height="190" rx="14" fill="#6D5BD8"/>
+  <text x="654" y="420" font-size="25" font-weight="bold" fill="#ffffff">R3F Canvas</text>
+  <text x="654" y="452" font-size="18" fill="#e6e0d6">frameloop="demand" — renders</text>
+  <text x="654" y="476" font-size="18" fill="#e6e0d6">one frame per invalidate();</text>
+  <text x="654" y="500" font-size="18" fill="#e6e0d6">no free-running rAF loop</text>
+  <text x="632" y="602" font-size="17" fill="#cfc9bf">useFrame delta capped at 100ms so</text>
+  <text x="632" y="624" font-size="17" fill="#cfc9bf">lerps don't overshoot after idle gaps</text>
+
+  <!-- caller → hub arrows (primary) -->
+  <line x1="534" y1="170" x2="622" y2="405" stroke="#E8A838" stroke-width="3" marker-end="url(#arrAmber)"/>
+  <line x1="534" y1="336" x2="622" y2="440" stroke="#E8A838" stroke-width="3" marker-end="url(#arrAmber)"/>
+  <line x1="534" y1="502" x2="622" y2="472" stroke="#E8A838" stroke-width="3" marker-end="url(#arrAmber)"/>
+  <line x1="534" y1="668" x2="622" y2="506" stroke="#E8A838" stroke-width="3" marker-end="url(#arrAmber)"/>
+  <line x1="534" y1="834" x2="622" y2="540" stroke="#E8A838" stroke-width="3" marker-end="url(#arrAmber)"/>
+
+  <!-- hub → outcome arrows (internal) -->
+  <line x1="974" y1="430" x2="1028" y2="285" stroke="#b0aaa0" stroke-width="2.5" marker-end="url(#arrGrey)"/>
+  <line x1="974" y1="475" x2="1028" y2="465" stroke="#b0aaa0" stroke-width="2.5" marker-end="url(#arrGrey)"/>
+  <line x1="974" y1="520" x2="1028" y2="645" stroke="#b0aaa0" stroke-width="2.5" marker-end="url(#arrGrey)"/>
+
+  <!-- right group: GPU outcome -->
+  <rect x="1010" y="150" width="358" height="600" rx="20" fill="#2e2b28" stroke="#4a463f" stroke-width="2"/>
+  <text x="1038" y="190" font-size="24" font-weight="bold" fill="#c9c3b8">GPU outcome</text>
+
+  <rect x="1035" y="210" width="308" height="150" rx="14" fill="#B8842C"/>
+  <text x="1059" y="250" font-size="25" font-weight="bold" fill="#ffffff">Desktop idle: 0 fps</text>
+  <text x="1059" y="282" font-size="18" fill="#e6e0d6">GPU goes fully idle once</text>
+  <text x="1059" y="306" font-size="18" fill="#e6e0d6">every lerp settles within</text>
+  <text x="1059" y="330" font-size="18" fill="#e6e0d6">its epsilon threshold</text>
+
+  <rect x="1035" y="390" width="308" height="150" rx="14" fill="#B8842C"/>
+  <text x="1059" y="430" font-size="25" font-weight="bold" fill="#ffffff">Mobile: 30 fps cap</text>
+  <text x="1059" y="462" font-size="18" fill="#e6e0d6">1000/30 ms throttle —</text>
+  <text x="1059" y="486" font-size="18" fill="#e6e0d6">sine pulses identical,</text>
+  <text x="1059" y="510" font-size="18" fill="#e6e0d6">half the GPU work / heat</text>
+
+  <rect x="1035" y="570" width="308" height="150" rx="14" fill="#B8842C"/>
+  <text x="1059" y="610" font-size="25" font-weight="bold" fill="#ffffff">Hidden tab: 0 fps</text>
+  <text x="1059" y="642" font-size="18" fill="#e6e0d6">rAF loop checks</text>
+  <text x="1059" y="666" font-size="18" fill="#e6e0d6">document.hidden; one</text>
+  <text x="1059" y="690" font-size="18" fill="#e6e0d6">invalidate() on return</text>
+
+  <!-- legend -->
+  <line x1="1010" y1="795" x2="1070" y2="795" stroke="#E8A838" stroke-width="3" marker-end="url(#arrAmber)"/>
+  <text x="1082" y="801" font-size="17" fill="#cfc9bf">invalidate() call</text>
+  <line x1="1010" y1="833" x2="1070" y2="833" stroke="#b0aaa0" stroke-width="2.5" marker-end="url(#arrGrey)"/>
+  <text x="1082" y="839" font-size="17" fill="#cfc9bf">one rendered frame</text>
+</svg>

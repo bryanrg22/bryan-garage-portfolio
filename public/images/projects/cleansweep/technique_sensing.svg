@@ -1,0 +1,168 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 950" font-family="'DM Sans', -apple-system, 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <marker id="mP" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#E8A838"/></marker>
+    <marker id="mI" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b0aaa0"/></marker>
+    <marker id="mA" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#9a948a"/></marker>
+  </defs>
+
+  <rect x="8" y="8" width="1384" height="934" rx="26" fill="#242220"/>
+
+  <!-- ============ GROUP A: Capture rig ============ -->
+  <rect x="36" y="36" width="308" height="380" rx="20" fill="#2e2b28" stroke="#4a463f" stroke-width="2"/>
+  <text x="60" y="74" font-size="24" font-weight="bold" fill="#c9c3b8">① Capture rig</text>
+
+  <rect x="58" y="100" width="264" height="112" rx="14" fill="#6D5BD8"/>
+  <text x="74" y="134" font-size="25" font-weight="bold" fill="#ffffff">iPhone + Camo</text>
+  <text x="74" y="164" font-size="18" fill="#e6e0d6">streams as a webcam</text>
+  <text x="74" y="190" font-size="18" fill="#e6e0d6">cv2.VideoCapture(1)</text>
+
+  <line x1="190" y1="212" x2="190" y2="266" stroke="#b0aaa0" stroke-width="2.5" marker-end="url(#mI)"/>
+  <text x="200" y="246" font-size="17" fill="#cfc9bf">video frame</text>
+
+  <rect x="58" y="272" width="264" height="112" rx="14" fill="#0E9F7A"/>
+  <text x="74" y="306" font-size="25" font-weight="bold" fill="#ffffff">capture.py</text>
+  <text x="74" y="336" font-size="18" fill="#e6e0d6">one frame per shot</text>
+  <text x="74" y="362" font-size="18" fill="#e6e0d6">→ cropped_image.jpg</text>
+
+  <!-- ============ GROUP B: Fill detection ============ -->
+  <rect x="372" y="36" width="512" height="380" rx="20" fill="#2e2b28" stroke="#4a463f" stroke-width="2"/>
+  <text x="396" y="74" font-size="24" font-weight="bold" fill="#c9c3b8">② Fill detection — opencv3.py</text>
+
+  <line x1="322" y1="328" x2="404" y2="328" stroke="#b0aaa0" stroke-width="2.5" marker-end="url(#mI)"/>
+  <text x="363" y="318" font-size="17" fill="#cfc9bf" text-anchor="middle">JPG</text>
+
+  <!-- bin illustration (debug overlay) -->
+  <rect x="410" y="104" width="118" height="250" rx="10" fill="#282521" stroke="#9a948a" stroke-width="2"/>
+  <rect x="414" y="200" width="110" height="150" rx="6" fill="#15130f"/>
+  <line x1="396" y1="200" x2="546" y2="200" stroke="#0E9F7A" stroke-width="2.5"/>
+  <text x="398" y="192" font-size="15" fill="#8a847a">highest_y</text>
+  <line x1="396" y1="350" x2="546" y2="350" stroke="#0E9F7A" stroke-width="2.5"/>
+  <text x="398" y="372" font-size="15" fill="#8a847a">lowest_y</text>
+
+  <rect x="560" y="100" width="300" height="136" rx="14" fill="#0E9F7A"/>
+  <text x="576" y="134" font-size="25" font-weight="bold" fill="#ffffff">HSV black mask</text>
+  <text x="576" y="164" font-size="18" fill="#e6e0d6">cvtColor(BGR2HSV)</text>
+  <text x="576" y="190" font-size="18" fill="#e6e0d6">inRange [0,0,0] →</text>
+  <text x="576" y="216" font-size="18" fill="#e6e0d6">[180,255,50]</text>
+
+  <line x1="710" y1="236" x2="710" y2="258" stroke="#b0aaa0" stroke-width="2.5" marker-end="url(#mI)"/>
+  <text x="722" y="254" font-size="17" fill="#cfc9bf">binary mask</text>
+
+  <rect x="560" y="264" width="300" height="120" rx="14" fill="#0E9F7A"/>
+  <text x="576" y="298" font-size="25" font-weight="bold" fill="#ffffff">Contour fill %</text>
+  <text x="576" y="328" font-size="18" fill="#e6e0d6">max contourArea bounds</text>
+  <text x="576" y="354" font-size="18" fill="#e6e0d6">% = height/lowest_y × 100</text>
+
+  <!-- ============ GROUP C: Level loop ============ -->
+  <rect x="912" y="36" width="452" height="380" rx="20" fill="#2e2b28" stroke="#4a463f" stroke-width="2"/>
+  <text x="936" y="74" font-size="24" font-weight="bold" fill="#c9c3b8">③ Level loop — WasteCapacity.py</text>
+
+  <text x="936" y="106" font-size="18" fill="#e6e0d6">get_level(): mean % → discrete level</text>
+
+  <!-- step chart: % -> level -->
+  <g stroke="#3a3733" stroke-width="1">
+    <line x1="976" y1="218" x2="1320" y2="218"/><line x1="976" y1="196" x2="1320" y2="196"/>
+    <line x1="976" y1="174" x2="1320" y2="174"/><line x1="976" y1="152" x2="1320" y2="152"/>
+    <line x1="976" y1="130" x2="1320" y2="130"/>
+  </g>
+  <rect x="1010.4" y="218" width="34.4" height="22" rx="3" fill="#E8A838"/>
+  <rect x="1044.8" y="196" width="68.8" height="44" rx="3" fill="#E8A838"/>
+  <rect x="1113.6" y="174" width="68.8" height="66" rx="3" fill="#E8A838"/>
+  <rect x="1182.4" y="152" width="68.8" height="88" rx="3" fill="#E8A838"/>
+  <rect x="1251.2" y="130" width="68.8" height="110" rx="3" fill="#E8A838"/>
+  <line x1="976" y1="240" x2="1320" y2="240" stroke="#4a463f" stroke-width="2"/>
+  <text x="993" y="233" font-size="20" font-weight="bold" fill="#ffffff" text-anchor="middle">0</text>
+  <text x="1027.6" y="210" font-size="20" font-weight="bold" fill="#ffffff" text-anchor="middle">1</text>
+  <text x="1079.2" y="188" font-size="20" font-weight="bold" fill="#ffffff" text-anchor="middle">2</text>
+  <text x="1148" y="166" font-size="20" font-weight="bold" fill="#ffffff" text-anchor="middle">3</text>
+  <text x="1216.8" y="144" font-size="20" font-weight="bold" fill="#ffffff" text-anchor="middle">4</text>
+  <text x="1285.6" y="122" font-size="20" font-weight="bold" fill="#ffffff" text-anchor="middle">5</text>
+  <g font-size="15" fill="#cfc9bf" text-anchor="middle">
+    <text x="976" y="262">0%</text><text x="1010" y="262">10</text><text x="1045" y="262">20</text>
+    <text x="1114" y="262">40</text><text x="1183" y="262">60</text><text x="1252" y="262">80</text>
+    <text x="1320" y="262">100%</text>
+  </g>
+
+  <rect x="956" y="284" width="384" height="112" rx="14" fill="#0E9F7A"/>
+  <text x="972" y="318" font-size="25" font-weight="bold" fill="#ffffff">3-shot averager</text>
+  <text x="972" y="348" font-size="18" fill="#e6e0d6">3 photos, 1 s apart → mean %</text>
+  <text x="972" y="374" font-size="18" fill="#e6e0d6">each shot clamped to ≥ 2 %</text>
+
+  <!-- ============ GROUP E: Backend handoff ============ -->
+  <rect x="36" y="444" width="360" height="420" rx="20" fill="#2e2b28" stroke="#4a463f" stroke-width="2"/>
+  <text x="60" y="482" font-size="24" font-weight="bold" fill="#c9c3b8">⑤ Backend handoff</text>
+
+  <rect x="56" y="520" width="320" height="145" rx="14" fill="#0E9F7A"/>
+  <text x="72" y="554" font-size="25" font-weight="bold" fill="#ffffff">Data/API server</text>
+  <text x="72" y="584" font-size="18" fill="#e6e0d6">backend/dataFormat.js</text>
+  <text x="72" y="610" font-size="18" fill="#e6e0d6">192.168.124.69:1123</text>
+  <text x="72" y="636" font-size="18" fill="#e6e0d6">updates bin fill_level</text>
+
+  <text x="72" y="704" font-size="18" fill="#e6e0d6">then, per level change:</text>
+  <text x="72" y="734" font-size="18" fill="#e6e0d6">• 100× Distance Matrix calls</text>
+  <text x="72" y="762" font-size="18" fill="#e6e0d6">• RandomForest priorities</text>
+  <text x="72" y="790" font-size="18" fill="#e6e0d6">• nearest-neighbor route</text>
+  <text x="72" y="824" font-size="15" fill="#8a847a">→ see the route-engine spotlight</text>
+
+  <!-- ============ GROUP D: Raspberry Pi ============ -->
+  <rect x="560" y="444" width="804" height="420" rx="20" fill="#2e2b28" stroke="#4a463f" stroke-width="2"/>
+  <text x="584" y="482" font-size="24" font-weight="bold" fill="#c9c3b8">④ Raspberry Pi — RPILEDControl/index.js</text>
+
+  <rect x="584" y="520" width="310" height="145" rx="14" fill="#0E9F7A"/>
+  <text x="600" y="554" font-size="25" font-weight="bold" fill="#ffffff">Dedup forwarder</text>
+  <text x="600" y="584" font-size="18" fill="#e6e0d6">cache: cam1lvl / cam2lvl</text>
+  <text x="600" y="610" font-size="18" fill="#e6e0d6">fires only on level change</text>
+
+  <rect x="1000" y="520" width="340" height="145" rx="14" fill="#0E9F7A"/>
+  <text x="1016" y="554" font-size="25" font-weight="bold" fill="#ffffff">Express server :1123</text>
+  <text x="1016" y="584" font-size="18" fill="#e6e0d6">GET /set/:id/:level (id 1–2)</text>
+  <text x="1016" y="610" font-size="18" fill="#e6e0d6">level 0–5 validated</text>
+  <text x="1016" y="636" font-size="18" fill="#e6e0d6">GET /start/:id boot rail</text>
+
+  <line x1="1000" y1="592" x2="900" y2="592" stroke="#b0aaa0" stroke-width="2.5" marker-end="url(#mI)"/>
+  <text x="947" y="582" font-size="17" fill="#cfc9bf" text-anchor="middle">new level</text>
+
+  <line x1="584" y1="592" x2="382" y2="592" stroke="#E8A838" stroke-width="3" marker-end="url(#mP)"/>
+  <text x="480" y="580" font-size="17" fill="#cfc9bf" text-anchor="middle">GET /start/{id}/{level}</text>
+  <text x="480" y="614" font-size="17" fill="#cfc9bf" text-anchor="middle">only on change</text>
+
+  <!-- LED bar illustration -->
+  <line x1="1180" y1="665" x2="1180" y2="712" stroke="#b0aaa0" stroke-width="2.5" marker-end="url(#mI)"/>
+  <circle cx="1060" cy="740" r="16" fill="#0E9F7A" stroke="#1b1916" stroke-width="2"/>
+  <circle cx="1120" cy="740" r="16" fill="#0E9F7A" stroke="#1b1916" stroke-width="2"/>
+  <circle cx="1180" cy="740" r="16" fill="#E8A838" stroke="#1b1916" stroke-width="2"/>
+  <circle cx="1240" cy="740" r="16" fill="#E8A838" stroke="#1b1916" stroke-width="2"/>
+  <circle cx="1300" cy="740" r="16" fill="#B34A3E" stroke="#1b1916" stroke-width="2"/>
+  <g font-size="15" fill="#cfc9bf" text-anchor="middle">
+    <text x="1060" y="776">lvl ≥1</text><text x="1120" y="776">≥2</text><text x="1180" y="776">≥3</text>
+    <text x="1240" y="776">≥4</text><text x="1300" y="776">= 5</text>
+  </g>
+  <text x="1180" y="806" font-size="15" fill="#8a847a" text-anchor="middle">one 5-LED bar per bin (×2)</text>
+  <text x="1180" y="826" font-size="15" fill="#8a847a" text-anchor="middle">sudo pinctrl &lt;gpio&gt; op dh|dl</text>
+  <text x="1180" y="846" font-size="15" fill="#8a847a" text-anchor="middle">12 GPIO pins in config.json</text>
+
+  <rect x="584" y="700" width="310" height="120" rx="14" fill="#B8842C"/>
+  <text x="600" y="734" font-size="25" font-weight="bold" fill="#ffffff">Browser LED panel</text>
+  <text x="600" y="764" font-size="18" fill="#e6e0d6">served from public/</text>
+  <text x="600" y="790" font-size="18" fill="#e6e0d6">toggle any GPIO live</text>
+
+  <path d="M 1000 640 L 940 640 L 940 760 L 900 760" fill="none" stroke="#9a948a" stroke-width="2.5" stroke-dasharray="7 7" marker-end="url(#mA)"/>
+  <text x="952" y="712" font-size="17" fill="#cfc9bf">WS :2000</text>
+
+  <!-- cross-group arrows (drawn last so group panels never cover them) -->
+  <line x1="860" y1="336" x2="950" y2="336" stroke="#b0aaa0" stroke-width="2.5" marker-end="url(#mI)"/>
+  <text x="946" y="326" font-size="17" fill="#cfc9bf" text-anchor="end">fill %</text>
+
+  <line x1="1148" y1="396" x2="1148" y2="514" stroke="#E8A838" stroke-width="3" marker-end="url(#mP)"/>
+  <text x="1160" y="472" font-size="17" fill="#cfc9bf">GET 192.168.124.47</text>
+  <text x="1160" y="492" font-size="17" fill="#cfc9bf">:1123/set/1/{level}</text>
+
+  <!-- legend -->
+  <line x1="60" y1="905" x2="120" y2="905" stroke="#E8A838" stroke-width="3" marker-end="url(#mP)"/>
+  <text x="132" y="911" font-size="17" fill="#cfc9bf">primary flow</text>
+  <line x1="280" y1="905" x2="340" y2="905" stroke="#b0aaa0" stroke-width="2.5" marker-end="url(#mI)"/>
+  <text x="352" y="911" font-size="17" fill="#cfc9bf">internal step</text>
+  <line x1="500" y1="905" x2="560" y2="905" stroke="#9a948a" stroke-width="2.5" stroke-dasharray="7 7" marker-end="url(#mA)"/>
+  <text x="572" y="911" font-size="17" fill="#cfc9bf">WebSocket / async</text>
+  <text x="1364" y="911" font-size="15" fill="#8a847a" text-anchor="end">sources: WasteCapacityDetection/*.py · RPILEDControl/index.js + config.json</text>
+</svg>

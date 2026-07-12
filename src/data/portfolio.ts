@@ -124,7 +124,9 @@ export const portfolioItems: PortfolioItem[] = [
         media: [
           { type: 'video', src: '/videos/agentic_ios_demo.mp4', poster: '/images/projects/agentic/demo_poster.webp', caption: '"Message my recruiter…" — Claude drives the iPhone end-to-end' },
           { type: 'video', src: '/videos/agentic_ios_drag.mp4', caption: 'First autonomous multi-step drag on a physical iPhone' },
+          { type: 'image', src: '/images/projects/agentic/optimization.svg', caption: 'Six instrumented runs of the same iPhone task: root-cause fixes took it from an 83s failure to a clean 23.9s, 4-step run — the theoretical minimum' },
           { type: 'image', src: '/images/projects/agentic/architecture.webp', caption: 'System architecture — Node.js agent ↔ XCTest bridge ↔ Swift companion app' },
+          { type: 'image', src: '/images/projects/agentic/technique_memory.svg', caption: "The agent's CoALA-style memory: three on-device stores feed an XML-tagged, prompt-cached system prompt, while a rolling summary keeps each step's context to a single screenshot" },
           { type: 'image', src: '/images/projects/agentic/team_stage.webp', caption: '3rd place — Claude Builder Hackathon @ UCLA' },
         ],
       },
@@ -137,6 +139,9 @@ export const portfolioItems: PortfolioItem[] = [
         logo: '/images/projects/basis_logo.png',
         media: [
           { type: 'image', src: '/images/projects/basis/architecture.svg', caption: 'System architecture — LangGraph engine, DINO→SAM2 vision, and a citation-backed IRS evidence layer' },
+          { type: 'image', src: '/images/projects/basis/technique_rag.svg', caption: 'RAG with receipts: a custom IRS tokenizer + BM25/FAISS score fusion feed whole-table evidence through a citation gate — no evidence, no claim' },
+          { type: 'image', src: '/images/projects/basis/agent_loop.svg', caption: 'Self-correcting appraisal extraction: an extractor → verifier → corrector loop over four confidence-tiered methods, gated at ≥0.90 for critical fields' },
+          { type: 'image', src: '/images/projects/basis/technique_stategraph.svg', caption: 'Pausable LangGraph workflow: three engineer checkpoints, a background vision job racing the first review, and Firestore checkpointing so any study resumes by thread_id' },
           { type: 'image', src: '/images/projects/basis/langsmith_trace.webp', caption: 'Agentic RAG trace — every retrieval and citation is observable in LangSmith' },
           { type: 'image', src: '/images/projects/basis/team_check.webp', caption: "Best Traction — LavaLab Demo Night F'25" },
         ],
@@ -153,6 +158,8 @@ export const portfolioItems: PortfolioItem[] = [
         media: [
           { type: 'image', src: '/images/projects/lambdarim/prizepicks_proof.webp', caption: 'The receipts — $10 → $3,000 at a 78% win rate' },
           { type: 'image', src: '/images/projects/lambdarim/architecture.svg', caption: 'System architecture — OCaml Monte Carlo over FFI, GCP pipelines, and a home-IP cron the sportsbooks can\'t block' },
+          { type: 'image', src: '/images/projects/lambdarim/technique_probability.svg', caption: 'The three-layer probability stack: closed-form Poisson baseline, a 100k-draw Monte Carlo engine in OCaml over a ctypes FFI, and GARCH(1,1) volatility that flags when constant-sigma breaks' },
+          { type: 'image', src: '/images/projects/lambdarim/numbers.svg', caption: 'Lambda Rim by the numbers — every figure traced to a file committed in the repo' },
           { type: 'image', src: '/images/projects/lambdarim/dashboard.webp', caption: 'Player-prop dashboard with Monte Carlo confidence bands' },
           { type: 'image', src: '/images/projects/lambdarim/ocr_pipeline.svg', caption: 'Automated OCR → prediction pipeline' },
           { type: 'image', src: '/images/projects/lambdarim/ui.webp', caption: 'Live odds aggregation across sportsbooks' },
@@ -170,6 +177,8 @@ export const portfolioItems: PortfolioItem[] = [
         logo: '/images/projects/swerveLogo.png',
         media: [
           { type: 'image', src: '/images/projects/swerve/architecture.svg', caption: 'System architecture — Hugo the LangChain agent, NetworkX BOM graph, and Slack alerting' },
+          { type: 'image', src: '/images/projects/swerve/agent_loop.svg', caption: "Hugo's AgentExecutor: a gpt-3.5-turbo router dispatching 6 Firestore-grounded tools, with nested gpt-4/gpt-4o calls and Slack alert output" },
+          { type: 'image', src: '/images/projects/swerve/technique_bom.svg', caption: 'The NetworkX bill-of-materials DiGraph: edges colored by stock health, feeding parts_summary.csv into Hugo\'s reasoning tools' },
           { type: 'image', src: '/images/projects/swerve/ui_1.webp', caption: "Hugo — the event-driven procurement agent's live dashboard" },
           { type: 'image', src: '/images/projects/swerve/ui_2.webp', caption: 'Inventory intelligence with reorder recommendations' },
           { type: 'image', src: '/images/projects/swerve/ui_3.webp', caption: 'Audit-traceable agent reasoning per alert' },
@@ -189,6 +198,8 @@ export const portfolioItems: PortfolioItem[] = [
         media: [
           { type: 'video', src: '/videos/cleansweep_demo.mp4', poster: '/images/projects/cleansweep/demo_poster.webp', caption: 'Application demo — computer-vision waste classification in action' },
           { type: 'image', src: '/images/projects/cleansweep/architecture.svg', caption: 'System architecture — OpenCV fill detection on a Pi rig, Terraform-provisioned AWS, and a Databricks route engine' },
+          { type: 'image', src: '/images/projects/cleansweep/technique_sensing.svg', caption: 'How CleanSweep senses a bin: OpenCV HSV mask + contour fill detection, 3 shots averaged into a 0–5 level, mirrored on Pi GPIO LED bars' },
+          { type: 'image', src: '/images/projects/cleansweep/technique_routing.svg', caption: 'Route planning: 100 Distance Matrix calls build a 10×10 travel-time matrix, RandomForest flags priority bins, nearest-neighbor orders the 24-minute route' },
         ],
       },
       {
@@ -203,6 +214,8 @@ export const portfolioItems: PortfolioItem[] = [
         media: [
           { type: 'video', src: '/videos/nosu_demo.mp4', poster: '/images/projects/nosu/demo_poster.webp', caption: 'Output sample — unmute to hear the AI-generated soundtrack 🔊' },
           { type: 'image', src: '/images/projects/nosu/architecture.svg', caption: 'System architecture — YOLO + BLIP + VideoMAE fused into a GPT-composed Suno music prompt' },
+          { type: 'image', src: '/images/projects/nosu/technique_fusion.svg', caption: "The fusion pipeline on one real 23-second beach clip: three model streams on a shared clock, confidence-weighted into a single GPT prompt, rendered by Suno, muxed back onto the video" },
+          { type: 'image', src: '/images/projects/nosu/technique_embeddings.svg', caption: 'How Nosu hears mood: CLAP zero-shot — audio windows and mood labels meet as vectors in a shared 512-d embedding space, where cosine similarity becomes the mood timeline' },
         ],
       },
       {
@@ -215,6 +228,8 @@ export const portfolioItems: PortfolioItem[] = [
         media: [
           { type: 'image', src: '/images/projects/portfolio/garage_view.webp', caption: "The garage itself — 22MB of Draco+WebP-optimized GLBs, custom physics, and a demand-driven render loop that idles at 0fps" },
           { type: 'image', src: '/images/projects/portfolio/architecture.svg', caption: 'System architecture — demand-driven R3F rendering, GPU-tier scaling, and a custom physics engine in ~300 lines' },
+          { type: 'image', src: '/images/projects/portfolio/technique_renderloop.svg', caption: 'Demand-driven rendering: five invalidate() callers drive a demand-frameloop Canvas that idles at 0fps on desktop and caps at 30fps on mobile' },
+          { type: 'image', src: '/images/projects/portfolio/optimization.svg', caption: 'GLB asset pipeline: resize-to-1024 → WebP → Draco cut the models folder 36 MB → 14 MB — the embedded PNG textures, not geometry, were the payload' },
         ],
       },
     ],
