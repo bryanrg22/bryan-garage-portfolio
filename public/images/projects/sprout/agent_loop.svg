@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 950" font-family="'DM Sans', -apple-system, 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <marker id="ag" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#E8A838"/></marker>
+    <marker id="an" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b0aaa0"/></marker>
+  </defs>
+  <rect x="8" y="8" width="1384" height="934" rx="26" fill="#242220"/>
+
+  <!-- LEFT: the loop -->
+  <rect x="32" y="28" width="800" height="850" rx="20" fill="#2e2b28" stroke="#4a463f" stroke-width="2"/>
+  <text x="56" y="66" font-size="24" font-weight="bold" fill="#c9c3b8">Vita's tool loop — trust is engineered in</text>
+
+  <!-- user message -->
+  <rect x="56" y="90" width="360" height="86" rx="14" fill="#B8842C"/>
+  <text x="76" y="126" font-size="25" font-weight="bold" fill="#ffffff">"log 2 bottles of water"</text>
+  <text x="76" y="156" font-size="18" fill="#e6e0d6">12+ tools: food, water, weight, goals…</text>
+
+  <!-- request builder -->
+  <rect x="56" y="216" width="360" height="112" rx="14" fill="#0E9F7A"/>
+  <text x="76" y="252" font-size="25" font-weight="bold" fill="#ffffff">CoachView builds turn</text>
+  <text x="76" y="282" font-size="18" fill="#e6e0d6">cached stable prefix + live data</text>
+  <text x="76" y="306" font-size="18" fill="#e6e0d6">sliding-window history + schemas</text>
+
+  <!-- LLM -->
+  <rect x="472" y="216" width="320" height="112" rx="14" fill="#6D5BD8"/>
+  <text x="492" y="252" font-size="25" font-weight="bold" fill="#ffffff">Claude / GPT</text>
+  <text x="492" y="282" font-size="18" fill="#e6e0d6">returns tool_use:</text>
+  <text x="492" y="306" font-size="18" fill="#e6e0d6">log_water {bottles: 2}</text>
+
+  <!-- validator -->
+  <rect x="472" y="384" width="320" height="112" rx="14" fill="#0E9F7A"/>
+  <text x="492" y="420" font-size="25" font-weight="bold" fill="#ffffff">Validate first</text>
+  <text x="492" y="450" font-size="18" fill="#e6e0d6">bounds + ambiguity vs profile</text>
+  <text x="492" y="474" font-size="18" fill="#e6e0d6">bad ask → in-band tool error</text>
+
+  <!-- branch: confirm -->
+  <rect x="56" y="552" width="360" height="112" rx="14" fill="#B8842C"/>
+  <text x="76" y="588" font-size="25" font-weight="bold" fill="#ffffff">Destructive change?</text>
+  <text x="76" y="618" font-size="18" fill="#e6e0d6">one-tap confirm card</text>
+  <text x="76" y="642" font-size="18" fill="#e6e0d6">(Yes / Not now)</text>
+
+  <!-- branch: undo -->
+  <rect x="472" y="552" width="320" height="112" rx="14" fill="#B8842C"/>
+  <text x="492" y="588" font-size="25" font-weight="bold" fill="#ffffff">Quick log?</text>
+  <text x="492" y="618" font-size="18" fill="#e6e0d6">applies instantly</text>
+  <text x="492" y="642" font-size="18" fill="#e6e0d6">+ Undo toast</text>
+
+  <!-- result -->
+  <rect x="56" y="720" width="736" height="112" rx="14" fill="#0E9F7A"/>
+  <text x="76" y="756" font-size="25" font-weight="bold" fill="#ffffff">tool_result → warm follow-up</text>
+  <text x="76" y="786" font-size="18" fill="#e6e0d6">"Applied…" or a graceful decline — the model is always told</text>
+  <text x="76" y="810" font-size="18" fill="#e6e0d6">what actually happened, so it never gaslights the user</text>
+
+  <!-- arrows -->
+  <line x1="236" y1="176" x2="236" y2="212" stroke="#E8A838" stroke-width="3" marker-end="url(#ag)"/>
+  <line x1="416" y1="272" x2="468" y2="272" stroke="#E8A838" stroke-width="3" marker-end="url(#ag)"/>
+  <line x1="632" y1="328" x2="632" y2="380" stroke="#E8A838" stroke-width="3" marker-end="url(#ag)"/>
+  <line x1="472" y1="470" x2="236" y2="548" stroke="#b0aaa0" stroke-width="2.5" marker-end="url(#an)"/>
+  <line x1="632" y1="496" x2="632" y2="548" stroke="#b0aaa0" stroke-width="2.5" marker-end="url(#an)"/>
+  <line x1="236" y1="664" x2="236" y2="716" stroke="#E8A838" stroke-width="3" marker-end="url(#ag)"/>
+  <line x1="632" y1="664" x2="632" y2="716" stroke="#E8A838" stroke-width="3" marker-end="url(#ag)"/>
+
+  <!-- RIGHT: safety rails -->
+  <rect x="856" y="28" width="512" height="850" rx="20" fill="#2e2b28" stroke="#4a463f" stroke-width="2"/>
+  <text x="880" y="66" font-size="24" font-weight="bold" fill="#c9c3b8">The safety rails</text>
+
+  <circle cx="902" cy="116" r="15" fill="#E8A838"/><text x="902" y="122" font-size="16" font-weight="bold" fill="#242220" text-anchor="middle">1</text>
+  <text x="930" y="122" font-size="19" font-weight="bold" fill="#ffffff">Validation before execution</text>
+  <text x="930" y="148" font-size="16" fill="#e6e0d6">out-of-range / ambiguous asks bounce back</text>
+  <text x="930" y="170" font-size="16" fill="#e6e0d6">to the model — user never sees an unsafe confirm</text>
+
+  <circle cx="902" cy="222" r="15" fill="#E8A838"/><text x="902" y="228" font-size="16" font-weight="bold" fill="#242220" text-anchor="middle">2</text>
+  <text x="930" y="228" font-size="19" font-weight="bold" fill="#ffffff">Confirm-or-undo, never silent</text>
+  <text x="930" y="254" font-size="16" fill="#e6e0d6">goal changes need a tap; quick logs get</text>
+  <text x="930" y="276" font-size="16" fill="#e6e0d6">an Undo toast — nothing happens invisibly</text>
+
+  <circle cx="902" cy="328" r="15" fill="#E8A838"/><text x="902" y="334" font-size="16" font-weight="bold" fill="#242220" text-anchor="middle">3</text>
+  <text x="930" y="334" font-size="19" font-weight="bold" fill="#ffffff">Depth-capped chaining</text>
+  <text x="930" y="360" font-size="16" fill="#e6e0d6">final turn forced to prose with tool_choice:</text>
+  <text x="930" y="382" font-size="16" fill="#e6e0d6">none — the loop always terminates</text>
+
+  <circle cx="902" cy="434" r="15" fill="#E8A838"/><text x="902" y="440" font-size="16" font-weight="bold" fill="#242220" text-anchor="middle">4</text>
+  <text x="930" y="440" font-size="19" font-weight="bold" fill="#ffffff">Truncation guard</text>
+  <text x="930" y="466" font-size="16" fill="#e6e0d6">a turn cut off mid-tool-call is never acted on</text>
+
+  <circle cx="902" cy="518" r="15" fill="#E8A838"/><text x="902" y="524" font-size="16" font-weight="bold" fill="#242220" text-anchor="middle">5</text>
+  <text x="930" y="524" font-size="19" font-weight="bold" fill="#ffffff">Bounded context forever</text>
+  <text x="930" y="550" font-size="16" fill="#e6e0d6">old turns folded into long-term notes by the</text>
+  <text x="930" y="572" font-size="16" fill="#e6e0d6">cheap model, off-turn, with a lost-update guard</text>
+
+  <rect x="880" y="620" width="464" height="224" rx="14" fill="#242220" stroke="#4a463f" stroke-width="1.5"/>
+  <text x="900" y="656" font-size="19" font-weight="bold" fill="#E8A838">Why this matters</text>
+  <text x="900" y="688" font-size="17" fill="#e6e0d6">A health coach that can WRITE — log food,</text>
+  <text x="900" y="712" font-size="17" fill="#e6e0d6">change goals, adjust plans — has to earn it.</text>
+  <text x="900" y="736" font-size="17" fill="#e6e0d6">Whoop's AI coach only reads your data.</text>
+  <text x="900" y="760" font-size="17" fill="#e6e0d6">Vita writes, because every write is validated,</text>
+  <text x="900" y="784" font-size="17" fill="#e6e0d6">confirmable, undoable, and honestly reported</text>
+  <text x="900" y="808" font-size="17" fill="#e6e0d6">back to the model.</text>
+</svg>

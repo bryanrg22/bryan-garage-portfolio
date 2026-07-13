@@ -161,6 +161,9 @@ export const portfolioItems: PortfolioItem[] = [
         logo: '/images/projects/sprout_logo.png',
         media: [
           { type: 'image', src: '/images/projects/sprout/architecture.svg', caption: 'System architecture — one AI abstraction, two providers, and a template-first cost ladder' },
+          { type: 'image', src: '/images/projects/sprout/technique_tiering.svg', caption: 'Right-sized models — the daily features run on the cheap tier; the expensive model is reserved for a few calls ever' },
+          { type: 'image', src: '/images/projects/sprout/agent_loop.svg', caption: "Vita's tool loop — validation before execution, confirm-or-undo, and the model always told what really happened" },
+          { type: 'image', src: '/images/projects/sprout/technique_cost.svg', caption: 'Cost engineering, measured — 82% prompt-cache hits took a coach turn from 1.7¢ to 0.45¢' },
         ],
       },
       {

@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 950" font-family="'DM Sans', -apple-system, 'Helvetica Neue', Arial, sans-serif">
+  <rect x="8" y="8" width="1384" height="934" rx="26" fill="#242220"/>
+  <text x="48" y="70" font-size="24" font-weight="bold" fill="#c9c3b8">Cost engineering — the part that makes consumer AI shippable</text>
+
+  <!-- ladder rows -->
+  <rect x="48" y="100" width="640" height="118" rx="14" fill="#0E9F7A"/>
+  <text x="70" y="138" font-size="23" font-weight="bold" fill="#ffffff">1 · Template-first generation</text>
+  <text x="70" y="168" font-size="17" fill="#e6e0d6">the deterministic template IS the product — the LLM may</text>
+  <text x="70" y="192" font-size="17" fill="#e6e0d6">only re-warm the same fact; no key → template still ships</text>
+
+  <rect x="48" y="242" width="640" height="118" rx="14" fill="#0E9F7A"/>
+  <text x="70" y="280" font-size="23" font-weight="bold" fill="#ffffff">2 · One generation per day, cached</text>
+  <text x="70" y="310" font-size="17" fill="#e6e0d6">daily brief generates once per calendar day —</text>
+  <text x="70" y="334" font-size="17" fill="#e6e0d6">reopening the app 20× costs zero</text>
+
+  <rect x="48" y="384" width="640" height="118" rx="14" fill="#0E9F7A"/>
+  <text x="70" y="422" font-size="23" font-weight="bold" fill="#ffffff">3 · Stable / volatile prompt split</text>
+  <text x="70" y="452" font-size="17" fill="#e6e0d6">byte-stable prefix (persona, rules, tools) + volatile tail</text>
+  <text x="70" y="476" font-size="17" fill="#e6e0d6">(today's data) — explicit cache breakpoints, both vendors</text>
+
+  <rect x="48" y="526" width="640" height="118" rx="14" fill="#0E9F7A"/>
+  <text x="70" y="564" font-size="23" font-weight="bold" fill="#ffffff">4 · Sliding window + memory folding</text>
+  <text x="70" y="594" font-size="17" fill="#e6e0d6">old chat turns folded into compact notes by the CHEAP</text>
+  <text x="70" y="618" font-size="17" fill="#e6e0d6">model, off the user's turn — context bounded forever</text>
+
+  <rect x="48" y="668" width="640" height="118" rx="14" fill="#0E9F7A"/>
+  <text x="70" y="706" font-size="23" font-weight="bold" fill="#ffffff">5 · Bounded outputs + observability</text>
+  <text x="70" y="736" font-size="17" fill="#e6e0d6">tight max_tokens per feature (300–2,200); every call logs</text>
+  <text x="70" y="760" font-size="17" fill="#e6e0d6">in / out / cacheRead / cacheWrite to on-device diagnostics</text>
+
+  <!-- RIGHT: the measured win -->
+  <rect x="720" y="100" width="632" height="686" rx="20" fill="#2e2b28" stroke="#E8A838" stroke-width="2"/>
+  <text x="744" y="142" font-size="24" font-weight="bold" fill="#c9c3b8">Measured, not vibes</text>
+
+  <text x="744" y="188" font-size="18" fill="#e6e0d6">Usage logs caught OpenAI's implicit caching</text>
+  <text x="744" y="212" font-size="18" fill="#e6e0d6">returning "cached 0" on every 6.5k-token coach</text>
+  <text x="744" y="236" font-size="18" fill="#e6e0d6">turn. Fix: route gpt-5.6 to the Responses API</text>
+  <text x="744" y="260" font-size="18" fill="#e6e0d6">with an explicit prompt_cache_breakpoint.</text>
+
+  <text x="744" y="304" font-size="18" font-weight="bold" fill="#cfc9bf">Result on a real key:</text>
+
+  <rect x="744" y="326" width="584" height="130" rx="16" fill="#242220"/>
+  <text x="1036" y="392" font-size="56" font-weight="bold" fill="#E8A838" text-anchor="middle">82% cached</text>
+  <text x="1036" y="434" font-size="19" fill="#cfc9bf" text-anchor="middle">5,512 of 6,747 input tokens at the 90% discount</text>
+
+  <rect x="744" y="480" width="584" height="130" rx="16" fill="#242220"/>
+  <text x="1036" y="546" font-size="56" font-weight="bold" fill="#0E9F7A" text-anchor="middle">1.7¢ → 0.45¢</text>
+  <text x="1036" y="588" font-size="19" fill="#cfc9bf" text-anchor="middle">cost of one coach turn, before → after</text>
+
+  <text x="744" y="656" font-size="17" fill="#8a847a">Source: on-device token diagnostics against a live</text>
+  <text x="744" y="680" font-size="17" fill="#8a847a">production key — the same observability that found</text>
+  <text x="744" y="704" font-size="17" fill="#8a847a">the bug. AI polish costs ≤1 cheap-model call per</text>
+  <text x="744" y="728" font-size="17" fill="#8a847a">surface per day; degrades gracefully with no key.</text>
+
+  <!-- bottom bar -->
+  <rect x="48" y="816" width="1304" height="92" rx="20" fill="#2e2b28" stroke="#4a463f" stroke-width="2"/>
+  <text x="700" y="856" font-size="22" font-weight="bold" fill="#ffffff" text-anchor="middle">Cache → route → compress → bound — the standard cost ladder, actually implemented end to end,</text>
+  <text x="700" y="886" font-size="20" fill="#e6e0d6" text-anchor="middle">with the receipts logged on the phone itself</text>
+</svg>
