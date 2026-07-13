@@ -243,6 +243,7 @@ function ProjectShowcase({ project, jobIndex }: { project: ProjectEntry; jobInde
       >
         <div className="mb-3 flex items-baseline justify-between gap-3">
           <p className="font-serif text-lg text-golden">{project.name}</p>
+          <span className="ml-auto shrink-0 rounded-full border border-golden/30 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-golden/80">{project.category}</span>
           <span className="shrink-0 font-mono text-[10px] tracking-widest text-stone/70">JOB #{String(jobIndex + 1).padStart(3, '0')}</span>
         </div>
 
@@ -403,9 +404,10 @@ function ProjectsContent({ projects }: { projects: ProjectEntry[] }) {
               />
             )}
             <p className="text-base font-bold text-golden">{project.name}</p>
-            {/* Auto-shop work-order tag */}
-            <span className="ml-auto shrink-0 pt-0.5 font-mono text-[10px] tracking-widest text-stone/70">
-              JOB #{String(i + 1).padStart(3, '0')}
+            {/* Auto-shop work-order tag + domain label */}
+            <span className="ml-auto flex shrink-0 flex-col items-end gap-1 pt-0.5">
+              <span className="font-mono text-[10px] tracking-widest text-stone/70">JOB #{String(i + 1).padStart(3, '0')}</span>
+              <span className="rounded-full border border-golden/30 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-golden/80">{project.category}</span>
             </span>
           </div>
           <p className="mt-1 text-sm text-cream/80">{project.description}</p>

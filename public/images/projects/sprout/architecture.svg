@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6b7280"/>
+    </marker>
+  </defs>
+
+  <!-- canvas -->
+  <rect x="0" y="0" width="900" height="560" rx="14" fill="#f8faf8"/>
+
+  <!-- ═══════════ APP LAYER ═══════════ -->
+  <rect x="20" y="18" width="860" height="150" rx="12" fill="#e8f2ea" stroke="#4a7c59" stroke-width="2"/>
+  <text x="40" y="46" font-size="17" font-weight="700" fill="#2f5140">🌱 Sprout — iOS app (SwiftUI + SwiftData, no backend anywhere)</text>
+
+  <g font-size="13" font-weight="600" fill="#2f5140" text-anchor="middle">
+    <rect x="40"  y="62" width="150" height="44" rx="9" fill="#ffffff" stroke="#4a7c59" stroke-width="1.4"/>
+    <text x="115" y="81">Vita — AI coach</text>
+    <text x="115" y="97" font-weight="400" font-size="11.5">12+ tools · confirm/undo</text>
+
+    <rect x="206" y="62" width="140" height="44" rx="9" fill="#ffffff" stroke="#4a7c59" stroke-width="1.4"/>
+    <text x="276" y="81">Daily brief</text>
+    <text x="276" y="97" font-weight="400" font-size="11.5">priority ladder · 1/day</text>
+
+    <rect x="362" y="62" width="140" height="44" rx="9" fill="#ffffff" stroke="#4a7c59" stroke-width="1.4"/>
+    <text x="432" y="81">Meal-photo vision</text>
+    <text x="432" y="97" font-weight="400" font-size="11.5">structured output</text>
+
+    <rect x="518" y="62" width="150" height="44" rx="9" fill="#ffffff" stroke="#4a7c59" stroke-width="1.4"/>
+    <text x="593" y="81">Adaptive plan</text>
+    <text x="593" y="97" font-weight="400" font-size="11.5">web research · rare</text>
+
+    <rect x="684" y="62" width="176" height="44" rx="9" fill="#ffffff" stroke="#4a7c59" stroke-width="1.4"/>
+    <text x="772" y="81">Tracker + recovery</text>
+    <text x="772" y="97" font-weight="400" font-size="11.5">sleep · RHR/HRV · travel</text>
+
+    <rect x="40" y="114" width="306" height="40" rx="9" fill="#ffffff" stroke="#4a7c59" stroke-width="1.4"/>
+    <text x="193" y="139">Buddy sync · streaks · widgets · memory</text>
+
+    <rect x="362" y="114" width="498" height="40" rx="9" fill="#ffffff" stroke="#4a7c59" stroke-width="1.4"/>
+    <text x="611" y="132">Graceful degradation: every AI feature has a template/manual fallback</text>
+    <text x="611" y="147" font-weight="400" font-size="11.5">no key → templates · no tracker → manual logging · no iCloud → fully local</text>
+  </g>
+
+  <!-- arrows down from app -->
+  <line x1="230" y1="168" x2="230" y2="208" stroke="#6b7280" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="670" y1="168" x2="670" y2="208" stroke="#6b7280" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ═══════════ AI PROVIDER LAYER ═══════════ -->
+  <rect x="20" y="210" width="430" height="190" rx="12" fill="#fdf1e7" stroke="#d97757" stroke-width="2"/>
+  <text x="40" y="238" font-size="15" font-weight="700" fill="#8a4a2f">AI provider layer — one wire vocabulary, BYOK</text>
+  <text x="40" y="256" font-size="11.5" fill="#8a4a2f">3 model tiers · prompt-cache breakpoints · token observability</text>
+
+  <rect x="40" y="268" width="190" height="116" rx="9" fill="#ffffff" stroke="#d97757" stroke-width="1.4"/>
+  <text x="135" y="290" font-size="13" font-weight="700" fill="#8a4a2f" text-anchor="middle">Anthropic</text>
+  <text x="135" y="308" font-size="11.5" fill="#374151" text-anchor="middle">Messages API</text>
+  <text x="135" y="326" font-size="11.5" fill="#374151" text-anchor="middle">cache_control breakpoints</text>
+  <text x="135" y="348" font-size="11" fill="#6b7280" text-anchor="middle">Haiku 4.5 · Sonnet 5</text>
+  <text x="135" y="364" font-size="11" fill="#6b7280" text-anchor="middle">Opus 4.8 (plan)</text>
+
+  <rect x="240" y="268" width="190" height="116" rx="9" fill="#ffffff" stroke="#d97757" stroke-width="1.4"/>
+  <text x="335" y="290" font-size="13" font-weight="700" fill="#8a4a2f" text-anchor="middle">OpenAI</text>
+  <text x="335" y="308" font-size="11.5" fill="#374151" text-anchor="middle">Responses + Chat Completions</text>
+  <text x="335" y="326" font-size="11.5" fill="#374151" text-anchor="middle">explicit cache breakpoints</text>
+  <text x="335" y="348" font-size="11" fill="#6b7280" text-anchor="middle">gpt-4.1-mini · 5.6-terra</text>
+  <text x="335" y="364" font-size="11" fill="#6b7280" text-anchor="middle">5.6-sol (plan + search)</text>
+
+  <!-- ═══════════ DATA LAYER ═══════════ -->
+  <rect x="470" y="210" width="410" height="190" rx="12" fill="#e9f0f7" stroke="#3b6ea5" stroke-width="2"/>
+  <text x="490" y="238" font-size="15" font-weight="700" fill="#2b4f76">Health data pipes</text>
+  <text x="490" y="256" font-size="11.5" fill="#2b4f76">idempotent upserts · cross-source dedup · fail-soft</text>
+
+  <rect x="490" y="268" width="180" height="54" rx="9" fill="#ffffff" stroke="#3b6ea5" stroke-width="1.4"/>
+  <text x="580" y="288" font-size="12.5" font-weight="700" fill="#2b4f76" text-anchor="middle">Google Health API v4</text>
+  <text x="580" y="304" font-size="11" fill="#374151" text-anchor="middle">OAuth PKCE · no bridge app</text>
+  <text x="580" y="316" font-size="10.5" fill="#6b7280" text-anchor="middle">sleep+stages · RHR/HRV · workouts</text>
+
+  <rect x="690" y="268" width="170" height="54" rx="9" fill="#ffffff" stroke="#3b6ea5" stroke-width="1.4"/>
+  <text x="775" y="290" font-size="12.5" font-weight="700" fill="#2b4f76" text-anchor="middle">Apple HealthKit</text>
+  <text x="775" y="308" font-size="11" fill="#374151" text-anchor="middle">steps · weight · 2nd pipe</text>
+
+  <rect x="490" y="336" width="370" height="48" rx="9" fill="#ffffff" stroke="#3b6ea5" stroke-width="1.4"/>
+  <text x="675" y="356" font-size="12.5" font-weight="700" fill="#2b4f76" text-anchor="middle">Fitbit Air</text>
+  <text x="675" y="372" font-size="11" fill="#374151" text-anchor="middle">24/7 HR · HRV · sleep stages · auto-detected exercise</text>
+
+  <line x1="675" y1="336" x2="600" y2="324" stroke="#6b7280" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- arrows to store -->
+  <line x1="235" y1="400" x2="330" y2="446" stroke="#6b7280" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="675" y1="400" x2="560" y2="446" stroke="#6b7280" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ═══════════ STORE + SYNC LAYER ═══════════ -->
+  <rect x="20" y="448" width="860" height="92" rx="12" fill="#f0ebf7" stroke="#6d5a9c" stroke-width="2"/>
+  <text x="40" y="476" font-size="15" font-weight="700" fill="#4c3f70">On-device store + sync</text>
+
+  <g font-size="12" font-weight="600" fill="#4c3f70" text-anchor="middle">
+    <rect x="40" y="488" width="200" height="40" rx="9" fill="#ffffff" stroke="#6d5a9c" stroke-width="1.4"/>
+    <text x="140" y="507">SwiftData (18+ models)</text>
+    <text x="140" y="521" font-weight="400" font-size="10.5">443-test suite guards every merge</text>
+
+    <rect x="256" y="488" width="200" height="40" rx="9" fill="#ffffff" stroke="#6d5a9c" stroke-width="1.4"/>
+    <text x="356" y="507">CloudKit private DB</text>
+    <text x="356" y="521" font-weight="400" font-size="10.5">personal-data mirror / backup</text>
+
+    <rect x="472" y="488" width="200" height="40" rx="9" fill="#ffffff" stroke="#6d5a9c" stroke-width="1.4"/>
+    <text x="572" y="507">CloudKit public DB</text>
+    <text x="572" y="521" font-weight="400" font-size="10.5">buddy sync · silent push</text>
+
+    <rect x="688" y="488" width="172" height="40" rx="9" fill="#ffffff" stroke="#6d5a9c" stroke-width="1.4"/>
+    <text x="774" y="507">WidgetKit</text>
+    <text x="774" y="521" font-weight="400" font-size="10.5">app-group data share</text>
+  </g>
+</svg>
