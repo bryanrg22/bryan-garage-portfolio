@@ -123,7 +123,7 @@ export const portfolioItems: PortfolioItem[] = [
         links: [{ label: 'GitHub', url: 'https://github.com/bryanrg22/ios-agent_automation' }],
         logo: '/images/hackathons/claudeLogo.webp',
         media: [
-          { type: 'video', src: '/videos/agentic_ios_demo.mp4', poster: '/images/projects/agentic/demo_poster.webp', caption: '"Message my recruiter…" — Claude drives the iPhone end-to-end' },
+          { type: 'video', src: '/videos/agentic_ios_demo.mp4', poster: '/images/projects/agentic/demo_poster.webp', caption: '"Open my most recent recruiter message on LinkedIn" — Claude drives the iPhone end-to-end' },
           { type: 'video', src: '/videos/agentic_ios_drag.mp4', caption: 'First autonomous multi-step drag on a physical iPhone' },
           { type: 'image', src: '/images/projects/agentic/optimization.svg', caption: 'Six instrumented runs of the same iPhone task: root-cause fixes took it from an 83s failure to a clean 23.9s, 4-step run — the theoretical minimum' },
           { type: 'image', src: '/images/projects/agentic/architecture.webp', caption: 'System architecture — Node.js agent ↔ XCTest bridge ↔ Swift companion app' },
@@ -161,9 +161,7 @@ export const portfolioItems: PortfolioItem[] = [
           { type: 'image', src: '/images/projects/lambdarim/architecture.svg', caption: 'System architecture — OCaml Monte Carlo over FFI, GCP pipelines, and a home-IP cron the sportsbooks can\'t block' },
           { type: 'image', src: '/images/projects/lambdarim/technique_probability.svg', caption: 'The three-layer probability stack: closed-form Poisson baseline, a 100k-draw Monte Carlo engine in OCaml over a ctypes FFI, and GARCH(1,1) volatility that flags when constant-sigma breaks' },
           { type: 'image', src: '/images/projects/lambdarim/numbers.svg', caption: 'Lambda Rim by the numbers — every figure traced to a file committed in the repo' },
-          { type: 'image', src: '/images/projects/lambdarim/dashboard.webp', caption: 'Player-prop dashboard with Monte Carlo confidence bands' },
           { type: 'image', src: '/images/projects/lambdarim/ocr_pipeline.svg', caption: 'Automated OCR → prediction pipeline' },
-          { type: 'image', src: '/images/projects/lambdarim/ui.webp', caption: 'Live odds aggregation across sportsbooks' },
         ],
       },
       {
@@ -220,7 +218,7 @@ export const portfolioItems: PortfolioItem[] = [
       },
       {
         name: "Bryan's Portfolio",
-        description: "The site you're standing in — my dad's auto body shop, rebuilt in 3D in your browser. Every object opens a chapter: the MacBook holds my projects, the boombox plays my music, the soccer ball actually kicks (try it). And it renders at zero frames per second while idle, so your battery doesn't pay for the vibes.",
+        description: "The site you're standing in — the auto body shop where my dad works, and where I worked at 15, rebuilt in 3D in your browser. Under the hood: 3D models compressed from 36 MB down to 14 MB, a hand-rolled physics engine (kick the soccer ball), and a renderer that idles at zero frames per second so your battery doesn't pay for the vibes.",
         achievement: "You're looking at it right now",
         techStack: ['React', 'TypeScript', 'Three.js', 'React Three Fiber', 'Vite', 'Tailwind CSS', 'GSAP', 'Zustand', 'Framer Motion'],
         links: [{ label: 'GitHub', url: 'https://github.com/bryanrg22/bryan-garage-portfolio' }],
