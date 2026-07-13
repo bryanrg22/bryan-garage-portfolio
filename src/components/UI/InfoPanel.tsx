@@ -156,8 +156,22 @@ function SkillsContent({ categories }: { categories: SkillCategory[] }) {
   )
 }
 
-/** Single media item — video (muted autoplay) or image */
+/** Single media item — video (muted autoplay), YouTube embed, or image */
 function MediaItem({ item, className }: { item: ProjectMedia; className?: string }) {
+  if (item.type === 'youtube') {
+    return (
+      <iframe
+        key={item.src}
+        src={`https://www.youtube-nocookie.com/embed/${item.src}?rel=0`}
+        title={item.caption}
+        className={className}
+        style={{ aspectRatio: '16 / 9', border: 0 }}
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+        loading="lazy"
+      />
+    )
+  }
   if (item.type === 'video') {
     return (
       <video
@@ -233,7 +247,10 @@ function ProjectShowcase({ project, jobIndex }: { project: ProjectEntry; jobInde
         </div>
 
         <div className="relative flex max-h-[58vh] min-h-[240px] items-center justify-center overflow-hidden rounded-lg bg-black/30">
-          <MediaItem item={current} className="max-h-[58vh] w-auto max-w-full rounded-lg object-contain" />
+          <MediaItem
+            item={current}
+            className={current.type === 'youtube' ? 'w-full max-h-[58vh] rounded-lg' : 'max-h-[58vh] w-auto max-w-full rounded-lg object-contain'}
+          />
           {/* Expand to lightbox — native video fullscreen is blocked in some
               embedded browsers, so we roll our own overlay */}
           <button

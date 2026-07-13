@@ -28,7 +28,8 @@ export interface SkillCategory {
 }
 
 export interface ProjectMedia {
-  type: 'video' | 'image'
+  type: 'video' | 'image' | 'youtube'
+  /** file path for video/image; the YouTube video ID for youtube */
   src: string
   poster?: string
   caption: string
@@ -179,10 +180,9 @@ export const portfolioItems: PortfolioItem[] = [
           { type: 'image', src: '/images/projects/swerve/architecture.svg', caption: 'System architecture — Hugo the LangChain agent, NetworkX BOM graph, and Slack alerting' },
           { type: 'image', src: '/images/projects/swerve/agent_loop.svg', caption: "Hugo's AgentExecutor: a gpt-3.5-turbo router dispatching 6 Firestore-grounded tools, with nested gpt-4/gpt-4o calls and Slack alert output" },
           { type: 'image', src: '/images/projects/swerve/technique_bom.svg', caption: 'The NetworkX bill-of-materials DiGraph: edges colored by stock health, feeding parts_summary.csv into Hugo\'s reasoning tools' },
-          { type: 'image', src: '/images/projects/swerve/ui_1.webp', caption: "Hugo — the event-driven procurement agent's live dashboard" },
-          { type: 'image', src: '/images/projects/swerve/ui_2.webp', caption: 'Inventory intelligence with reorder recommendations' },
-          { type: 'image', src: '/images/projects/swerve/ui_3.webp', caption: 'Audit-traceable agent reasoning per alert' },
-          { type: 'image', src: '/images/projects/swerve/ui_4.webp', caption: 'Real-time Slack alerts from the CSV/CAD ingestion pipeline' },
+          { type: 'image', src: '/images/projects/swerve/hugo_live.webp', caption: 'Hugo running live — dashboard and agent code side by side during the Dryft collaboration' },
+          { type: 'image', src: '/images/projects/swerve/team_win.webp', caption: '1st Place — Dryft Challenge @ Caltech HackTech' },
+          { type: 'image', src: '/images/projects/swerve/neo_whiteboard.webp', caption: "Neo's SF office whiteboard — the post-hackathon visit Dryft invited us to" },
         ],
       },
       {
@@ -196,7 +196,7 @@ export const portfolioItems: PortfolioItem[] = [
         ],
         logo: '/images/projects/cleansweeplogo.png',
         media: [
-          { type: 'video', src: '/videos/cleansweep_demo.mp4', poster: '/images/projects/cleansweep/demo_poster.webp', caption: 'Application demo — computer-vision waste classification in action' },
+          { type: 'youtube', src: 'iU_6u-RygyQ', caption: 'Full demo — the complete CleanSweep walkthrough' },
           { type: 'image', src: '/images/projects/cleansweep/architecture.svg', caption: 'System architecture — OpenCV fill detection on a Pi rig, Terraform-provisioned AWS, and a Databricks route engine' },
           { type: 'image', src: '/images/projects/cleansweep/technique_sensing.svg', caption: 'How CleanSweep senses a bin: OpenCV HSV mask + contour fill detection, 3 shots averaged into a 0–5 level, mirrored on Pi GPIO LED bars' },
           { type: 'image', src: '/images/projects/cleansweep/technique_routing.svg', caption: 'Route planning: 100 Distance Matrix calls build a 10×10 travel-time matrix, RandomForest flags priority bins, nearest-neighbor orders the 24-minute route' },
