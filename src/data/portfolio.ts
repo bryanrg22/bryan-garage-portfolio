@@ -104,7 +104,7 @@ export const portfolioItems: PortfolioItem[] = [
     title: 'Projects',
     subtitle: "What I've Built",
     description:
-      'Agentic Automation on iOS — voice-controlled Claude agent that operates a real iPhone for blind and low-vision users. 3rd place at the Claude Builder Hackathon @ UCLA. Basis — AI-powered cost segregation. Co-founder & lead dev. Multi-agent AI using YOLOv8, CLIP, and OpenAI Vision for automated building component classification. Won LavaLab Demo Night (Best Traction). Lambda Rim — full-stack NBA fantasy analytics. Poisson distributions, Monte Carlo sims, GARCH volatility forecasting. Turned $10 into $3,000 with a 78%+ win rate. Swerve — agentic AI procurement co-pilot, 1st place Dryft Challenge at Caltech. CleanSweep — smart waste management with OpenCV, won Best Use of Terraform at Harvard. Nosu — AI video-to-soundtrack generator built at HackMIT 2025, multi-model vision pipeline with YOLO, BLIP, VideoMAE, and Suno AI music generation.',
+      'Seven builds, each with the diagrams and demos to prove it: an AI agent that drives a real iPhone by voice, a tax platform with paying customers, a betting model with receipts, a procurement co-pilot, a fleet of smart trash bins, a video-to-soundtrack generator — and the 3D garage you\'re standing in.',
     tags: ['Claude', 'Next.js', 'TypeScript', 'PyTorch', 'YOLOv8', 'CLIP', 'Firebase', 'Flask', 'Docker'],
     links: [
       { label: 'Agentic iOS', url: 'https://github.com/bryanrg22/ios-agent_automation' },
@@ -117,7 +117,7 @@ export const portfolioItems: PortfolioItem[] = [
     projectEntries: [
       {
         name: 'Agentic Automation on iOS',
-        description: 'Voice-controlled Claude Sonnet 4.6 agent that drives a real iPhone. Hold the Action Button, speak a task, and Claude takes over with vision + tool calling over ~22 tools (tap, type, scroll, swipe, openApp, …). AVSpeechSynthesizer narrates every step so blind and low-vision users can operate any iOS app, not just Apple-native ones. Six composed optimizations — prompt caching, rolling summaries, direct XCTest HTTP, 50× JPEG screenshot compression, stuck detection, and CoALA-style memory — cut a representative task from 83s failed → 23.9s success. Node.js agent drives the phone over USB; a Swift companion app paints Dynamic Island progress.',
+        description: 'Hold the iPhone\'s Action Button, say what you need, and Claude does it on the real phone — tapping, typing, and swiping through any app while narrating every step out loud. Built so blind and low-vision users can operate the apps everyone else takes for granted. Six rounds of optimization took the same task from an 83-second failure to a clean 24-second success — the full story is in the images.',
         achievement: '3rd Place — Claude Builder Hackathon @ UCLA',
         techStack: ['Claude Sonnet 4.6', 'Node.js', 'Swift', 'XCTest', 'Maestro', 'AVSpeechSynthesizer', 'Dynamic Island', 'iOS Shortcuts', 'Prompt Caching', 'CoALA Memory'],
         links: [{ label: 'GitHub', url: 'https://github.com/bryanrg22/ios-agent_automation' }],
@@ -133,7 +133,7 @@ export const portfolioItems: PortfolioItem[] = [
       },
       {
         name: 'Basis',
-        description: 'Award-winning agentic AI platform for cost segregation. Built a full-stack workflow with LangGraph and a multi-agent vision pipeline (Grounding DINO → SAM2 → GPT-5.2). Features an IRS-grounded Agentic RAG system combining BM25 and FAISS search with citation-backed results. 2 paying customers from top-5 firms.',
+        description: 'AI that does cost segregation — the tax study that lets building owners deduct faster — in hours instead of weeks. Agents read the appraisal, look at photos of every room, classify what they see against IRS rules, and back every claim with a citation an engineer can check. No evidence, no claim. Two firms already pay for it.',
         achievement: "Won LavaLab Demo Night F'25 (Best Traction)",
         techStack: ['LangGraph', 'Python', 'GPT-5.2', 'Grounding DINO', 'SAM2', 'FAISS', 'BM25', 'MCP', 'React', 'TypeScript'],
         links: [{ label: 'GitHub', url: 'https://github.com/bryanrg22/Basis_Info' }],
@@ -149,7 +149,7 @@ export const portfolioItems: PortfolioItem[] = [
       },
       {
         name: 'Lambda Rim',
-        description: 'Quantitative fantasy sports analytics platform. Built a probabilistic forecasting pipeline with Poisson modeling, 100k-run Monte Carlo simulation, and GARCH(1,1) volatility forecasting for NBA player props. Includes a cross-platform arbitrage engine aggregating odds from 3+ sportsbooks to surface +EV opportunities, plus automated data pipelines pulling live stats, injury reports, and betting lines.',
+        description: 'Math against the sportsbooks. Every NBA player prop becomes a probability problem — modeled, simulated 100,000 times, and stress-tested for volatility — then compared against the betting lines from five books. It only plays when the numbers say the edge is real. The receipts are in the images.',
         achievement: '78% win rate, $10 → $3,000 profit',
         techStack: ['React', 'Flask', 'Python', 'Monte Carlo', 'GARCH', 'Poisson', 'Firestore', 'NBA API', 'Cloud Scheduler'],
         links: [
@@ -168,7 +168,7 @@ export const portfolioItems: PortfolioItem[] = [
       },
       {
         name: 'Swerve',
-        description: "Agentic procurement platform built at Caltech's HackTech. Features 'Hugo,' an event-driven LangChain agent that routes procurement queries through OpenAI models with intent classification and multi-step reasoning to generate audit-traceable alerts and reorder recommendations. Includes CSV/CAD ingestion into Firestore with Slack automation for real-time alerts. Invited by Dryft to SF Neo offices for post-hackathon collaboration.",
+        description: "A procurement co-pilot for hardware companies. Hugo — the AI agent at its core — watches inventory, understands the entire bill of materials, answers questions in plain English, and pings Slack before a part shortage becomes a production stop. Built in a weekend at Caltech; Dryft liked it enough to invite us to their SF offices afterward.",
         achievement: '1st Place Dryft Challenge @ Caltech HackTech',
         techStack: ['LangChain', 'Python', 'Flask', 'OpenAI', 'Firestore', 'Slack API', 'MapLibre GL', 'React'],
         links: [
@@ -187,7 +187,7 @@ export const portfolioItems: PortfolioItem[] = [
       },
       {
         name: 'CleanSweep',
-        description: 'Smart waste management system with computer vision for waste classification and optimized collection routing.',
+        description: 'Trash bins that report how full they are. A camera and computer vision watch each bin, a Raspberry Pi shows the fill level on LED bars, and a route engine plans the shortest truck run that only visits bins that actually need emptying. Cities burn fuel collecting half-empty bins — this fixes that.',
         achievement: 'Won Best Use of Terraform @ Harvard',
         techStack: ['OpenCV', 'Python', 'Terraform', 'React', 'Flask', 'Firebase'],
         links: [
@@ -204,7 +204,7 @@ export const portfolioItems: PortfolioItem[] = [
       },
       {
         name: 'Nosu',
-        description: 'AI video-to-soundtrack generator built at HackMIT 2025. Multi-model vision pipeline runs YOLO v5, BLIP, and VideoMAE locally to analyze objects, captions, and scene actions per frame. Outputs are fused with confidence-weighted scoring and distilled by GPT into a music prompt for Suno AI. MoviePy merges the generated track back into a shareable MP4.',
+        description: "Give it a silent video, get it back with a soundtrack that fits. Three vision models watch the footage while an audio model reads the mood — everything the machine \"sees\" becomes vectors, the vectors become one description of the scene, and an AI composer writes music to match it, moment by moment. It doesn't slap a song on your video; it scores it.",
         achievement: 'Built at HackMIT 2025',
         techStack: ['FastAPI', 'Python', 'YOLOv5', 'BLIP', 'VideoMAE', 'CLAP', 'OpenAI', 'Suno AI', 'React', 'Firebase'],
         links: [
@@ -220,7 +220,7 @@ export const portfolioItems: PortfolioItem[] = [
       },
       {
         name: "Bryan's Portfolio",
-        description: 'This very website. It is an immersive 3D portfolio built as an interactive auto body garage scene. Visitors explore projects, experience, and skills by clicking on garage objects with smooth camera fly-ins.',
+        description: "The site you're standing in — my dad's auto body shop, rebuilt in 3D in your browser. Every object opens a chapter: the MacBook holds my projects, the boombox plays my music, the soccer ball actually kicks (try it). And it renders at zero frames per second while idle, so your battery doesn't pay for the vibes.",
         achievement: "You're looking at it right now",
         techStack: ['React', 'TypeScript', 'Three.js', 'React Three Fiber', 'Vite', 'Tailwind CSS', 'GSAP', 'Zustand', 'Framer Motion'],
         links: [{ label: 'GitHub', url: 'https://github.com/bryanrg22/bryan-garage-portfolio' }],
