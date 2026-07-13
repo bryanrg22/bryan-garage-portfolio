@@ -109,7 +109,7 @@ export const portfolioItems: PortfolioItem[] = [
       'Seven builds, each with the diagrams and demos to prove it: an AI agent that drives a real iPhone by voice, a tax platform with paying customers, a betting model with receipts, a procurement co-pilot, a fleet of smart trash bins, a video-to-soundtrack generator — and the 3D garage you\'re standing in.',
     tags: ['Claude', 'Next.js', 'TypeScript', 'PyTorch', 'YOLOv8', 'CLIP', 'Firebase', 'Flask', 'Docker'],
     links: [
-      { label: 'Agentic iOS', url: 'https://github.com/bryanrg22/ios-agent_automation' },
+      { label: 'Agentic iOS', url: 'https://github.com/bryanrg22/ios-agent_automation_info' },
       { label: 'Basis', url: 'https://github.com/bryanrg22/Basis_Info' },
       { label: 'Lambda Rim', url: 'https://github.com/bryanrg22/lambda-rim' },
       { label: 'Swerve', url: 'https://devpost.com/software/swerve-gqmenk' },
@@ -123,7 +123,7 @@ export const portfolioItems: PortfolioItem[] = [
         achievement: '3rd Place — Claude Builder Hackathon @ UCLA',
         category: 'AI Agents',
         techStack: ['Claude Sonnet 4.6', 'Node.js', 'Swift', 'XCTest', 'Maestro', 'AVSpeechSynthesizer', 'Dynamic Island', 'iOS Shortcuts', 'Prompt Caching', 'CoALA Memory'],
-        links: [{ label: 'GitHub', url: 'https://github.com/bryanrg22/ios-agent_automation' }],
+        links: [{ label: 'GitHub', url: 'https://github.com/bryanrg22/ios-agent_automation_info' }],
         logo: '/images/hackathons/claudeLogo.webp',
         media: [
           { type: 'video', src: '/videos/agentic_ios_demo.mp4', poster: '/images/projects/agentic/demo_poster.webp', caption: '"Open my most recent recruiter message on LinkedIn" — Claude drives the iPhone end-to-end' },
@@ -273,7 +273,7 @@ export const portfolioItems: PortfolioItem[] = [
       'My first projects were mediocre. I flew across the country and learned from failure. Then I won at Harvard (CleanSweep — Best Use of Terraform). Then Caltech (Swerve — 1st place Dryft Challenge). Then UCLA (Agentic Automation on iOS — 3rd place at the Claude Builder Hackathon). AstroHacks Gold Medalist. LavaLab Demo Night Winner (Best Traction). SkillsUSA State Bronze — 3rd best engineering project in California. FIRST Robotics Regional Semifinalist. MIT, Stanford TreeHacks, Princeton, Yale, UPenn, Berkeley — I showed up to all of them.',
     tags: ['UCLA', 'Harvard', 'Caltech', 'MIT', 'Stanford', 'Princeton', 'Yale', 'UPenn'],
     links: [
-      { label: 'Agentic iOS (UCLA Winner)', url: 'https://github.com/bryanrg22/ios-agent_automation' },
+      { label: 'Agentic iOS (UCLA Winner)', url: 'https://github.com/bryanrg22/ios-agent_automation_info' },
       { label: 'Swerve (Caltech Winner)', url: 'https://devpost.com/software/swerve-gqmenk' },
       { label: 'CleanSweep (Harvard Winner)', url: 'https://devpost.com/software/cleansweep-tjq36w' },
       { label: 'DevPost Profile', url: 'https://devpost.com/bryanrg22' },
