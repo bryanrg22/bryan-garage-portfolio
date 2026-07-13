@@ -245,7 +245,7 @@ export const portfolioItems: PortfolioItem[] = [
       },
       {
         name: "Bryan's Portfolio",
-        description: "The site you're standing in — the auto body shop where my dad works, and where I worked at 15, rebuilt in 3D in your browser. Under the hood: 3D models compressed from 36 MB down to 14 MB, a hand-rolled physics engine (kick the soccer ball), and a renderer that idles at zero frames per second so your battery doesn't pay for the vibes.",
+        description: "The site you're standing in — the auto body shop where my dad works, and where I worked at 15, rebuilt in 3D in your browser. Under the hood: 3D models compressed from 36 MB down to 14 MB, a hand-rolled physics engine (kick the soccer ball), and a renderer that idles at zero frames per second — a 3D site your battery barely notices.",
         achievement: "You're looking at it right now",
         category: '3D Web',
         techStack: ['React', 'TypeScript', 'Three.js', 'React Three Fiber', 'Vite', 'Tailwind CSS', 'GSAP', 'Zustand', 'Framer Motion'],
@@ -304,7 +304,7 @@ export const portfolioItems: PortfolioItem[] = [
     title: 'The Beautiful Game',
     subtitle: 'Academy Soccer & Varsity Captain',
     description:
-      "Soccer taught me everything that matters: how to lead, how to compete, how to read patterns in chaos, and to keep pushing no matter how hard it gets. These are the same instincts I now use to debug code at 2 AM.\n\nPlayed Academy Soccer.\nCaptain of my High School Soccer team for 3 years.\nMade High School history by taking them the farthest to CIF yet.\n\nFun Fact: I scored against Barcelona's Academy!",
+      "Academy soccer since I was a kid. Three years captain of my high school team — we made the deepest CIF playoff run in school history.\n\nAnd yes: I scored against Barcelona's academy.\n\nThat's why there's a ball in this garage — go ahead, kick it.",
     tags: ['Academy Soccer', 'Varsity Captain', 'CIF'],
     position: [0.5, 0.25, -0.7],
     color: '#F5F0EB',
@@ -376,7 +376,7 @@ export const portfolioItems: PortfolioItem[] = [
       { company: 'Susquehanna International Group', role: 'Discovery Day for First Year Students', date: 'Feb 2025', logo: '/images/experience/sig_logo.jpeg', category: 'Quant' },
       { company: 'Y Combinator', role: 'Startup School 2026', date: 'Jul 2026', description: "YC's in-person Startup School — San Francisco, CA", logo: '/images/experience/ycombinator_logo.svg', category: 'Entrepreneurship' },
       { company: 'LavaLab', role: 'Software Developer', date: 'Jul 2024 – Present', description: "USC's Premier Startup Incubator — LavaLab's Best Traction F25", logo: '/images/awards/logos/lavalabLogo.jpg', category: 'Entrepreneurship' },
-      { company: 'TroyLabs', role: 'Software Developer', date: 'Jul 2024 – Present', description: "USC's Premier Startup Accelerator — Building the tech side of the next generation of startups", logo: '/images/experience/troy_labs.png', category: 'Entrepreneurship' },
+      { company: 'TroyLabs', role: 'Tech Lead', date: 'Jul 2024 – Present', description: "USC's premier startup accelerator — reviewing portfolio startups' AI and engineering work, advising founders, and building the weekly AI curriculum", logo: '/images/experience/troy_labs.png', category: 'Entrepreneurship' },
       { company: 'Quant SC', role: 'Software Developer', date: 'Jul 2024 – Present', description: "Software Developer for USC's Premier Quant Club", logo: '/images/orgs/quantscLogo.ico', category: 'Leadership' },
       { company: 'FIRST Robotics', role: 'Lead Developer', date: '2023–2024', description: 'Regional Semifinalist — Top 5 out of 32 Teams', logo: '/images/experience/firstLogo.jpeg', category: 'Leadership' },
       { company: 'SkillsUSA', role: 'Team Leader', date: '2023–2024', description: 'State Bronze Medalist — 3rd Best Engineering Project in California', logo: '/images/experience/skillsusaLogo.png', category: 'Leadership' },
@@ -427,11 +427,8 @@ export const portfolioItems: PortfolioItem[] = [
         dates: 'Jun 2024 – May 2028',
         details: [
           'USC Viterbi School of Engineering — Computer Science',
-          'Software Developer @ QuantSC',
-          'Software Developer / Mentor @ LavaLab',
-          'Software Developer @ TroyLabs',
+          "Dev roles across USC's startup + quant scene — LavaLab, TroyLabs (Tech Lead), QuantSC",
           'Study Abroad: Berlin, Germany — Engineering in Society',
-          'Relevant Coursework: Data Structures, Algorithms, Object-Oriented Programming, Embedded Systems, Discrete Mathematics, Linear Algebra',
         ],
         logo: '/images/experience/uscviterbiLogo.jpg',
       },
@@ -456,7 +453,7 @@ export const portfolioItems: PortfolioItem[] = [
     title: 'What I Call Home',
     subtitle: 'Born & Raised in California',
     description:
-      "Born and raised in Azusa, California. Lived here my whole life. I've always been an LA boy — the hustle, the culture, the energy. California shaped who I am, and no matter where I go, LA is always home.",
+      "Born and raised in Azusa, California — a small city right up against the San Gabriel Mountains, east of LA. Everything on this site traces back there: the shop, the soccer, the work ethic. Wherever I end up, that's home.",
     gallery: [
       '/images/home/azusa_greetings_sign.jpg',
       '/images/home/azusa_ave.webp',
@@ -473,7 +470,7 @@ export const portfolioItems: PortfolioItem[] = [
     title: 'Mi Cultura',
     subtitle: 'Mexican-American & Proud',
     description:
-      "First-generation Latino. Son of Mexican parents. My parents came to California with nothing and built a life from scratch. Their work ethic, sacrifice, and culture shaped everything I am. Being Mexican-American isn't just part of my identity — it's the foundation of it.",
+      "First-generation. Son of Mexican parents who came to California with nothing and built a life from scratch. Their work ethic raised me; their sacrifice paid for my shot. That's who I work this hard for.",
     tags: ['Mexican-American', 'First-Generation', 'Azusa', 'California'],
     gallery: ['/images/parents.webp'],
     position: [-3.5, 3.5, -2.85],
@@ -487,7 +484,7 @@ export const portfolioItems: PortfolioItem[] = [
     title: 'Where It All Started',
     subtitle: 'Brea Auto Body Inc. — Since 1979',
     description:
-      "I learned engineering before I ever wrote code — right here in my dad's shop. At 15, the COVID-19 pandemic hit and I worked alongside him to support our family.\n\nOut the door before 6 AM, back home after 7 PM — full days in the shop while doing school virtually. That's where I learned what real work looks like.",
+      "My dad works at Brea Auto Body, a collision shop running since 1979. When COVID hit, I was 15 and school went virtual — so I went to work with him. Out the door before 6 AM, home after 7 PM, classes from the break room in between.\n\nThe garage you're standing in is that shop.",
     tags: ['First-Gen', 'Family Business', 'Problem Solver', "USC BS+MS '28"],
     links: [
       { label: 'LinkedIn', url: 'https://www.linkedin.com/in/bryanrg22' },
