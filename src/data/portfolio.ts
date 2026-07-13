@@ -128,6 +128,8 @@ export const portfolioItems: PortfolioItem[] = [
         media: [
           { type: 'video', src: '/videos/agentic_ios_demo.mp4', poster: '/images/projects/agentic/demo_poster.webp', caption: '"Open my most recent recruiter message on LinkedIn" — Claude drives the iPhone end-to-end' },
           { type: 'video', src: '/videos/agentic_ios_drag.mp4', caption: 'First autonomous multi-step drag on a physical iPhone' },
+          { type: 'image', src: '/images/projects/agentic/dynamic_island.webp', caption: 'Live on a real iPhone — the Swift companion app paints the agent\'s progress (step 4 of 25, 19.3s) into the Dynamic Island as Claude works' },
+          { type: 'image', src: '/images/projects/agentic/human_in_loop.webp', caption: 'Human-in-the-loop — before sending anything, the agent stops and asks: "I found a conversation with Kenny… send it?"' },
           { type: 'image', src: '/images/projects/agentic/optimization.svg', caption: 'Six instrumented runs of the same iPhone task: root-cause fixes took it from an 83s failure to a clean 23.9s, 4-step run — the theoretical minimum' },
           { type: 'image', src: '/images/projects/agentic/architecture.webp', caption: 'System architecture — Node.js agent ↔ XCTest bridge ↔ Swift companion app' },
           { type: 'image', src: '/images/projects/agentic/technique_memory.svg', caption: "The agent's CoALA-style memory: three on-device stores feed an XML-tagged, prompt-cached system prompt, while a rolling summary keeps each step's context to a single screenshot" },
