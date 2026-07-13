@@ -161,9 +161,13 @@ export const portfolioItems: PortfolioItem[] = [
         logo: '/images/projects/sprout_logo.png',
         media: [
           { type: 'image', src: '/images/projects/sprout/architecture.svg', caption: 'System architecture — one AI abstraction, two providers, and a template-first cost ladder' },
-          { type: 'image', src: '/images/projects/sprout/technique_tiering.svg', caption: 'Right-sized models — the daily features run on the cheap tier; the expensive model is reserved for a few calls ever' },
+          { type: 'image', src: '/images/projects/sprout/today-dashboard.webp', caption: 'Living on my phone — day 28 of the streak, real calorie budget, one proactive note per day' },
+          { type: 'image', src: '/images/projects/sprout/vita-tool-call.webp', caption: 'Vita logging water through real tool calls — validated before anything is written' },
           { type: 'image', src: '/images/projects/sprout/agent_loop.svg', caption: "Vita's tool loop — validation before execution, confirm-or-undo, and the model always told what really happened" },
+          { type: 'image', src: '/images/projects/sprout/technique_tiering.svg', caption: 'Right-sized models — the daily features run on the cheap tier; the expensive model is reserved for a few calls ever' },
           { type: 'image', src: '/images/projects/sprout/technique_cost.svg', caption: 'Cost engineering, measured — 82% prompt-cache hits took a coach turn from 1.7¢ to 0.45¢' },
+          { type: 'image', src: '/images/projects/sprout/sleep-recovery.webp', caption: 'Real Fitbit data — sleep stages, resting HR, and HRV vs my own 14-day baseline' },
+          { type: 'image', src: '/images/projects/sprout/progress-trend.webp', caption: "The AI reading the data honestly — training is up but the scale is moving the wrong way for a gain goal, so it says so" },
         ],
       },
       {
@@ -351,7 +355,6 @@ export const portfolioItems: PortfolioItem[] = [
     ],
     experienceEntries: [
       { company: 'NVIDIA', role: 'Software Engineering Intern', date: 'May 2026 – Aug 2026', description: 'Building Agentic AI systems — Summer 2026', logo: '/images/experience/Nvidia_logo.svg.png', category: 'Tech' },
-      { company: 'Datadog', role: 'DataPUPS 2026', date: 'Jun 23–24, 2026', description: "Selected for Datadog's invite-only Emerging Talent summit — two days of engineering sessions and networking at Datadog HQ in NYC", logo: '/images/experience/datadog_logo.png', category: 'Tech' },
       { company: 'Hudson River Trading', role: 'Undergraduate Fellow', date: 'May 2026', logo: '/images/experience/hrt_logo.png', category: 'Quant', subRoles: [
         { role: 'Inside HRT', date: 'May 2026', description: 'Algorithm Development (Quantitative Research) Track' },
       ] },
@@ -367,10 +370,11 @@ export const portfolioItems: PortfolioItem[] = [
         { role: "FOCUS '25", date: 'May 2025', description: 'Selected as 1 of 14' },
         { role: "UNBOXED '24", date: 'Jul 2024', description: 'Selected as 1 of 37' },
       ] },
-      { company: 'The D. E. Shaw Group', role: 'Undergraduate Fellow', date: 'Sep 2025', description: '3 Day program at D. E. Shaw\'s NYC office (Connect Fellowship)', logo: '/images/experience/deshaw.avif', category: 'Quant' },
+      { company: 'Datadog', role: 'DataPUPS 2026', date: 'Jun 2026', description: "Invite-only Emerging Talent summit at Datadog HQ, NYC — 1 of 30 selected from 900+ applicants", logo: '/images/experience/datadog_logo.png', category: 'Tech' },
+      { company: 'The D. E. Shaw Group', role: 'Undergraduate Fellow', date: 'Sep 2025', description: "Connect Fellowship at D. E. Shaw's NYC office", logo: '/images/experience/deshaw.avif', category: 'Quant' },
       { company: 'Two Sigma', role: 'New Seekers Summit', date: 'Feb 2025', logo: '/images/orgs/twosigmaLogo.png', category: 'Quant' },
       { company: 'Susquehanna International Group', role: 'Discovery Day for First Year Students', date: 'Feb 2025', logo: '/images/experience/sig_logo.jpeg', category: 'Quant' },
-      { company: 'Y Combinator', role: 'Startup School 2026', date: 'Jul 25–26, 2026', description: "Two-day in-person gathering of the most ambitious technical builders in the world — San Francisco, CA", logo: '/images/experience/ycombinator_logo.svg', category: 'Entrepreneurship' },
+      { company: 'Y Combinator', role: 'Startup School 2026', date: 'Jul 2026', description: "YC's in-person Startup School — San Francisco, CA", logo: '/images/experience/ycombinator_logo.svg', category: 'Entrepreneurship' },
       { company: 'LavaLab', role: 'Software Developer', date: 'Jul 2024 – Present', description: "USC's Premier Startup Incubator — LavaLab's Best Traction F25", logo: '/images/awards/logos/lavalabLogo.jpg', category: 'Entrepreneurship' },
       { company: 'TroyLabs', role: 'Software Developer', date: 'Jul 2024 – Present', description: "USC's Premier Startup Accelerator — Building the tech side of the next generation of startups", logo: '/images/experience/troy_labs.png', category: 'Entrepreneurship' },
       { company: 'Quant SC', role: 'Software Developer', date: 'Jul 2024 – Present', description: "Software Developer for USC's Premier Quant Club", logo: '/images/orgs/quantscLogo.ico', category: 'Leadership' },
