@@ -350,13 +350,13 @@ export const portfolioItems: PortfolioItem[] = [
     title: 'Experience',
     subtitle: "Where I've Worked",
     description:
-      "NVIDIA — Software Engineering Intern (Summer 2026), building agentic AI. Datadog — DataPUPS 2026 (Emerging Talent, NYC). Jane Street — FOCUS '25 (1 of 14) and UNBOXED '24 (1 of 37). Hudson River Trading — Algorithm Development (Quantitative Research) Track. D.E. Shaw — Connect Fellowship. USC ISI HUMANS Lab — Research Assistant across two labs. FIRST Robotics — Lead Developer, Regional Semifinalist. SkillsUSA — Team Leader, State Bronze Medalist.",
-    tags: ['NVIDIA', 'Datadog', 'Jane Street', 'HRT', 'D.E. Shaw', 'USC ISI', 'FIRST Robotics'],
+      "NVIDIA — Software Engineering Intern (Summer 2026), building agentic AI. OpenAI — OpenAI Connect. Datadog — DataPUPS 2026 (Emerging Talent, NYC). Jane Street — FOCUS '25 (1 of 14) and UNBOXED '24 (1 of 37). Hudson River Trading — Algorithm Development (Quantitative Research) Track. D.E. Shaw — Connect Fellowship. USC ISI HUMANS Lab — Research Assistant across two labs. FIRST Robotics — Lead Developer, Regional Semifinalist. SkillsUSA — Team Leader, State Bronze Medalist.",
+    tags: ['NVIDIA', 'OpenAI', 'Datadog', 'Jane Street', 'HRT', 'D.E. Shaw', 'USC ISI', 'FIRST Robotics'],
     links: [
       { label: 'LinkedIn', url: 'https://www.linkedin.com/in/bryanrg22' },
     ],
     experienceEntries: [
-      { company: 'NVIDIA', role: 'Software Engineering Intern', date: 'May 2026 – Aug 2026', description: 'Building Agentic AI systems — Summer 2026', logo: '/images/experience/Nvidia_logo.svg.png', category: 'Tech' },
+      { company: 'NVIDIA', role: 'Software Engineering Intern', date: 'May 2026 – Aug 2026', description: 'Building Agentic AI systems — Summer 2026', logo: '/images/experience/nvidia_logo.png', category: 'Tech' },
       { company: 'Hudson River Trading', role: 'Undergraduate Fellow', date: 'May 2026', logo: '/images/experience/hrt_logo.png', category: 'Quant', subRoles: [
         { role: 'Inside HRT', date: 'May 2026', description: 'Algorithm Development (Quantitative Research) Track' },
       ] },
@@ -372,6 +372,7 @@ export const portfolioItems: PortfolioItem[] = [
         { role: "FOCUS '25", date: 'May 2025', description: 'Selected as 1 of 14' },
         { role: "UNBOXED '24", date: 'Jul 2024', description: 'Selected as 1 of 37' },
       ] },
+      { company: 'OpenAI', role: 'OpenAI Connect', date: 'Jul 2026', logo: '/images/experience/chatgptLogo.png', category: 'Tech' },
       { company: 'Datadog', role: 'DataPUPS 2026', date: 'Jun 2026', description: "Invite-only Emerging Talent summit at Datadog HQ, NYC — 1 of 30 selected from 900+ applicants", logo: '/images/experience/datadog_logo.png', category: 'Tech' },
       { company: 'The D. E. Shaw Group', role: 'Undergraduate Fellow', date: 'Sep 2025', description: "Connect Fellowship at D. E. Shaw's NYC office", logo: '/images/experience/deshaw.avif', category: 'Quant' },
       { company: 'Two Sigma', role: 'New Seekers Summit', date: 'Feb 2025', logo: '/images/orgs/twosigmaLogo.png', category: 'Quant' },
