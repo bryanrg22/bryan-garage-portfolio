@@ -350,28 +350,21 @@ export const portfolioItems: PortfolioItem[] = [
     title: 'Experience',
     subtitle: "Where I've Worked",
     description:
-      "NVIDIA — Software Engineering Intern (Summer 2026), building agentic AI. SUMMIT — Software Developer at an AI search optimization startup; built the AWS Lambda + SQS snapshot pipeline and the multi-provider LLM layer. OpenAI — OpenAI Connect. Datadog — DataPUPS 2026 (Emerging Talent, NYC). Jane Street — FOCUS '25 (1 of 14) and UNBOXED '24 (1 of 37). Hudson River Trading — Algorithm Development (Quantitative Research) Track. D.E. Shaw — Connect Fellowship. USC ISI HUMANS Lab — Research Assistant across two labs. FIRST Robotics — Lead Developer, Regional Semifinalist. SkillsUSA — Team Leader, State Bronze Medalist.",
+      "NVIDIA — Software Engineering Intern (Summer 2026), building agentic AI. SUMMIT — Software Developer at an AI search startup; built the AWS Lambda + SQS pipeline and multi-provider LLM layer. OpenAI — OpenAI Connect. Datadog — DataPUPS 2026 (Emerging Talent, NYC). Jane Street — FOCUS '25 (1 of 14) and UNBOXED '24 (1 of 37). Hudson River Trading — Algorithm Development (Quantitative Research) Track. D.E. Shaw — Connect Fellowship. USC ISI HUMANS Lab — Research Assistant across two labs. FIRST Robotics — Lead Developer, Regional Semifinalist. SkillsUSA — Team Leader, State Bronze Medalist.",
     tags: ['NVIDIA', 'SUMMIT', 'AWS', 'OpenAI', 'Datadog', 'Jane Street', 'HRT', 'D.E. Shaw', 'USC ISI'],
     links: [
       { label: 'LinkedIn', url: 'https://www.linkedin.com/in/bryanrg22' },
     ],
     experienceEntries: [
       { company: 'NVIDIA', role: 'Software Engineering Intern', date: 'May 2026 – Aug 2026', description: 'Building Agentic AI systems — Summer 2026', logo: '/images/experience/nvidia_logo.png', category: 'Tech' },
-      { company: 'SUMMIT', role: 'Software Developer', date: 'Jan 2026 – May 2026', description: 'AI search optimization startup with paying customers, joined through TroyLabs — SUMMIT measures how often AI assistants cite a company when users ask relevant questions. One of four engineers; I focused on production infrastructure and the multi-provider LLM pipeline.', label: 'Startup', category: 'Tech', subRoles: [
+      { company: 'SUMMIT', role: 'Software Developer', date: 'Jan 2026 – May 2026', description: 'AI search optimization startup with paying customers. I focused on AI production infrastructure and the multi-provider LLM pipeline.', logo: '/images/experience/summit_logo.svg', label: 'Startup', category: 'Tech', subRoles: [
         { role: 'Production infrastructure — AWS Lambda + SQS', date: 'Mar 2026', bullets: [
-          'Moved snapshot generation off the Express request path onto AWS Lambda behind SQS. Each snapshot fans out dozens of LLM calls across four providers, which tied up the server and risked request timeouts; jobs are now queued and processed by Lambda workers with concurrency capped at 3 for provider rate-limit safety.',
-          'Added a dead-letter queue with a CloudWatch alarm for failed jobs, an EventBridge cron for daily 8 AM PT generation, and infrastructure-as-code in a SAM template with a one-command deploy — plus a local-dev fallback that runs on Express when the queue is unconfigured.',
+          'Moved snapshot generation off the blocking Express path onto AWS Lambda behind SQS — worker concurrency capped at 3 for provider rate-limit safety.',
+          'Dead-letter queue + CloudWatch alarms, a daily EventBridge cron, and SAM infrastructure-as-code with one-command deploy.',
         ] },
         { role: 'Multi-provider LLM pipeline', date: 'Feb 2026', bullets: [
-          'Built a provider abstraction over Claude, GPT, Gemini, and Perplexity behind a registry that activates only configured providers, so the pipeline degrades gracefully instead of failing when a key is missing.',
-          'Fixed rate-limit failures under concurrent load with a counting semaphore for per-provider concurrency caps, batched dispatch, and exponential-backoff retry — replacing sequential calls that were too slow and unbounded parallel calls that got throttled.',
+          'Fixed rate limiting across four providers (Claude, GPT, Gemini, Perplexity) with a per-provider counting semaphore and backoff retry, then ran them in parallel instead of sequentially — cutting a full citation run from ~6m 48s to ~1m 44s (~4× faster).',
         ] },
-        { role: 'Customer-facing features', date: 'Mar – Apr 2026', bullets: [
-          'Shipped the visibility-over-time analytics chart with drill-down, a sentiment analysis page, per-provider citation breakdown wired to real data, Gemini grounding with Google Search metadata capture, and the landing-page interactive demo running real data through a lite pipeline.',
-        ] },
-      ] },
-      { company: 'Hudson River Trading', role: 'Undergraduate Fellow', date: 'May 2026', logo: '/images/experience/hrt_logo.png', category: 'Quant', subRoles: [
-        { role: 'Inside HRT', date: 'May 2026', description: 'Algorithm Development (Quantitative Research) Track' },
       ] },
       { company: 'USC Information Sciences Institute', role: 'Undergraduate Research Intern', date: 'Aug 2024 – Present', logo: '/images/experience/uscisiLogo.jpg', label: 'Research', category: 'Research', subRoles: [
         { role: 'iOS-Agent: Open Research Platform for Physical Mobile GUI Agents', date: 'Jan 2026 – Present', bullets: [
@@ -381,6 +374,9 @@ export const portfolioItems: PortfolioItem[] = [
         { role: 'LLM-assisted AI for TikTok Eating-Disorder Dataset (EDTok)', date: 'Aug 2024 – May 2025', description: 'Published EDTok, multimodal eating disorder TikTok dataset — Accepted to ICWSM 2025', links: [{ label: 'Research Paper', url: 'https://arxiv.org/abs/2505.02250' }] },
       ] },
       { company: 'USC Viterbi School of Engineering', role: 'Research Intern', date: 'Jul 2024 – Aug 2024', description: 'Image–Text Misinformation Detection — improved out-of-context image–text detection to 68% accuracy', logo: '/images/experience/uscviterbiLogo.jpg', label: 'Research', category: 'Research' },
+      { company: 'Hudson River Trading', role: 'Undergraduate Fellow', date: 'May 2026', logo: '/images/experience/hrt_logo.png', category: 'Quant', subRoles: [
+        { role: 'Inside HRT', date: 'May 2026', description: 'Algorithm Development (Quantitative Research) Track' },
+      ] },
       { company: 'Jane Street', role: 'Undergraduate Fellow', date: '2024–2025', logo: '/images/experience/janestreetLogo.png', category: 'Quant', subRoles: [
         { role: "FOCUS '25", date: 'May 2025', description: 'Selected as 1 of 14' },
         { role: "UNBOXED '24", date: 'Jul 2024', description: 'Selected as 1 of 37' },
