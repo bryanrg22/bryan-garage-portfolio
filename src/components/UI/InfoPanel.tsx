@@ -59,6 +59,17 @@ function ExperienceContent({ entries }: { entries: ExperienceEntry[] }) {
               )}
             </div>
           </div>
+          {entry.subRoles && (entry.role || entry.date || entry.description) && (
+            <div className="mt-1">
+              <div className="flex flex-wrap items-baseline gap-x-2">
+                {entry.role && <p className="text-sm text-cream">{entry.role}</p>}
+                {entry.date && <p className="text-xs text-stone">{entry.date}</p>}
+              </div>
+              {entry.description && (
+                <p className="mt-2 text-sm text-cream/70">{entry.description}</p>
+              )}
+            </div>
+          )}
           {entry.subRoles ? (
             <div className="mt-3 flex flex-col gap-3">
               {entry.subRoles.map((sub, j) => (
