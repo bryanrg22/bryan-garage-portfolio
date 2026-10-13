@@ -1,10 +1,11 @@
-import { Suspense, useCallback, useState, useEffect } from 'react'
+import { Suspense, useCallback, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Environment, useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 import Garage from './Garage'
 import CameraController from './CameraController'
 import RenderController from './RenderController'
+import ShaderWarmup from './ShaderWarmup'
 import Particles from './Particles'
 import InteractiveObject from './objects/InteractiveObject'
 import KickableSoccerBall from './objects/KickableSoccerBall'
@@ -25,41 +26,12 @@ import type { QualityConfig } from '../../lib/gpuTier'
 // round-trip to gstatic.com and works offline
 useGLTF.setDecoderPath('/draco/')
 
-// Load priority tiers — lightest first, heaviest last.
-// Each tier waits for the previous to mount before loading.
-const loadTiers: string[][] = [
-  ['soccer', 'boombox'],              // tier 0: small models
-  ['skills', 'projects'],             // tier 1: medium models (~5 MB)
-  ['gtr'],                             // tier 2: heaviest model (~15 MB)
-]
-
-/** Hook that progressively unlocks GLB model tiers with delays */
-function useProgressiveLoad(showHeavyModels: boolean) {
-  const [allowedIds, setAllowedIds] = useState<Set<string>>(new Set())
-
-  useEffect(() => {
-    let cancelled = false
-    async function loadTiersSequentially() {
-      for (let i = 0; i < loadTiers.length; i++) {
-        // Skip the GTR tier when heavy models are disabled
-        if (loadTiers[i].includes('gtr') && !showHeavyModels) continue
-
-        // Wait before loading each tier to let the GPU breathe
-        await new Promise((r) => setTimeout(r, i === 0 ? 500 : 1500))
-        if (cancelled) return
-        setAllowedIds((prev) => {
-          const next = new Set(prev)
-          for (const id of loadTiers[i]) next.add(id)
-          return next
-        })
-      }
-    }
-    loadTiersSequentially()
-    return () => { cancelled = true }
-  }, [showHeavyModels])
-
-  return allowedIds
-}
+// Every GLB is requested up front, in parallel, behind the loading screen.
+// An earlier "progressive load" staggered the models with 0.5s/1.5s/1.5s
+// timeouts to "let the GPU breathe" — but the loading screen dismissed after
+// the first batch, so the stagger pushed every decode + shader-compile stall
+// out into view (measured: the GTR landed ~8s in and froze a visible frame).
+// Now the loading screen waits for all of it and ShaderWarmup precompiles.
 
 /** Map item id → lazy-loaded GLB component */
 function GLBChild({ id }: { id: string }) {
@@ -76,15 +48,12 @@ function GLBChild({ id }: { id: string }) {
 }
 
 function SceneContent({ quality }: { quality: QualityConfig }) {
-  const allowedIds = useProgressiveLoad(quality.showHeavyModels)
-
   return (
     <>
       {portfolioItems.map((item) => {
         const hasGLB = ['soccer', 'skills', 'boombox', 'projects'].includes(item.id)
-        const isAllowed = allowedIds.has(item.id)
         // Soccer ball is special: click opens the story, drag-and-release kicks it
-        if (item.id === 'soccer' && isAllowed) {
+        if (item.id === 'soccer') {
           return (
             <Suspense key={item.id} fallback={null}>
               <KickableSoccerBall item={item} />
@@ -94,7 +63,7 @@ function SceneContent({ quality }: { quality: QualityConfig }) {
         // Boombox gets shoved around by the ball; the heavy toolbox only
         // slides a little. Both stay fully clickable (KnockableProp wraps,
         // it doesn't intercept pointer events).
-        if ((item.id === 'boombox' || item.id === 'skills') && isAllowed) {
+        if (item.id === 'boombox' || item.id === 'skills') {
           const knock = item.id === 'boombox'
             ? { id: 'boombox', radius: 0.55, height: 0.5, massFactor: 0.35, resetDelay: 0.1 }
             : { id: 'toolbox', radius: 0.6, height: 1.0, massFactor: 0.15, resetDelay: 0.15 }
@@ -110,7 +79,7 @@ function SceneContent({ quality }: { quality: QualityConfig }) {
         }
         return (
           <InteractiveObject key={item.id} item={item}>
-            {hasGLB && isAllowed ? (
+            {hasGLB ? (
               <Suspense fallback={null}>
                 <GLBChild id={item.id} />
               </Suspense>
@@ -119,7 +88,7 @@ function SceneContent({ quality }: { quality: QualityConfig }) {
         )
       })}
       {/* Car lift — decorative only, not interactive. Hidden on low/mid tiers for performance. */}
-      {quality.showHeavyModels && allowedIds.has('projects') && (
+      {quality.showHeavyModels && (
         <Suspense fallback={null}>
           <group position={[2.5, 0, 2.8]}>
             <CarLift />
@@ -127,7 +96,7 @@ function SceneContent({ quality }: { quality: QualityConfig }) {
         </Suspense>
       )}
       {/* Nissan GTR R34 — decorative only, not interactive. Hidden on low/mid tiers for performance. */}
-      {quality.showHeavyModels && allowedIds.has('gtr') && (
+      {quality.showHeavyModels && (
         <Suspense fallback={null}>
           <group position={[-4.1, 1.04, -0.82]}>
             <NissanGTR />
@@ -145,9 +114,7 @@ export default function GarageScene() {
   const [sceneKey, setSceneKey] = useState(0)
 
   const handleCreated = useCallback(
-    (state: { gl: THREE.WebGLRenderer; scene: THREE.Scene; camera: THREE.Camera }) => {
-      const { gl, scene, camera } = state
-
+    ({ gl }: { gl: THREE.WebGLRenderer }) => {
       // Dark background so context loss doesn't flash white
       gl.setClearColor(new THREE.Color('#14120F'), 1)
 
@@ -162,13 +129,9 @@ export default function GarageScene() {
         setSceneKey((k) => k + 1)
       })
 
-      // Synchronous shader pre-compile. We deliberately do NOT use compileAsync
-      // here: compileAsync polls completion via requestAnimationFrame, and the
-      // Canvas is frameloop="demand" — rAF doesn't tick until invalidate(), so
-      // compileAsync's Promise would never resolve and setIsLoaded would never
-      // fire. Synchronous compile stalls the main thread for a beat, but it
-      // happens inside the loading window where the user is already waiting.
-      gl.compile(scene, camera)
+      // Shader compilation is NOT done here: at onCreated the GLBs haven't
+      // arrived yet, so a compile pass would miss nearly everything. It runs
+      // in ShaderWarmup once every asset is in (and async — see that file).
       setIsLoaded()
     },
     [setIsLoaded],
@@ -177,11 +140,10 @@ export default function GarageScene() {
   return (
     <div className="absolute inset-0" style={{ background: '#14120F', touchAction: 'none' }}>
       <Canvas
-        // Mobile: tier is resolved synchronously at module load (see gpuTier.ts),
-        // so this key is stable and never remounts. Desktop: tier starts at LOW
-        // and may upgrade once detect-gpu resolves — the remount lets gl props
-        // (antialias, shadows) reflect the new tier, since those are only read
-        // at context creation.
+        // The tier is final before this Canvas ever mounts (App waits on
+        // qualityResolved), so the tier half of this key never changes in
+        // practice — gl props (antialias, shadows) are only read at context
+        // creation, so it stays as a guard. sceneKey remounts on context loss.
         key={`${sceneKey}-${quality.tier}`}
         frameloop="demand"
         shadows={quality.shadows}
@@ -204,6 +166,7 @@ export default function GarageScene() {
           </Suspense>
         )}
         <RenderController />
+        <ShaderWarmup />
         <CameraController />
         <Garage />
         <GarageDoor />

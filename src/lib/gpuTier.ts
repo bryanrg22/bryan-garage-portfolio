@@ -168,13 +168,15 @@ function desktopTierFromGPU(gpuTier: number): QualityConfig {
   return DESKTOP_HIGH
 }
 
-const IS_MOBILE = detectIsMobile()
+export const IS_MOBILE = detectIsMobile()
 
 /**
  * Default config used at module load. On mobile we pick the final tier
- * synchronously so the Canvas never remounts. On desktop we start pessimistic
- * (LOW) and let detect-gpu upgrade us — desktop can absorb a tier-change
- * remount without the iOS memory/shader hitch.
+ * synchronously. On desktop this is a placeholder: the Canvas is NOT mounted
+ * until `detectionPromise` resolves (see `qualityResolved` in the store), so
+ * the WebGL context is created exactly once at the final tier. Mounting at
+ * LOW and remounting at HIGH used to rebuild the whole scene a second time —
+ * visibly, after the loading screen was already gone.
  */
 export const defaultQuality: QualityConfig = IS_MOBILE ? pickMobileTier() : DESKTOP_LOW
 
@@ -198,7 +200,10 @@ function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
 export const detectionPromise: Promise<QualityConfig> = IS_MOBILE
   ? Promise.resolve(defaultQuality)
   : withTimeout(
-      getGPUTier({ failIfMajorPerformanceCaveat: false }),
+      // Benchmark tables are self-hosted (copied from detect-gpu/dist/benchmarks)
+      // so detection never waits on a DNS+TLS round-trip to unpkg.com — the
+      // same reason the Draco decoder and HDRI are self-hosted.
+      getGPUTier({ failIfMajorPerformanceCaveat: false, benchmarksURL: '/gpu-benchmarks' }),
       DETECTION_TIMEOUT_MS,
     ).then(
       (result) => desktopTierFromGPU(result.tier),

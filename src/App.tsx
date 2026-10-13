@@ -11,6 +11,7 @@ import BackButton from './components/UI/BackButton'
 import LoadingScreen from './components/UI/LoadingScreen'
 import MobileTabBar from './components/UI/MobileTabBar'
 import ResetRoomButton from './components/UI/ResetRoomButton'
+import { useStore } from './stores/useStore'
 
 function SceneFallback() {
   return (
@@ -21,11 +22,16 @@ function SceneFallback() {
 }
 
 export default function App() {
+  // Desktop: hold the Canvas until detect-gpu picks the final tier (bounded at
+  // 2.5s, usually well under 300ms) so the WebGL context is created once at
+  // the right quality. The loading screen is already covering this wait.
+  const qualityResolved = useStore((s) => s.qualityResolved)
+
   return (
     <div className="relative h-screen w-screen overflow-hidden bg-garage-dark">
       <ErrorBoundary>
         <Suspense fallback={<SceneFallback />}>
-          <GarageScene />
+          {qualityResolved && <GarageScene />}
         </Suspense>
       </ErrorBoundary>
 

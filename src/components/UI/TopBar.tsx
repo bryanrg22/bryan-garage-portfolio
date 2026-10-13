@@ -9,7 +9,7 @@ const socialLinks = [
   { label: 'Scholar', href: 'https://scholar.google.com/citations?user=x5W6xScAAAAJ&hl=en' },
   { label: 'DevPost', href: 'https://devpost.com/bryanrg22' },
   { label: 'Handshake', href: 'https://usc.joinhandshake.com/profiles/bryanrg22' },
-  { label: 'Contact', href: 'mailto:bryanrg@usc.edu' },
+  { label: 'Contact', href: 'mailto:bryanram2024@gmail.com' },
 ]
 
 export default function TopBar() {
@@ -126,7 +126,7 @@ export default function TopBar() {
               </a>
             ))}
             <a
-              href="mailto:bryanrg@usc.edu"
+              href="mailto:bryanram2024@gmail.com"
               className="rounded-full border border-blue-accent/30 px-4 py-1.5 text-sm text-blue-accent transition-colors hover:border-blue-accent hover:bg-blue-accent/10"
             >
               Contact

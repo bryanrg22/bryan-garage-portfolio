@@ -39,7 +39,8 @@ export default function GarageDoor() {
     const check = () => {
       if (started || !slatsRef.current) return
       const { progress, active } = useProgress.getState()
-      if (!useStore.getState().isLoaded || active || progress < 100) return
+      const { isLoaded, isCompiled } = useStore.getState()
+      if (!isLoaded || !isCompiled || active || progress < 100) return
       started = true
       tween = gsap.to(slatsRef.current.position, {
         y: OPEN_RISE,

@@ -5,16 +5,21 @@ import { useStore } from '../../stores/useStore'
 
 export default function LoadingScreen() {
   const isLoaded = useStore((s) => s.isLoaded)
+  const isCompiled = useStore((s) => s.isCompiled)
   const progress = useProgress((s) => s.progress)
+  const active = useProgress((s) => s.active)
   const [show, setShow] = useState(true)
 
-  // Dismiss when assets are loaded AND WebGL context is ready
+  // Dismiss only once EVERYTHING is in: every asset downloaded (including the
+  // heavy models), the WebGL context created, and every shader compiled by
+  // ShaderWarmup. Revealing any earlier puts the decode/compile stalls on
+  // visible frames — the door would stutter while rolling up.
   useEffect(() => {
-    if (progress >= 100 && isLoaded) {
+    if (progress >= 100 && !active && isLoaded && isCompiled) {
       const timer = setTimeout(() => setShow(false), 800)
       return () => clearTimeout(timer)
     }
-  }, [progress, isLoaded])
+  }, [progress, active, isLoaded, isCompiled])
 
   return (
     <AnimatePresence>
