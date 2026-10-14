@@ -26,6 +26,17 @@ import type { QualityConfig } from '../../lib/gpuTier'
 // round-trip to gstatic.com and works offline
 useGLTF.setDecoderPath('/draco/')
 
+// Models that load on EVERY tier start downloading the moment this module
+// evaluates — before detect-gpu has resolved and the Canvas has mounted — so
+// the network round-trip overlaps GPU detection instead of waiting on it
+// (~1s on desktop). Tier-gated decoratives are deliberately left out: on a
+// LOW tier they'd be bandwidth spent on models that never render. Must come
+// after setDecoderPath above, or these would fetch the decoder from gstatic.
+for (const file of [
+  'nvidia_3d_logo', 'mexican_flag', 'workbench', 'linkedin_logo', 'github_logo',
+  'shiba_inu', 'soccer_ball', 'jbl_boombox', 'macbook', 'tool_box',
+]) useGLTF.preload(`/models/${file}.glb`)
+
 // Every GLB is requested up front, in parallel, behind the loading screen.
 // An earlier "progressive load" staggered the models with 0.5s/1.5s/1.5s
 // timeouts to "let the GPU breathe" — but the loading screen dismissed after
@@ -160,9 +171,11 @@ export default function GarageScene() {
         <fog attach="fog" args={['#1a1408', 6, 22]} />
         {quality.showEnvironment && (
           <Suspense fallback={null}>
-            {/* Self-hosted copy of drei's "warehouse" preset (empty_warehouse_01_1k.hdr) —
-                avoids a runtime fetch from raw.githack.com */}
-            <Environment files="/hdri/empty_warehouse_01_1k.hdr" environmentIntensity={quality.environmentIntensity} />
+            {/* Self-hosted copy of drei's "warehouse" preset, downsampled 1024x512 →
+                512x256 (1.6 MB → 0.4 MB). It only lights reflections at intensity
+                ≤0.3 — never shown as a background — and PMREM blurs it per roughness
+                level anyway. Avoids a runtime fetch from raw.githack.com. */}
+            <Environment files="/hdri/empty_warehouse_01_512.hdr" environmentIntensity={quality.environmentIntensity} />
           </Suspense>
         )}
         <RenderController />

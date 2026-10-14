@@ -22,7 +22,7 @@ useTexture.preload('/images/breaAutoBody.jpeg')
 
 /** USC Trojan logo — image texture on the left wall */
 function USCTrojanSign() {
-  const texture = useTexture('/images/usc_trojan_logo.png')
+  const texture = useTexture('/images/usc_trojan_logo.webp')
   return (
     <mesh position={[-4.9, 3.2, -1]} rotation={[0, Math.PI / 2, 0]} castShadow>
       <planeGeometry args={[1.2, 1.2]} />
@@ -31,11 +31,11 @@ function USCTrojanSign() {
   )
 }
 
-useTexture.preload('/images/usc_trojan_logo.png')
+useTexture.preload('/images/usc_trojan_logo.webp')
 
 /** Azusa city logo — image texture on the left wall */
 function AzusaCitySign() {
-  const texture = useTexture('/images/azusa_city_logo.png')
+  const texture = useTexture('/images/azusa_city_logo.webp')
   return (
     <mesh position={[-4.9, 3.05, 0.8]} rotation={[0, Math.PI / 2, 0]} castShadow>
       <planeGeometry args={[1.2, 1.2]} />
@@ -44,7 +44,7 @@ function AzusaCitySign() {
   )
 }
 
-useTexture.preload('/images/azusa_city_logo.png')
+useTexture.preload('/images/azusa_city_logo.webp')
 
 /** California flag — image texture on the left wall */
 function CaliforniaFlag() {
@@ -61,7 +61,7 @@ useTexture.preload('/images/california_flag.webp')
 
 /** MLH logo — image texture on the right wall */
 function MLHSign() {
-  const texture = useTexture('/images/mlh_logo.png')
+  const texture = useTexture('/images/mlh_logo.webp')
   return (
     <mesh position={[4.9, 3.2, -0.7]} rotation={[0, -Math.PI / 2, 0]} castShadow>
       <planeGeometry args={[2, 0.8]} />
@@ -70,11 +70,11 @@ function MLHSign() {
   )
 }
 
-useTexture.preload('/images/mlh_logo.png')
+useTexture.preload('/images/mlh_logo.webp')
 
 /** Jane Street logo — image texture on back wall, behind workbench */
 function JaneStreetSign() {
-  const texture = useTexture('/images/janestreetLogo.png')
+  const texture = useTexture('/images/janestreetLogo.webp')
   return (
     <mesh position={[-3.96, 2.15, -2.92]} castShadow>
       <planeGeometry args={[1.8, 0.71]} />
@@ -83,7 +83,7 @@ function JaneStreetSign() {
   )
 }
 
-useTexture.preload('/images/janestreetLogo.png')
+useTexture.preload('/images/janestreetLogo.webp')
 
 /** HRT logo — image texture on back wall, next to Jane Street */
 function HRTSign() {
@@ -126,7 +126,7 @@ useTexture.preload('/images/Claude_AI_symbol.svg')
 
 /** Caltech logo — image texture on back wall above trophies */
 function CaltechSign() {
-  const texture = useTexture('/images/caltechLogo.png')
+  const texture = useTexture('/images/caltechLogo.webp')
   return (
     <mesh position={[2.9, 2.4, -2.92]} castShadow>
       <planeGeometry args={[0.7, 0.7]} />
@@ -135,7 +135,7 @@ function CaltechSign() {
   )
 }
 
-useTexture.preload('/images/caltechLogo.png')
+useTexture.preload('/images/caltechLogo.webp')
 
 useTexture.preload('/concrete_floor/Concrete035_1K-JPG_Color.webp')
 useTexture.preload('/concrete_floor/Concrete035_1K-JPG_NormalGL.webp')

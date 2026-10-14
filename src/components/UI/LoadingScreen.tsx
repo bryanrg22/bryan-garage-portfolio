@@ -16,7 +16,8 @@ export default function LoadingScreen() {
   // visible frames — the door would stutter while rolling up.
   useEffect(() => {
     if (progress >= 100 && !active && isLoaded && isCompiled) {
-      const timer = setTimeout(() => setShow(false), 800)
+      // Just long enough for the bar to visibly land on 100% before fading.
+      const timer = setTimeout(() => setShow(false), 450)
       return () => clearTimeout(timer)
     }
   }, [progress, active, isLoaded, isCompiled])
