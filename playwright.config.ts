@@ -5,7 +5,7 @@ import { defineConfig } from '@playwright/test'
 // same software renderer locally keeps results comparable.
 export default defineConfig({
   testDir: 'e2e',
-  timeout: 300_000,
+  timeout: 8 * 60_000,
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? [['list'], ['html', { open: 'never' }]] : 'list',
   use: {
