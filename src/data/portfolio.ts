@@ -82,6 +82,7 @@ export interface PortfolioItem {
   cameraPosition: [number, number, number]
   cameraTarget: [number, number, number]
   mobileCameraPosition?: [number, number, number]
+  mobileCameraTarget?: [number, number, number]
   experienceEntries?: ExperienceEntry[]
   skillCategories?: SkillCategory[]
   projectEntries?: ProjectEntry[]
@@ -261,10 +262,10 @@ export const portfolioItems: PortfolioItem[] = [
         ],
       },
     ],
-    position: [-2.0, 1.08, -0.8],
+    position: [-2.05, 1.08, -0.8],
     color: '#E8A838',
-    cameraPosition: [-0.5, 1.5, 1.0],
-    cameraTarget: [-2.0, 1.1, -0.8],
+    cameraPosition: [-0.55, 1.5, 1.0],
+    cameraTarget: [-2.05, 1.1, -0.8],
   },
   {
     id: 'hackathons',
@@ -350,13 +351,14 @@ export const portfolioItems: PortfolioItem[] = [
     title: 'Experience',
     subtitle: "Where I've Worked",
     description:
-      "NVIDIA — Software Engineering Intern (Summer 2026), building agentic AI. SUMMIT — Software Developer at an AI search startup; built the AWS Lambda + SQS pipeline and multi-provider LLM layer. OpenAI — OpenAI Connect. Datadog — DataPUPS 2026 (Emerging Talent, NYC). Jane Street — FOCUS '25 (1 of 14) and UNBOXED '24 (1 of 37). Hudson River Trading — Algorithm Development (Quantitative Research) Track. D.E. Shaw — Connect Fellowship. USC ISI HUMANS Lab — Research Assistant across two labs. FIRST Robotics — Lead Developer, Regional Semifinalist. SkillsUSA — Team Leader, State Bronze Medalist.",
+      "NVIDIA — Software Engineering Intern, building agentic AI. OpenAI — Campus Lead (Student Collective) and OpenAI Connect. SUMMIT — Software Developer at an AI search startup; built the AWS Lambda + SQS pipeline and multi-provider LLM layer. Datadog — DataPUPS 2026 (Emerging Talent, NYC). Jane Street — FOCUS '25 (1 of 14) and UNBOXED '24 (1 of 37). Hudson River Trading — Algorithm Development (Quantitative Research) Track. D.E. Shaw — Connect Fellowship. USC ISI HUMANS Lab — Research Assistant across two labs. FIRST Robotics — Lead Developer, Regional Semifinalist. SkillsUSA — Team Leader, State Bronze Medalist.",
     tags: ['NVIDIA', 'SUMMIT', 'AWS', 'OpenAI', 'Datadog', 'Jane Street', 'HRT', 'D.E. Shaw', 'USC ISI'],
     links: [
       { label: 'LinkedIn', url: 'https://www.linkedin.com/in/bryanrg22' },
     ],
     experienceEntries: [
-      { company: 'NVIDIA', role: 'Software Engineering Intern', date: 'May 2026 – Aug 2026', description: 'Building Agentic AI systems — Summer 2026', logo: '/images/experience/nvidia_logo.png', category: 'Tech' },
+      { company: 'NVIDIA', role: 'Software Engineering Intern', date: 'May 2026 – Present', description: 'Building agentic AI systems', logo: '/images/experience/nvidia_logo.png', category: 'Tech' },
+      { company: 'OpenAI', role: 'Campus Lead', date: 'Sep 2026 – May 2027', description: 'OpenAI Student Collective', logo: '/images/experience/chatgptLogo.png', category: 'Tech' },
       { company: 'SUMMIT', role: 'Software Developer', date: 'Jan 2026 – May 2026', description: 'AI search optimization startup with paying customers. I focused on AI production infrastructure and the multi-provider LLM pipeline.', logo: '/images/experience/summit_logo.svg', label: 'Startup', category: 'Tech', subRoles: [
         { role: 'Production infrastructure — AWS Lambda + SQS', date: 'Mar 2026', bullets: [
           'Moved snapshot generation off the blocking Express path onto AWS Lambda behind SQS — worker concurrency capped at 3 for provider rate-limit safety.',
@@ -393,11 +395,15 @@ export const portfolioItems: PortfolioItem[] = [
       { company: 'FIRST Robotics', role: 'Lead Developer', date: '2023–2024', description: 'Regional Semifinalist — Top 5 out of 32 Teams', logo: '/images/experience/firstLogo.jpeg', category: 'Leadership' },
       { company: 'SkillsUSA', role: 'Team Leader', date: '2023–2024', description: 'State Bronze Medalist — 3rd Best Engineering Project in California', logo: '/images/experience/skillsusaLogo.png', category: 'Leadership' },
     ],
-    position: [-3.05, 1.38, -0.9],
+    // Click target spans both bench logos (OpenAI at x −4.15, NVIDIA at −3.30).
+    position: [-3.72, 1.38, -0.7],
     color: '#CC4444',
-    cameraPosition: [-3.05, 1.6, 1.0],
-    cameraTarget: [-3.05, 1.38, -0.9],
-    mobileCameraPosition: [-3.05, 1.8, 3.0],
+    // Desktop framing is computed in CameraController (keeps the logos clear
+    // of the 420px side panel); these are its center + the fallback.
+    cameraPosition: [-3.5, 2.0, 2.2],
+    cameraTarget: [-3.65, 1.6, -0.9],
+    mobileCameraPosition: [-3.6, 2.6, 3.8],
+    mobileCameraTarget: [-3.6, -0.25, -0.9],
   },
   {
     id: 'awards',
