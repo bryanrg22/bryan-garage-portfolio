@@ -176,10 +176,9 @@ function ObjectGeometry({ id, color, hovered }: { id: string; color: string; hov
       )
 
     case 'experience':
-      // Invisible hitbox over the NVIDIA logo
       return (
         <mesh visible={false}>
-          <boxGeometry args={[1.0, 0.5, 0.8]} />
+          <boxGeometry args={[1.36, 0.65, 0.4]} />
           <meshBasicMaterial transparent opacity={0} />
         </mesh>
       )

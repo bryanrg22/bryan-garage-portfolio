@@ -32,6 +32,7 @@ const LOOK_DISTANCE = defaultDirection.length()
 
 export default function CameraController() {
   const camera = useThree((s) => s.camera)
+  const size = useThree((s) => s.size)
   const invalidate = useThree((s) => s.invalidate)
   const invalidateRef = useRef(invalidate)
   useEffect(() => { invalidateRef.current = invalidate }, [invalidate])
@@ -160,9 +161,20 @@ export default function CameraController() {
     gsap.killTweensOf(lookAtTarget.current)
 
     if (activeItem) {
-      const camPos = (isMobilePortrait && activeItem.mobileCameraPosition)
+      let camPos = (isMobilePortrait && activeItem.mobileCameraPosition)
         ? activeItem.mobileCameraPosition
         : activeItem.cameraPosition
+      let camTarget = (isMobilePortrait && activeItem.mobileCameraTarget)
+        ? activeItem.mobileCameraTarget
+        : activeItem.cameraTarget
+      if (activeItem.id === 'experience' && !isMobile) {
+        const halfFov = THREE.MathUtils.degToRad((camera as THREE.PerspectiveCamera).fov / 2)
+        const availableWidth = Math.max(1, size.width - 420 - 64)
+        const distance = Math.max(3.1, 2.4 * size.height / (2 * Math.tan(halfFov) * availableWidth))
+        const horizontalOffset = distance * Math.tan(halfFov) * 420 / size.height
+        camPos = [-3.2 + horizontalOffset, 2.0, -0.9 + distance]
+        camTarget = [-3.2 + horizontalOffset, 1.6, -0.9]
+      }
       mode.current = 'animating'
       const tl = gsap.timeline({
         onUpdate: () => invalidateRef.current(),
@@ -187,9 +199,9 @@ export default function CameraController() {
       tl.to(
         lookAtTarget.current,
         {
-          x: activeItem.cameraTarget[0],
-          y: activeItem.cameraTarget[1],
-          z: activeItem.cameraTarget[2],
+          x: camTarget[0],
+          y: camTarget[1],
+          z: camTarget[2],
           duration: 1.2,
           ease: 'power3.inOut',
         },
@@ -246,7 +258,7 @@ export default function CameraController() {
 
       tweenRef.current = tl
     }
-  }, [activeItem, camera, defaultPos, isMobilePortrait])
+  }, [activeItem, camera, defaultPos, isMobilePortrait, isMobile, size.width, size.height])
 
   // Desktop parallax multipliers
   const parallaxX = 0.3

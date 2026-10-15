@@ -6,6 +6,7 @@ import * as THREE from 'three'
 import { useStore } from '../../stores/useStore'
 import KnockableProp from './objects/KnockableProp'
 import ShopParrot from './objects/ShopParrot'
+import OpenAILogo from './objects/OpenAILogo'
 
 /** Brea Auto Body sign — image texture on a plane */
 function BreaBoardSign() {
@@ -903,7 +904,10 @@ export default function Garage() {
 
       {/* ====== NVIDIA LOGO — on workbench, near macbook ====== */}
       <Suspense fallback={null}>
-        <NvidiaLogo position={[-3.1, 1.4, -0.7]} />
+        <NvidiaLogo position={[-3.30, 1.4, -0.56]} />
+      </Suspense>
+      <Suspense fallback={null}>
+        <OpenAILogo />
       </Suspense>
 
       {/* ====== PURE DECORATIVE — only on high tier ====== */}
