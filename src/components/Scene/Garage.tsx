@@ -7,6 +7,7 @@ import { useStore } from '../../stores/useStore'
 import KnockableProp from './objects/KnockableProp'
 import ShopParrot from './objects/ShopParrot'
 import OpenAILogo from './objects/OpenAILogo'
+import AssetSuspense from './AssetSuspense'
 
 /** Brea Auto Body sign — image texture on a plane */
 function BreaBoardSign() {
@@ -810,9 +811,9 @@ export default function Garage() {
 
       {/* ====== BACK WALL — UPPER ====== */}
       {/* Mexican flag — left of sign */}
-      <Suspense fallback={null}>
+      <AssetSuspense>
         <MexicanFlag position={[-3.5, 3.5, -2.85]} />
-      </Suspense>
+      </AssetSuspense>
 
       {/* Brea Auto Body sign — centered */}
       <BreaBoardSign />
@@ -844,9 +845,9 @@ export default function Garage() {
       </mesh>
 
       {/* ====== WORKBENCH — back wall, under picture frame ====== */}
-      <Suspense fallback={null}>
+      <AssetSuspense>
         <WorkbenchModel position={[0.9, -0.1, -2.7]} />
-      </Suspense>
+      </AssetSuspense>
 
       {/* ====== SHOP PARROT — perched on the back workbench ====== */}
       {/* Front edge of the bench top (measured: surface y≈1.03 at z≈-2.0; the
@@ -890,52 +891,56 @@ export default function Garage() {
       {/* ====== TROPHIES — semi-decorative, on mid + high tiers ====== */}
       {quality.showSemiDecorative && (
         <>
-          <Suspense fallback={null}>
+          <AssetSuspense>
             <FifaTrophy position={[1.98, 1.46, -2.5]} />
-          </Suspense>
-          <Suspense fallback={null}>
+          </AssetSuspense>
+          <AssetSuspense>
             <GoldTrophy position={[2.43, 1.41, -2.5]} />
-          </Suspense>
-          <Suspense fallback={null}>
+          </AssetSuspense>
+          <AssetSuspense>
             <MLBTrophy position={[2.9, 1.57, -2.5]} />
-          </Suspense>
+          </AssetSuspense>
         </>
       )}
 
-      {/* ====== NVIDIA LOGO — on workbench, near macbook ====== */}
-      <Suspense fallback={null}>
+      {/* ====== LEFT BENCH, left → right: OpenAI · NVIDIA · MacBook · Red Bull ======
+          Footprints measured from the GLB bounds (x extents at these positions):
+          OpenAI −4.43…−3.87 · NVIDIA −3.65…−2.95 · MacBook −2.48…−1.62 ·
+          Red Bull −1.51…−1.39 (bench ends at −1.35). Re-measure before moving
+          anything here — the can once ended up sunk inside the laptop. */}
+      <AssetSuspense>
+        <OpenAILogo position={[-4.15, 1.05, -0.85]} rotationY={0.35} />
+      </AssetSuspense>
+      <AssetSuspense>
         <NvidiaLogo position={[-3.30, 1.4, -0.56]} />
-      </Suspense>
-      <Suspense fallback={null}>
-        <OpenAILogo />
-      </Suspense>
+      </AssetSuspense>
 
       {/* ====== PURE DECORATIVE — only on high tier ====== */}
       {quality.showPureDecorative && (
         <>
           {/* RED BULL CAN — on workbench */}
-          <Suspense fallback={null}>
+          <AssetSuspense>
             <RedBullCan position={[-1.45, 1.21, -1.1]} />
-          </Suspense>
+          </AssetSuspense>
 
           {/* RETRO OIL — under workbench, knockable */}
-          <Suspense fallback={null}>
+          <AssetSuspense>
             <KnockableProp id="retro-oil" position={[-3, 0.0, 0.5]} radius={0.15} height={0.5} resetDelay={0.1}>
               <RetroOil position={[0, 0, 0]} />
             </KnockableProp>
-          </Suspense>
+          </AssetSuspense>
 
           {/* WD-40 — near retro oil, knockable */}
-          <Suspense fallback={null}>
+          <AssetSuspense>
             <KnockableProp id="wd40" position={[-2.5, 0, 0.5]} radius={0.13} height={0.45}>
               <WD40 position={[0, 0, 0]} />
             </KnockableProp>
-          </Suspense>
+          </AssetSuspense>
 
           {/* DIRTY RAG — near retro oil */}
-          <Suspense fallback={null}>
+          <AssetSuspense>
             <DirtyRag position={[-3.5, 0, 0.8]} />
-          </Suspense>
+          </AssetSuspense>
         </>
       )}
 
@@ -977,18 +982,18 @@ export default function Garage() {
       {quality.showPureDecorative && (
         <>
           {/* TRASH CAN — in front of oil drums, knockable (tips like a real can) */}
-          <Suspense fallback={null}>
+          <AssetSuspense>
             <KnockableProp id="trash-can" position={[-2.8, 0.25, 1.85]} radius={0.32} height={0.75} massFactor={0.55} resetDelay={0.05}>
               <TrashCan position={[0, 0, 0]} />
             </KnockableProp>
-          </Suspense>
+          </AssetSuspense>
 
           {/* BUCKET — next to tires, knockable */}
-          <Suspense fallback={null}>
+          <AssetSuspense>
             <KnockableProp id="bucket" position={[3.5, 0, 3.5]} radius={0.2} height={0.35} resetDelay={0.2}>
               <Bucket position={[0, 0, 0]} />
             </KnockableProp>
-          </Suspense>
+          </AssetSuspense>
         </>
       )}
 
@@ -996,62 +1001,62 @@ export default function Garage() {
       {quality.showSemiDecorative && (
         <>
           {/* PROGRAMMING LOGOS — floor, in front of toolbox, knockable */}
-          <Suspense fallback={null}>
+          <AssetSuspense>
             <KnockableProp id="python-logo" position={[1.3, 0.05, 1.16]} radius={0.22} height={0.15} resetDelay={0.15}>
               <PythonLogo position={[0, 0, 0]} />
             </KnockableProp>
-          </Suspense>
-          <Suspense fallback={null}>
+          </AssetSuspense>
+          <AssetSuspense>
             <KnockableProp id="java-logo" position={[2.2, 0.18, 1.6]} radius={0.18} height={0.3} resetDelay={0.25}>
               <JavaLogo position={[0, 0, 0]} />
             </KnockableProp>
-          </Suspense>
-          <Suspense fallback={null}>
+          </AssetSuspense>
+          <AssetSuspense>
             <KnockableProp id="react-logo" position={[2.7, 0.05, 1.1]} radius={0.22} height={0.15} resetDelay={0.35}>
               <ReactLogo position={[0, 0, 0]} />
             </KnockableProp>
-          </Suspense>
+          </AssetSuspense>
         </>
       )}
 
       {/* ====== SOCIAL LOGOS — floor, front-center, clickable ====== */}
-      <Suspense fallback={null}>
+      <AssetSuspense>
         <LinkedInLogo position={[-0.5, -1.17, 4]} />
-      </Suspense>
-      <Suspense fallback={null}>
+      </AssetSuspense>
+      <AssetSuspense>
         <GitHubLogo position={[-0.1, 0.02, 3.2]} />
-      </Suspense>
-      <Suspense fallback={null}>
+      </AssetSuspense>
+      <AssetSuspense>
         <ResumePaper position={[0.7, 0.01, 3.1]} />
-      </Suspense>
+      </AssetSuspense>
 
       {/* ====== SEMI-DECORATIVE — garage tools (drills), knockable ====== */}
       {quality.showSemiDecorative && (
-        <Suspense fallback={null}>
+        <AssetSuspense>
           <KnockableProp id="garage-tools" position={[1.9, 0, 1.5]} radius={0.35} height={0.25} massFactor={0.5} tippable={false} resetDelay={0.2}>
             <GarageTools position={[0, 0, 0]} />
           </KnockableProp>
-        </Suspense>
+        </AssetSuspense>
       )}
 
       {/* ====== PURE DECORATIVE — car jack, air compressor, extension cord ====== */}
       {quality.showPureDecorative && (
         <>
           {/* Car jack — flat steel, slides along the floor when hit */}
-          <Suspense fallback={null}>
+          <AssetSuspense>
             <KnockableProp id="car-jack" position={[3.75, 0, 1]} radius={0.24} height={0.22} massFactor={0.5} tippable={false} resetDelay={0.15}>
               <CarJack position={[0, 0, 0]} />
             </KnockableProp>
-          </Suspense>
+          </AssetSuspense>
           {/* Air compressor has wheels — it rolls when hit, like the toolbox */}
-          <Suspense fallback={null}>
+          <AssetSuspense>
             <KnockableProp id="air-compressor" position={[3.8, 0, -1]} radius={0.45} height={0.85} massFactor={0.3} tippable={false} resetDelay={0.3}>
               <AirCompressor position={[0, 0, 0]} />
             </KnockableProp>
-          </Suspense>
-          <Suspense fallback={null}>
+          </AssetSuspense>
+          <AssetSuspense>
             <ExtensionCord position={[-2, 0, 1.5]} />
-          </Suspense>
+          </AssetSuspense>
         </>
       )}
 

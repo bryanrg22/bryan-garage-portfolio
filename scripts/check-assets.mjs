@@ -21,8 +21,7 @@ const BUDGET = {
   hdrBytes: 1.0 * 1024 * 1024,        // per environment map
 }
 const ALLOW = {
-  // Desktop-HIGH-only display car; 22 materials, see NissanGTR.tsx.
-  '1999_nissan_skyline_gtr_r34_c-west__2f2f.glb': { modelBytes: 4 * 1024 * 1024, modelTriangles: 300_000 },
+  // 'some_model.glb': { modelBytes: 2 * 1024 * 1024, modelTriangles: 200_000 }, // reason
 }
 
 const io = new NodeIO()

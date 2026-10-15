@@ -10,9 +10,9 @@ const WARMUP_TIMEOUT_MS = 6000
 
 /**
  * Compiles every shader in the fully-loaded scene BEFORE the loading screen
- * drops, so the first visible frames (door roll-up, GTR appearing) never
+ * drops, so the first visible frames (door roll-up, heavy models appearing) never
  * stall on synchronous program linking. three.js' first render of a material
- * compiles+links its program on the spot; the GTR alone has 22 materials.
+ * compiles+links its program on the spot — dozens of materials across the scene.
  *
  * Uses gl.compileAsync, which leans on KHR_parallel_shader_compile where the
  * driver offers it (Chrome/macOS does) and polls readiness with setTimeout —

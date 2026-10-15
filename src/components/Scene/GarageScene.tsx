@@ -1,4 +1,4 @@
-import { Suspense, useCallback, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Environment, useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
@@ -15,8 +15,8 @@ import GarageDoor from './GarageDoor'
 import Macbook from './objects/Macbook'
 import JBLBoombox from './objects/JBLBoombox'
 import CarLift from './objects/CarLift'
-import NissanGTR from './objects/NissanGTR'
 import ToolBox from './objects/ToolBox'
+import AssetSuspense from './AssetSuspense'
 import { portfolioItems } from '../../data/portfolio'
 import { useStore } from '../../stores/useStore'
 import type { QualityConfig } from '../../lib/gpuTier'
@@ -41,7 +41,8 @@ for (const file of [
 // An earlier "progressive load" staggered the models with 0.5s/1.5s/1.5s
 // timeouts to "let the GPU breathe" — but the loading screen dismissed after
 // the first batch, so the stagger pushed every decode + shader-compile stall
-// out into view (measured: the GTR landed ~8s in and froze a visible frame).
+// out into view (measured: the heaviest model landed ~8s in and froze a
+// visible frame).
 // Now the loading screen waits for all of it and ShaderWarmup precompiles.
 
 /** Map item id → lazy-loaded GLB component */
@@ -66,9 +67,9 @@ function SceneContent({ quality }: { quality: QualityConfig }) {
         // Soccer ball is special: click opens the story, drag-and-release kicks it
         if (item.id === 'soccer') {
           return (
-            <Suspense key={item.id} fallback={null}>
+            <AssetSuspense key={item.id}>
               <KickableSoccerBall item={item} />
-            </Suspense>
+            </AssetSuspense>
           )
         }
         // Boombox gets shoved around by the ball; the heavy toolbox only
@@ -81,9 +82,9 @@ function SceneContent({ quality }: { quality: QualityConfig }) {
           return (
             <KnockableProp key={item.id} {...knock} position={item.position} tippable={false}>
               <InteractiveObject item={{ ...item, position: [0, 0, 0] }}>
-                <Suspense fallback={null}>
+                <AssetSuspense>
                   <GLBChild id={item.id} />
-                </Suspense>
+                </AssetSuspense>
               </InteractiveObject>
             </KnockableProp>
           )
@@ -91,28 +92,20 @@ function SceneContent({ quality }: { quality: QualityConfig }) {
         return (
           <InteractiveObject key={item.id} item={item}>
             {hasGLB ? (
-              <Suspense fallback={null}>
+              <AssetSuspense>
                 <GLBChild id={item.id} />
-              </Suspense>
+              </AssetSuspense>
             ) : undefined}
           </InteractiveObject>
         )
       })}
       {/* Car lift — decorative only, not interactive. Hidden on low/mid tiers for performance. */}
       {quality.showHeavyModels && (
-        <Suspense fallback={null}>
+        <AssetSuspense>
           <group position={[2.5, 0, 2.8]}>
             <CarLift />
           </group>
-        </Suspense>
-      )}
-      {/* Nissan GTR R34 — decorative only, not interactive. Hidden on low/mid tiers for performance. */}
-      {quality.showHeavyModels && (
-        <Suspense fallback={null}>
-          <group position={[-4.1, 1.04, -0.82]}>
-            <NissanGTR />
-          </group>
-        </Suspense>
+        </AssetSuspense>
       )}
     </>
   )
@@ -170,22 +163,22 @@ export default function GarageScene() {
       >
         <fog attach="fog" args={['#1a1408', 6, 22]} />
         {quality.showEnvironment && (
-          <Suspense fallback={null}>
+          <AssetSuspense>
             {/* Self-hosted copy of drei's "warehouse" preset, downsampled 1024x512 →
                 512x256 (1.6 MB → 0.4 MB). It only lights reflections at intensity
                 ≤0.3 — never shown as a background — and PMREM blurs it per roughness
                 level anyway. Avoids a runtime fetch from raw.githack.com. */}
             <Environment files="/hdri/empty_warehouse_01_512.hdr" environmentIntensity={quality.environmentIntensity} />
-          </Suspense>
+          </AssetSuspense>
         )}
         <RenderController />
         <ShaderWarmup />
         <CameraController />
         <Garage />
         <GarageDoor />
-        <Suspense fallback={null}>
+        <AssetSuspense>
           <ShopDog />
-        </Suspense>
+        </AssetSuspense>
         {quality.showParticles && <Particles />}
         <SceneContent quality={quality} />
       </Canvas>

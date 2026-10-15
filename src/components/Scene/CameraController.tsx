@@ -30,6 +30,14 @@ const YAW_RANGE = (25 / 180) * Math.PI    // ±12.5 degrees from center
 const PITCH_RANGE = (20 / 180) * Math.PI  // ±10 degrees from center
 const LOOK_DISTANCE = defaultDirection.length()
 
+// Mobile portrait fly-ins: the bottom sheet covers the lower ~70% of the
+// screen, and a portrait frustum is ~1/3 as wide as desktop. Unless an item
+// supplies its own mobile target, pull the camera back along its view line
+// and aim below the object so it lands in the visible strip above the sheet.
+// Values match the hand-tuned Work camera (≈2.5× back), aimed so the object sits mid-strip.
+const MOBILE_PULLBACK = 2.3
+const MOBILE_TARGET_DROP = 0.6 // in NDC: object ends up at y ≈ +0.6 — the middle of the strip between the header and the sheet
+
 export default function CameraController() {
   const camera = useThree((s) => s.camera)
   const size = useThree((s) => s.size)
@@ -167,13 +175,29 @@ export default function CameraController() {
       let camTarget = (isMobilePortrait && activeItem.mobileCameraTarget)
         ? activeItem.mobileCameraTarget
         : activeItem.cameraTarget
+      if (isMobilePortrait && !activeItem.mobileCameraTarget) {
+        const target = new THREE.Vector3(...activeItem.cameraTarget)
+        const pos = new THREE.Vector3(...camPos)
+        if (!activeItem.mobileCameraPosition) {
+          pos.sub(target).multiplyScalar(MOBILE_PULLBACK).add(target)
+        }
+        const halfFov = THREE.MathUtils.degToRad((camera as THREE.PerspectiveCamera).fov / 2)
+        target.y -= pos.distanceTo(target) * Math.tan(halfFov) * MOBILE_TARGET_DROP
+        camPos = pos.toArray() as [number, number, number]
+        camTarget = target.toArray() as [number, number, number]
+      }
       if (activeItem.id === 'experience' && !isMobile) {
+        // Fit a 2.4-unit-wide strip of the bench (both logos + the wall signs
+        // above) into the area LEFT of the 420px side panel, at any window
+        // size: back off far enough to fit it, then slide camera + target
+        // sideways so it's centered in the uncovered part of the screen.
+        const [cx, cy, cz] = activeItem.cameraTarget
         const halfFov = THREE.MathUtils.degToRad((camera as THREE.PerspectiveCamera).fov / 2)
         const availableWidth = Math.max(1, size.width - 420 - 64)
         const distance = Math.max(3.1, 2.4 * size.height / (2 * Math.tan(halfFov) * availableWidth))
         const horizontalOffset = distance * Math.tan(halfFov) * 420 / size.height
-        camPos = [-3.2 + horizontalOffset, 2.0, -0.9 + distance]
-        camTarget = [-3.2 + horizontalOffset, 1.6, -0.9]
+        camPos = [cx + horizontalOffset, activeItem.cameraPosition[1], cz + distance]
+        camTarget = [cx + horizontalOffset, cy, cz]
       }
       mode.current = 'animating'
       const tl = gsap.timeline({

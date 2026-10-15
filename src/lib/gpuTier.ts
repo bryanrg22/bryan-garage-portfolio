@@ -68,8 +68,8 @@ const DESKTOP_HIGH: QualityConfig = {
 // empty; keeping them costs ~20 MB of download but almost nothing at render time
 // once shaders are pre-compiled. What varies between mobile tiers is *rendering*
 // quality — DPR, environment, particles, lights. Shadows and antialias are off
-// across all mobile tiers (biggest GPU cost on iOS). Heavy models (GTR ~15 MB,
-// car lift) stay desktop-only — those genuinely stress mobile memory ceilings.
+// across all mobile tiers (biggest GPU cost on iOS). The heavy model
+// (car lift) stays desktop-only.
 
 const MOBILE_LOW: QualityConfig = {
   tier: 'low',
@@ -109,8 +109,9 @@ const MOBILE_HIGH: QualityConfig = {
   environmentIntensity: 0.18,
   showEnvironment: true,
   showParticles: true,
-  // Keep heavy models off mobile until the GTR is successfully batched
-  // (it is 1388 draw calls unbatched — see NissanGTR.tsx notes).
+  // Heavy models (the car lift) stay desktop-only. The GTR that originally
+  // justified this was removed; the lift alone (~0.9 MB, 21k triangles)
+  // could be enabled here if mobile ever feels empty on the right.
   showHeavyModels: false,
   showPureDecorative: true,
   showSemiDecorative: true,

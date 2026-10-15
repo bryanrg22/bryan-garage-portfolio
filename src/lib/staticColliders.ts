@@ -1,7 +1,7 @@
 /**
  * Static furniture colliders shared by the kickable ball AND knockable props.
  * Boxes are solid below `top` (XZ footprint). Measured from the actual GLB
- * geometry where it matters (car lift, GTR, workbench) — see CLAUDE.md.
+ * geometry where it matters (car lift, workbench) — see CLAUDE.md.
  *
  * CONVENTION: any box face sitting at/beyond a room wall is extended well
  * past it — otherwise the nearest-face ejection can point into the wall and
@@ -28,13 +28,12 @@ const BASE_BOXES: StaticBox[] = [
   { minX: -0.3, maxX: 2.5, minZ: -4.5, maxZ: -2.2, top: 1.0 },  // back workbench (back wall)
 ]
 
-// Car lift (measured: two tall posts + low drive-on track) and the GTR
-// display model — these only exist on tiers with heavy models.
+// Car lift (measured: two tall posts + low drive-on track) — only exists on
+// tiers with heavy models.
 const HEAVY_BOXES: StaticBox[] = [
   { minX: 4.05, maxX: 6, minZ: -4, maxZ: -1.9, top: 3.0 },  // back post (right + back wall)
   { minX: 4.05, maxX: 6, minZ: 1.3, maxZ: 2.25, top: 3.0 }, // front post (right wall)
   { minX: 4.05, maxX: 6, minZ: -1.9, maxZ: 1.3, top: 0.35 }, // low track (right wall)
-  { minX: -6, maxX: -3.75, minZ: -1.45, maxZ: -0.2, top: 1.35 }, // GTR model on the bench
 ]
 
 export function getStaticBoxes(showHeavyModels: boolean): StaticBox[] {

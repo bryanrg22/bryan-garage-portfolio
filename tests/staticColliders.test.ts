@@ -47,7 +47,7 @@ describe('resolveCircleBox', () => {
 })
 
 describe('getStaticBoxes', () => {
-  it('only includes the car lift / GTR colliders on tiers that render heavy models', () => {
+  it('only includes the car-lift colliders on tiers that render heavy models', () => {
     const light = getStaticBoxes(false)
     const heavy = getStaticBoxes(true)
     expect(heavy.length).toBeGreaterThan(light.length)
