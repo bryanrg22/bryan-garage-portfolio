@@ -358,7 +358,7 @@ export const portfolioItems: PortfolioItem[] = [
     ],
     experienceEntries: [
       { company: 'NVIDIA', role: 'Software Engineering Intern', date: 'May 2026 – Present', description: 'Building agentic AI systems', logo: '/images/experience/nvidia_logo.png', category: 'Tech' },
-      { company: 'OpenAI', role: 'Campus Lead', date: 'Sep 2026 – May 2027', description: 'OpenAI Student Collective', logo: '/images/experience/chatgptLogo.png', category: 'Tech' },
+      { company: 'OpenAI', role: 'Campus Lead', date: 'Sep 2026 – Present', description: 'OpenAI Student Collective', logo: '/images/experience/chatgptLogo.png', category: 'Tech' },
       { company: 'SUMMIT', role: 'Software Developer', date: 'Jan 2026 – May 2026', description: 'AI search optimization startup with paying customers. I focused on AI production infrastructure and the multi-provider LLM pipeline.', logo: '/images/experience/summit_logo.svg', label: 'Startup', category: 'Tech', subRoles: [
         { role: 'Production infrastructure — AWS Lambda + SQS', date: 'Mar 2026', bullets: [
           'Moved snapshot generation off the blocking Express path onto AWS Lambda behind SQS — worker concurrency capped at 3 for provider rate-limit safety.',
