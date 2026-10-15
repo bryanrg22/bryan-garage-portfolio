@@ -907,17 +907,17 @@ export default function Garage() {
       {/* ====== LEFT BENCH, left → right: OpenAI · NVIDIA · MacBook · Red Bull ======
           Tabletop spans x −4.50…−1.30 (top at y≈1.04). Footprints measured from
           the GLB/SVG bounds at these positions:
-          OpenAI −4.25…−3.85 (0.42 m) · gap 0.30 · NVIDIA −3.55…−2.75 (0.84 m) ·
-          gap 0.27 · MacBook −2.48…−1.62 · Red Bull −1.51…−1.39.
-          NVIDIA is deliberately the biggest, front-most logo (the internship);
-          OpenAI is smaller and set back. Re-measure before moving anything here
+          OpenAI −4.25…−3.73 (0.52 m) · gap 0.28 · NVIDIA −3.45…−2.65 (0.84 m) ·
+          gap 0.17 · MacBook −2.48…−1.62 · Red Bull −1.51…−1.39.
+          The two logos are about the same size, with NVIDIA (the internship)
+          slightly bigger and in front — measured on screen, not eyeballed. Re-measure before moving anything here
           — the can once ended up sunk inside the laptop. */}
       <AssetSuspense>
-        <OpenAILogo position={[-4.05, 1.05, -0.85]} rotationY={0.35} size={0.42} />
+        <OpenAILogo position={[-3.99, 1.05, -0.85]} rotationY={0.35} size={0.52} />
       </AssetSuspense>
       <AssetSuspense>
         {/* y: center rises with scale so the base stays on the bench (0.27 m half-height at 0.07 → 0.324 at 0.084) */}
-        <NvidiaLogo position={[-3.15, 1.454, -0.56]} />
+        <NvidiaLogo position={[-3.05, 1.454, -0.56]} />
       </AssetSuspense>
 
       {/* ====== PURE DECORATIVE — only on high tier ====== */}

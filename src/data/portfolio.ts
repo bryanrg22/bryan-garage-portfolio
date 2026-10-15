@@ -395,8 +395,8 @@ export const portfolioItems: PortfolioItem[] = [
       { company: 'FIRST Robotics', role: 'Lead Developer', date: '2023–2024', description: 'Regional Semifinalist — Top 5 out of 32 Teams', logo: '/images/experience/firstLogo.jpeg', category: 'Leadership' },
       { company: 'SkillsUSA', role: 'Team Leader', date: '2023–2024', description: 'State Bronze Medalist — 3rd Best Engineering Project in California', logo: '/images/experience/skillsusaLogo.png', category: 'Leadership' },
     ],
-    // Click target spans both bench logos (OpenAI −4.25…−3.85, NVIDIA −3.55…−2.75).
-    position: [-3.5, 1.4, -0.7],
+    // Click target spans both bench logos (OpenAI −4.25…−3.73, NVIDIA −3.45…−2.65).
+    position: [-3.45, 1.4, -0.7],
     color: '#CC4444',
     // Desktop framing is computed in CameraController (keeps the logos clear
     // of the 420px side panel); these are its center + the fallback.
