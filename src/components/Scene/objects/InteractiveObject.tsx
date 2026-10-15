@@ -179,7 +179,7 @@ function ObjectGeometry({ id, color, hovered }: { id: string; color: string; hov
       // Invisible hitbox spanning both bench logos (OpenAI + NVIDIA)
       return (
         <mesh visible={false}>
-          <boxGeometry args={[1.6, 0.65, 0.5]} />
+          <boxGeometry args={[1.7, 0.75, 0.5]} />
           <meshBasicMaterial transparent opacity={0} />
         </mesh>
       )

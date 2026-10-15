@@ -193,10 +193,11 @@ function ConcreteFloor() {
   )
 }
 
-/** Nvidia 3D logo — decorative, on workbench near macbook */
+/** Nvidia 3D logo — decorative, on workbench near macbook. Scale 0.084 →
+ *  0.84 m wide × 0.65 m tall; it's the largest logo on the bench on purpose. */
 function NvidiaLogo({ position }: { position: [number, number, number] }) {
   const { scene } = useGLTF('/models/nvidia_3d_logo.glb')
-  return <primitive object={scene} position={position} scale={0.07} rotation={[Math.PI / 2, 0, 0.3]} castShadow />
+  return <primitive object={scene} position={position} scale={0.084} rotation={[Math.PI / 2, 0, 0.3]} castShadow />
 }
 
 /** Red Bull can — decorative GLB on workbench */
@@ -904,15 +905,19 @@ export default function Garage() {
       )}
 
       {/* ====== LEFT BENCH, left → right: OpenAI · NVIDIA · MacBook · Red Bull ======
-          Footprints measured from the GLB bounds (x extents at these positions):
-          OpenAI −4.43…−3.87 · NVIDIA −3.65…−2.95 · MacBook −2.48…−1.62 ·
-          Red Bull −1.51…−1.39 (bench ends at −1.35). Re-measure before moving
-          anything here — the can once ended up sunk inside the laptop. */}
+          Tabletop spans x −4.50…−1.30 (top at y≈1.04). Footprints measured from
+          the GLB/SVG bounds at these positions:
+          OpenAI −4.25…−3.85 (0.42 m) · gap 0.30 · NVIDIA −3.55…−2.75 (0.84 m) ·
+          gap 0.27 · MacBook −2.48…−1.62 · Red Bull −1.51…−1.39.
+          NVIDIA is deliberately the biggest, front-most logo (the internship);
+          OpenAI is smaller and set back. Re-measure before moving anything here
+          — the can once ended up sunk inside the laptop. */}
       <AssetSuspense>
-        <OpenAILogo position={[-4.15, 1.05, -0.85]} rotationY={0.35} />
+        <OpenAILogo position={[-4.05, 1.05, -0.85]} rotationY={0.35} size={0.42} />
       </AssetSuspense>
       <AssetSuspense>
-        <NvidiaLogo position={[-3.30, 1.4, -0.56]} />
+        {/* y: center rises with scale so the base stays on the bench (0.27 m half-height at 0.07 → 0.324 at 0.084) */}
+        <NvidiaLogo position={[-3.15, 1.454, -0.56]} />
       </AssetSuspense>
 
       {/* ====== PURE DECORATIVE — only on high tier ====== */}
