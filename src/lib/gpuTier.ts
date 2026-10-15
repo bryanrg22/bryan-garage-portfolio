@@ -170,6 +170,16 @@ function desktopTierFromGPU(gpuTier: number): QualityConfig {
 
 export const IS_MOBILE = detectIsMobile()
 
+// QA/CI override: `?tier=low|mid|high` forces a desktop tier. GPU-less CI
+// runners render with SwiftShader, which detect-gpu always scores as LOW — so
+// without this the smoke test would never load the decorative or heavy models,
+// and a broken new model could never fail it. Harmless for real visitors.
+const FORCED_TIER: QualityConfig | undefined = typeof window === 'undefined'
+  ? undefined
+  : ({ low: DESKTOP_LOW, mid: DESKTOP_MID, high: DESKTOP_HIGH } as Record<string, QualityConfig>)[
+      new URLSearchParams(window.location.search).get('tier') ?? ''
+    ]
+
 /**
  * Default config used at module load. On mobile we pick the final tier
  * synchronously. On desktop this is a placeholder: the Canvas is NOT mounted
@@ -178,7 +188,7 @@ export const IS_MOBILE = detectIsMobile()
  * LOW and remounting at HIGH used to rebuild the whole scene a second time —
  * visibly, after the loading screen was already gone.
  */
-export const defaultQuality: QualityConfig = IS_MOBILE ? pickMobileTier() : DESKTOP_LOW
+export const defaultQuality: QualityConfig = FORCED_TIER ?? (IS_MOBILE ? pickMobileTier() : DESKTOP_LOW)
 
 const DETECTION_TIMEOUT_MS = 2500
 
@@ -197,7 +207,7 @@ function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
  * to the already-picked tier — skipping detect-gpu's WebGL benchmark, which
  * on iOS competes for the same scarce GPU context we're about to use.
  */
-export const detectionPromise: Promise<QualityConfig> = IS_MOBILE
+export const detectionPromise: Promise<QualityConfig> = FORCED_TIER || IS_MOBILE
   ? Promise.resolve(defaultQuality)
   : withTimeout(
       // Benchmark tables are self-hosted (copied from detect-gpu/dist/benchmarks)

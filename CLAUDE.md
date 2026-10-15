@@ -17,9 +17,18 @@ npm run dev       # Start dev server (HMR)
 npm run build     # Type-check (tsc -b) + production build (vite build) → dist/
 npm run lint      # ESLint
 npm run preview   # Preview production build locally
+npm test          # Vitest unit tests (tests/): collider math, world bookkeeping, every asset path in src/ exists in public/
+npm run check:assets  # Every GLB passes the Khronos glTF Validator + size/triangle budgets (scripts/check-assets.mjs)
+npm run test:e2e  # Playwright smoke test of the built site (run `npm run build` first; PW_CHANNEL=chrome to use installed Chrome)
 ```
 
-No test runner is configured. Type checking (`tsc -b`) is the primary correctness tool.
+### CI (`.github/workflows/ci.yml`)
+
+Runs on every push and PR. Job **checks**: lint → `npm run build` (tsc + vite) → unit tests → asset budgets. Job **e2e** (after checks): serves `dist/` with `vite preview` and runs the Playwright smoke test in Chromium on **SwiftShader** (CI runners have no GPU) with `?tier=high` forced, so every model — decoratives, lift, GTR — is loaded and compiled. It asserts the loading screen drops (= all assets + all shaders done), ≥25 models load, the frame isn't blank, every tab panel opens/closes, and there are zero console errors / failed same-origin requests. A screenshot of the home view is attached to the `playwright-report` artifact — check it on any PR that touches the scene. Analytics requests are blocked in the test so CI never pollutes PostHog.
+
+- **`?tier=low|mid|high`** (`gpuTier.ts`) forces a desktop quality tier and skips detect-gpu. It exists for CI (SwiftShader always scores LOW, which would skip most models) but is also handy for checking a tier by hand.
+- **Adding a model?** It must pass `npm run check:assets`: ≤1 MB and ≤120k triangles per GLB, ≤12 MB total, no glTF validation errors. A genuinely heavy model gets an explicit entry in `ALLOW` (with a reason) in `scripts/check-assets.mjs` — don't just raise the global budget.
+- Job names are what branch rulesets / Vercel Deployment Checks reference; renaming a job means updating those settings.
 
 ## Architecture
 
