@@ -71,12 +71,20 @@ test('HIGH tier: every model loads and compiles, and the scene renders', async (
   await expect(page.locator('canvas')).toBeVisible()
   expect(models.size, `models loaded: ${[...models].join(', ')}`).toBeGreaterThanOrEqual(25)
 
-  // Let the garage door roll up, then prove the canvas has a picture in it
-  // (a render bug that draws nothing still "loads" fine).
-  await page.waitForTimeout(5000)
-  const shot = await page.screenshot({ timeout: 2 * 60_000 })
+  // Prove the canvas has a picture in it (a render bug that draws nothing
+  // still "loads" fine). Poll instead of a fixed wait: on a slow GPU-less
+  // runner the garage door's roll-up can take far longer than its nominal 3s,
+  // and a still-closed door is a near-uniform frame (this flaked once on CI).
+  let shot = Buffer.alloc(0)
+  await expect.poll(async () => {
+    shot = await page.screenshot({ timeout: 2 * 60_000 })
+    return centerStdDev(shot)
+  }, {
+    message: 'scene looks blank (uniform color) — nothing rendered',
+    timeout: 3 * 60_000,
+    intervals: [5_000, 10_000],
+  }).toBeGreaterThan(12)
   await testInfo.attach('home-view', { body: shot, contentType: 'image/png' })
-  expect(centerStdDev(shot), 'scene looks blank (uniform color) — nothing rendered').toBeGreaterThan(12)
 
   expect(problems, problems.join('\n')).toEqual([])
 })
