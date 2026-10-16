@@ -8,6 +8,7 @@ import KnockableProp from './objects/KnockableProp'
 import ShopParrot from './objects/ShopParrot'
 import OpenAILogo from './objects/OpenAILogo'
 import AssetSuspense from './AssetSuspense'
+import { IS_MOBILE } from '../../lib/gpuTier'
 
 /** Brea Auto Body sign — image texture on a plane */
 function BreaBoardSign() {
@@ -139,13 +140,18 @@ function CaltechSign() {
 
 useTexture.preload('/images/caltechLogo.webp')
 
-useTexture.preload('/concrete_floor/Concrete035_1K-JPG_Color.webp')
-useTexture.preload('/concrete_floor/Concrete035_1K-JPG_NormalGL.webp')
-useTexture.preload('/concrete_floor/Concrete035_1K-JPG_Roughness.webp')
-
-useTexture.preload('/chipboard_wall/Chipboard002_1K-JPG_Color.webp')
-useTexture.preload('/chipboard_wall/Chipboard002_1K-JPG_NormalGL.webp')
-useTexture.preload('/chipboard_wall/Chipboard002_1K-JPG_Roughness.webp')
+// Floor + wall PBR sets. Phones get 512px versions (walls 757 KB → 203 KB,
+// floor 255 KB → 150 KB) — compared side by side on an iPhone-sized screen
+// they're indistinguishable; desktop keeps 1024px, where the large Work
+// close-up shows slightly crisper wall grain. Paths are literals (not built
+// from a template) so the asset-reference test checks every file exists.
+const FLOOR_TEX = IS_MOBILE
+  ? ['/concrete_floor/Concrete035_512_Color.webp', '/concrete_floor/Concrete035_512_NormalGL.webp', '/concrete_floor/Concrete035_512_Roughness.webp']
+  : ['/concrete_floor/Concrete035_1K-JPG_Color.webp', '/concrete_floor/Concrete035_1K-JPG_NormalGL.webp', '/concrete_floor/Concrete035_1K-JPG_Roughness.webp']
+const WALL_TEX = IS_MOBILE
+  ? ['/chipboard_wall/Chipboard002_512_Color.webp', '/chipboard_wall/Chipboard002_512_NormalGL.webp', '/chipboard_wall/Chipboard002_512_Roughness.webp']
+  : ['/chipboard_wall/Chipboard002_1K-JPG_Color.webp', '/chipboard_wall/Chipboard002_1K-JPG_NormalGL.webp', '/chipboard_wall/Chipboard002_1K-JPG_Roughness.webp']
+for (const path of [...FLOOR_TEX, ...WALL_TEX]) useTexture.preload(path)
 
 // Reusable Vector3s for scale lerps — avoids per-frame GC allocation
 const _linkedInScale = new THREE.Vector3()
@@ -170,9 +176,9 @@ function getRepeatedTexture(tex: THREE.Texture, rx: number, ry: number): THREE.T
 
 /** Concrete floor with PBR textures */
 function ConcreteFloor() {
-  const colorMap = useTexture('/concrete_floor/Concrete035_1K-JPG_Color.webp')
-  const normalMap = useTexture('/concrete_floor/Concrete035_1K-JPG_NormalGL.webp')
-  const roughnessMap = useTexture('/concrete_floor/Concrete035_1K-JPG_Roughness.webp')
+  const colorMap = useTexture(FLOOR_TEX[0])
+  const normalMap = useTexture(FLOOR_TEX[1])
+  const roughnessMap = useTexture(FLOOR_TEX[2])
 
   for (const tex of [colorMap, normalMap, roughnessMap]) {
     tex.wrapS = tex.wrapT = THREE.RepeatWrapping
@@ -553,9 +559,9 @@ function CorrugatedWall({
   const meshRef = useRef<THREE.InstancedMesh>(null)
   const ridgeCount = Math.floor(width / 0.25)
 
-  const colorTex = useTexture('/chipboard_wall/Chipboard002_1K-JPG_Color.webp')
-  const normalTex = useTexture('/chipboard_wall/Chipboard002_1K-JPG_NormalGL.webp')
-  const roughnessTex = useTexture('/chipboard_wall/Chipboard002_1K-JPG_Roughness.webp')
+  const colorTex = useTexture(WALL_TEX[0])
+  const normalTex = useTexture(WALL_TEX[1])
+  const roughnessTex = useTexture(WALL_TEX[2])
 
   const [rx, ry] = textureRepeat
   const colorMap = getRepeatedTexture(colorTex, rx, ry)

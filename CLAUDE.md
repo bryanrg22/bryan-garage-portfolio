@@ -57,6 +57,7 @@ Single-page 3D experience with no client-side router. Navigation is driven by `a
 - `public/images/` — Organized subdirectories for portfolio content images (`experience/`, `projects/`, `soccer/`, `hackathons/`, `awards/`, `home/`, `breaAutoBody/`, `orgs/`, `skills/`) plus root-level logo/flag textures for garage signs
 - `public/concrete_floor/` — PBR texture set for the garage floor (color, normal, roughness — WebP)
 - `public/chipboard_wall/` — PBR texture set for the garage walls (color, normal, roughness — WebP)
+- **Phone texture variants:** `Chipboard002_512_*` / `Concrete035_512_*` are 512px versions loaded only when `IS_MOBILE` (see `FLOOR_TEX`/`WALL_TEX` in `Garage.tsx`); desktop keeps the 1K set. The MacBook (`macbook.glb`) was cut 918 KB → 424 KB (prune unused attributes + simplify to ~40% + draco) after a side-by-side showed no visible difference, even in the desktop close-up.
 
 ## Key Patterns
 
