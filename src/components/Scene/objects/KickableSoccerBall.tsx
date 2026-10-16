@@ -10,6 +10,7 @@ import { ballDrag } from '../../../lib/ballDrag'
 import { ballWorld, registerResettable, markDisplaced, clearDisplaced } from '../../../lib/ballWorld'
 import { getStaticBoxes, resolveCircleBox, ROOM } from '../../../lib/staticColliders'
 import { trackEvent } from '../../../lib/analytics'
+import { modelUrl } from '../../../lib/assetUrls'
 
 const BALL_RADIUS = 0.25
 const GRAVITY = 9.8
@@ -48,7 +49,7 @@ const _hoverScale = new THREE.Vector3()
  * after a few seconds; landing it in the trash can (from above!) is a goal.
  */
 export default function KickableSoccerBall({ item }: { item: PortfolioItem }) {
-  const { scene } = useGLTF('/models/soccer_ball.glb')
+  const { scene } = useGLTF(modelUrl('soccer_ball'))
   const groupRef = useRef<THREE.Group>(null)
   const ballRef = useRef<THREE.Group>(null)
   const [hovered, setHovered] = useState(false)

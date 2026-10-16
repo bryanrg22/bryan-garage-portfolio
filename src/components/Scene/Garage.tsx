@@ -9,6 +9,7 @@ import ShopParrot from './objects/ShopParrot'
 import OpenAILogo from './objects/OpenAILogo'
 import AssetSuspense from './AssetSuspense'
 import { IS_MOBILE } from '../../lib/gpuTier'
+import { modelUrl, RESUME_IMAGE } from '../../lib/assetUrls'
 
 /** Brea Auto Body sign — image texture on a plane */
 function BreaBoardSign() {
@@ -202,122 +203,122 @@ function ConcreteFloor() {
 /** Nvidia 3D logo — decorative, on workbench near macbook. Scale 0.084 →
  *  0.84 m wide × 0.65 m tall; it's the largest logo on the bench on purpose. */
 function NvidiaLogo({ position }: { position: [number, number, number] }) {
-  const { scene } = useGLTF('/models/nvidia_3d_logo.glb')
+  const { scene } = useGLTF(modelUrl('nvidia_3d_logo'))
   return <primitive object={scene} position={position} scale={0.084} rotation={[Math.PI / 2, 0, 0.3]} castShadow />
 }
 
 /** Red Bull can — decorative GLB on workbench */
 function RedBullCan({ position }: { position: [number, number, number] }) {
-  const { scene } = useGLTF('/models/red_bull_can.glb')
+  const { scene } = useGLTF(modelUrl('red_bull_can'))
   return <primitive object={scene} position={position} scale={2} rotation={[0, Math.PI / 2, 0]} castShadow />
 }
 
 /** Workbench — decorative, back wall under picture frame */
 function WorkbenchModel({ position }: { position: [number, number, number] }) {
-  const { scene } = useGLTF('/models/workbench.glb')
+  const { scene } = useGLTF(modelUrl('workbench'))
   return <primitive object={scene} position={position} scale={0.012} castShadow />
 }
 
 /** Garage tools — decorative, right side near toolbox */
 function GarageTools({ position }: { position: [number, number, number] }) {
-  const { scene } = useGLTF('/models/garage_tools.glb')
+  const { scene } = useGLTF(modelUrl('garage_tools'))
   return <primitive object={scene} position={position} scale={1.5} castShadow />
 }
 
 /** Car jack — decorative, right side */
 function CarJack({ position }: { position: [number, number, number] }) {
-  const { scene } = useGLTF('/models/car_jack.glb')
+  const { scene } = useGLTF(modelUrl('car_jack'))
   return <primitive object={scene} position={position} scale={0.7} rotation={[0, -Math.PI / 6, 0]} castShadow />
 }
 
 /** Trash can — decorative, near oil drums */
 function TrashCan({ position }: { position: [number, number, number] }) {
-  const { scene } = useGLTF('/models/trash_can.glb')
+  const { scene } = useGLTF(modelUrl('trash_can'))
   return <primitive object={scene} position={position} scale={0.8} castShadow />
 }
 
 /** WD-40 can — decorative, near retro oil */
 function WD40({ position }: { position: [number, number, number] }) {
-  const { scene } = useGLTF('/models/wd-40.glb')
+  const { scene } = useGLTF(modelUrl('wd-40'))
   return <primitive object={scene} position={position} scale={2.2} castShadow />
 }
 
 /** Dirty rag — decorative, near retro oil */
 function DirtyRag({ position }: { position: [number, number, number] }) {
-  const { scene } = useGLTF('/models/dirty_rag.glb')
+  const { scene } = useGLTF(modelUrl('dirty_rag'))
   return <primitive object={scene} position={position} scale={0.4} castShadow />
 }
 
 /** Bucket — decorative, near tires */
 function Bucket({ position }: { position: [number, number, number] }) {
-  const { scene } = useGLTF('/models/bucket.glb')
+  const { scene } = useGLTF(modelUrl('bucket'))
   return <primitive object={scene} position={position} scale={0.21} castShadow />
 }
 
 /** Air compressor — decorative, near right wall */
 function AirCompressor({ position }: { position: [number, number, number] }) {
-  const { scene } = useGLTF('/models/air_compressor.glb')
+  const { scene } = useGLTF(modelUrl('air_compressor'))
   return <primitive object={scene} position={position} scale={1.5} castShadow />
 }
 
 /** Extension cord — decorative, on the floor */
 function ExtensionCord({ position }: { position: [number, number, number] }) {
-  const { scene } = useGLTF('/models/extension_cord.glb')
+  const { scene } = useGLTF(modelUrl('extension_cord'))
   return <primitive object={scene} position={position} scale={0.9} castShadow />
 }
 
 /** Mexican flag .glb model on the wall */
 function MexicanFlag({ position }: { position: [number, number, number] }) {
-  const { scene } = useGLTF('/models/mexican_flag.glb')
+  const { scene } = useGLTF(modelUrl('mexican_flag'))
   return <primitive object={scene} position={position} scale={0.25} castShadow />
 }
 
 
 /** FIFA trophy — decorative, on workbench */
 function FifaTrophy({ position }: { position: [number, number, number] }) {
-  const { scene } = useGLTF('/models/fifa_trophy.glb')
+  const { scene } = useGLTF(modelUrl('fifa_trophy'))
   return <primitive object={scene} position={position} scale={0.4} castShadow />
 }
 
 /** Gold trophy — decorative, on workbench */
 function GoldTrophy({ position }: { position: [number, number, number] }) {
-  const { scene } = useGLTF('/models/gold_trophy.glb')
+  const { scene } = useGLTF(modelUrl('gold_trophy'))
   return <primitive object={scene} position={position} scale={0.45} castShadow />
 }
 
 /** MLB trophy — decorative, on workbench */
 function MLBTrophy({ position }: { position: [number, number, number] }) {
-  const { scene } = useGLTF('/models/mlb_trophy.glb')
+  const { scene } = useGLTF(modelUrl('mlb_trophy'))
   return <primitive object={scene} position={position} scale={0.1} castShadow />
 }
 
 /** Retro oil .glb model — decorative */
 function RetroOil({ position }: { position: [number, number, number] }) {
-  const { scene } = useGLTF('/models/retro_oil.glb')
+  const { scene } = useGLTF(modelUrl('retro_oil'))
   return <primitive object={scene} position={position} scale={0.3} castShadow />
 }
 
 /** Python logo — decorative, floor near toolbox */
 function PythonLogo({ position }: { position: [number, number, number] }) {
-  const { scene } = useGLTF('/models/python_logo.glb')
+  const { scene } = useGLTF(modelUrl('python_logo'))
   return <primitive object={scene} position={position} scale={0.01} rotation={[-Math.PI / 2, 0, 0.3]} castShadow />
 }
 
 /** Java logo — decorative, floor near toolbox */
 function JavaLogo({ position }: { position: [number, number, number] }) {
-  const { scene } = useGLTF('/models/java_logo.glb')
+  const { scene } = useGLTF(modelUrl('java_logo'))
   return <primitive object={scene} position={position} scale={0.13} rotation={[0, -0.5, 0]} castShadow />
 }
 
 /** React logo — decorative, floor near toolbox */
 function ReactLogo({ position }: { position: [number, number, number] }) {
-  const { scene } = useGLTF('/models/react_logo.glb')
+  const { scene } = useGLTF(modelUrl('react_logo'))
   return <primitive object={scene} position={position} scale={0.15} rotation={[-Math.PI / 2, 0, 0.8]} castShadow />
 }
 
 /** LinkedIn logo — clickable, opens LinkedIn profile */
 function LinkedInLogo({ position }: { position: [number, number, number] }) {
-  const { scene } = useGLTF('/models/linkedin_logo.glb')
+  const { scene } = useGLTF(modelUrl('linkedin_logo'))
   const groupRef = useRef<THREE.Group>(null)
   const [hovered, setHovered] = useState(false)
   const invalidate = useThree((s) => s.invalidate)
@@ -385,7 +386,7 @@ function LinkedInLogo({ position }: { position: [number, number, number] }) {
 
 /** GitHub logo — clickable, opens GitHub profile */
 function GitHubLogo({ position }: { position: [number, number, number] }) {
-  const { scene } = useGLTF('/models/github_logo.glb')
+  const { scene } = useGLTF(modelUrl('github_logo'))
   const groupRef = useRef<THREE.Group>(null)
   const [hovered, setHovered] = useState(false)
   const invalidate = useThree((s) => s.invalidate)
@@ -438,7 +439,7 @@ function GitHubLogo({ position }: { position: [number, number, number] }) {
 
 /** Resume paper — clickable, opens resume PDF */
 function ResumePaper({ position }: { position: [number, number, number] }) {
-  const texture = useTexture('/images/resume_image.webp')
+  const texture = useTexture(RESUME_IMAGE)
   const groupRef = useRef<THREE.Group>(null)
   const meshRef = useRef<THREE.Mesh>(null)
   const [hovered, setHovered] = useState(false)

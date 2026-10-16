@@ -38,15 +38,26 @@ describe('asset references', () => {
     expect(missing, `missing files:\n${missing.join('\n')}`).toEqual([])
   })
 
-  // GarageScene preloads models by name via a template literal
-  // (`/models/${file}.glb`); check that list explicitly.
-  it('every preloaded model name has a .glb file', () => {
-    const src = fs.readFileSync(path.join(ROOT, 'src/components/Scene/GarageScene.tsx'), 'utf8')
-    const list = src.match(/for \(const file of \[([\s\S]*?)\]\)\s*useGLTF\.preload/)
-    if (!list) return // preload list removed — nothing to check
-    const names = [...list[1].matchAll(/'([^']+)'/g)].map((m) => m[1])
-    expect(names.length).toBeGreaterThan(0)
-    const missing = names.filter((n) => !fs.existsSync(path.join(PUBLIC, 'models', `${n}.glb`)))
-    expect(missing).toEqual([])
+  // Models load through modelUrl(name), which serves /models/mobile/<name>.glb
+  // on phones and /models/<name>.glb on desktop — so every name needs BOTH
+  // files, or one platform gets a missing model. (Adding a model? Make its
+  // phone twin with the recipe in src/lib/assetUrls.ts.)
+  const modelNames = new Set<string>()
+  for (const file of sourceFiles(path.join(ROOT, 'src'))) {
+    for (const m of fs.readFileSync(file, 'utf8').matchAll(/modelUrl\('([^']+)'\)/g)) modelNames.add(m[1])
+  }
+  // GarageScene also preloads by name: `for (const file of [...]) useGLTF.preload(modelUrl(file))`
+  const scene = fs.readFileSync(path.join(ROOT, 'src/components/Scene/GarageScene.tsx'), 'utf8')
+  const preload = scene.match(/for \(const file of \[([\s\S]*?)\]\)\s*useGLTF\.preload/)
+  if (preload) for (const m of preload[1].matchAll(/'([^']+)'/g)) modelNames.add(m[1])
+
+  it('finds the model names (guards against the scan silently matching nothing)', () => {
+    expect(modelNames.size).toBeGreaterThan(20)
+  })
+
+  it('every model has both a desktop file and a phone twin', () => {
+    const missing = [...modelNames].flatMap((n) => [`models/${n}.glb`, `models/mobile/${n}.glb`])
+      .filter((p) => !fs.existsSync(path.join(PUBLIC, p)))
+    expect(missing, `missing:\n${missing.join('\n')}`).toEqual([])
   })
 })

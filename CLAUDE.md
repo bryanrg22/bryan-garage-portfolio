@@ -195,3 +195,7 @@ Scale and optional `rotation` vary per model. Decorative GLB loaders in `Garage.
    e. Add the item's id to the appropriate load tier in `loadTiers`.
 3. If the model is purely decorative (not interactive), add it to `Garage.tsx` and wrap it in the appropriate quality tier conditional (`quality.showPureDecorative` or `quality.showSemiDecorative`). Essential models that must always be visible should render unconditionally.
 4. If not using a GLB, add a geometry case in `InteractiveObject.tsx` (`useObjectShape` + `ObjectGeometry`).
+
+### Phone asset twins (Oct 2026)
+
+Phones load lighter twins of the scene assets via `src/lib/assetUrls.ts`: `modelUrl(name)` → `/models/mobile/<name>.glb` on phones (`IS_MOBILE`), `/models/<name>.glb` on desktop; plus `ENV_HDR` (256×128 vs 512×256) and `RESUME_IMAGE` (768 px vs full). Phone download 6.86 MB → ~4.8 MB with no visible difference (verified side by side in every view). **Adding a model:** load it with `useGLTF(modelUrl('name'))` and create its phone twin with the recipe documented in `assetUrls.ts` — `tests/assetReferences.test.ts` fails if either file is missing, `check:assets` budgets both folders, and the e2e "phone" test asserts phones fetch only `/models/mobile/`. The car lift is desktop-only and keeps its hard-coded path.

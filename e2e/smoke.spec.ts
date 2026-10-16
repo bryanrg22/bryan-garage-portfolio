@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test'
+import { devices, expect, test, type Page } from '@playwright/test'
 import { PNG } from 'pngjs'
 
 // End-to-end smoke tests of the real production bundle (`vite preview` of
@@ -103,4 +103,35 @@ test('LOW tier: every tab panel opens and closes', async ({ page }) => {
   }
 
   expect(problems, problems.join('\n')).toEqual([])
+})
+
+// Phones take a different path (sync tier pick, lighter /models/mobile/ twins,
+// 512px textures, smaller HDR). Emulate an iPhone at DPR 1 — SwiftShader cost
+// scales with pixels, and this test is about assets, not resolution.
+test.describe('phone', () => {
+  const iphone = devices['iPhone 15 Pro']
+  test.use({ viewport: iphone.viewport, userAgent: iphone.userAgent, isMobile: true, hasTouch: true, deviceScaleFactor: 1 })
+
+  test('Phone: loads only the phone asset set and the scene renders', async ({ page }) => {
+    const problems = watchForProblems(page)
+    const phoneModels = new Set<string>()
+    const desktopModels = new Set<string>()
+    page.on('response', (r) => {
+      const p = new URL(r.url()).pathname
+      if (!p.endsWith('.glb') || !r.ok()) return
+      ;(p.startsWith('/models/mobile/') ? phoneModels : desktopModels).add(p)
+    })
+
+    await page.goto('/')
+    await expect(page.getByText('Opening the garage door')).toBeHidden({ timeout: 4 * 60_000 })
+    expect(phoneModels.size, `phone models: ${[...phoneModels].join(', ')}`).toBeGreaterThanOrEqual(24)
+    expect([...desktopModels], 'phone fetched desktop-size models').toEqual([])
+
+    let shot = Buffer.alloc(0)
+    await expect.poll(async () => {
+      shot = await page.screenshot({ timeout: 2 * 60_000 })
+      return centerStdDev(shot)
+    }, { message: 'phone scene looks blank', timeout: 3 * 60_000, intervals: [5_000, 10_000] }).toBeGreaterThan(12)
+    expect(problems, problems.join('\n')).toEqual([])
+  })
 })
