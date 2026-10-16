@@ -4,6 +4,7 @@ import { useGLTF, useAnimations, Html } from '@react-three/drei'
 import type { ThreeEvent } from '@react-three/fiber'
 import * as THREE from 'three'
 import { ballWorld } from '../../../lib/ballWorld'
+import { modelUrl } from '../../../lib/assetUrls'
 
 const WALK_SPEED = 0.55
 const GALLOP_SPEED = 1.7
@@ -46,7 +47,7 @@ type DogState = 'rest' | 'walk' | 'sniff' | 'scatter' | 'greet'
  * rendering while the ball moves).
  */
 export default function ShopDog() {
-  const { scene, animations } = useGLTF('/models/shiba_inu.glb')
+  const { scene, animations } = useGLTF(modelUrl('shiba_inu'))
   const groupRef = useRef<THREE.Group>(null)
   const { actions } = useAnimations(animations, groupRef)
   const invalidate = useThree((s) => s.invalidate)

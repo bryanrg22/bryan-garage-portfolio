@@ -20,6 +20,7 @@ import AssetSuspense from './AssetSuspense'
 import { portfolioItems } from '../../data/portfolio'
 import { useStore } from '../../stores/useStore'
 import type { QualityConfig } from '../../lib/gpuTier'
+import { modelUrl, ENV_HDR } from '../../lib/assetUrls'
 
 // Draco decoder for compressed GLB models — self-hosted (copied from
 // three/examples/jsm/libs/draco/gltf) so first model load skips a DNS+TLS
@@ -35,7 +36,7 @@ useGLTF.setDecoderPath('/draco/')
 for (const file of [
   'nvidia_3d_logo', 'mexican_flag', 'workbench', 'linkedin_logo', 'github_logo',
   'shiba_inu', 'soccer_ball', 'jbl_boombox', 'macbook', 'tool_box',
-]) useGLTF.preload(`/models/${file}.glb`)
+]) useGLTF.preload(modelUrl(file))
 
 // Every GLB is requested up front, in parallel, behind the loading screen.
 // An earlier "progressive load" staggered the models with 0.5s/1.5s/1.5s
@@ -168,7 +169,7 @@ export default function GarageScene() {
                 512x256 (1.6 MB → 0.4 MB). It only lights reflections at intensity
                 ≤0.3 — never shown as a background — and PMREM blurs it per roughness
                 level anyway. Avoids a runtime fetch from raw.githack.com. */}
-            <Environment files="/hdri/empty_warehouse_01_512.hdr" environmentIntensity={quality.environmentIntensity} />
+            <Environment files={ENV_HDR} environmentIntensity={quality.environmentIntensity} />
           </AssetSuspense>
         )}
         <RenderController />
